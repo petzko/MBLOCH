@@ -1,0 +1,21 @@
+### matlab workspace files ### 
+*.mat
+*.fig
+*.jpeg
+*.png
+*.bmp
+*.txt
+*.eps
+*.zip
+*.tar 
+*.gz
+
+*.o
+*.swp
+*.swo
+*.sw*
+
+#monte carlo files! 
+*.inp
+*.dat
+

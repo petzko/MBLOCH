@@ -1,0 +1,71 @@
+# % or ! are comments 
+
+#simulattion name 
+name = qcl183s(MLVL,10p4kVpCm)
+#shall I include spatial hole burning or not
+shb = 1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N = 2500 
+
+#diffusion constant in cm^2/sec
+D = 46
+
+#dispersion constant in [ps^2/mm]! 
+disp = +0.125
+
+#cavity length (mm) 
+Ltot = 5
+
+#period length [nm]
+Lp = 54.8
+
+#doping density in [cm^-3]
+dN = 1.9E16
+
+#doping region thickness [nm] (set equal to Lp if average doping density is known)
+Ld = 16.2;
+
+#mode overlap factor [dimensionless]
+Overlap = 0.8
+
+#refractive index
+n = 3.6
+
+####dipole mtx elements (in C-nm)
+zUL = 3.6
+
+#pure dephasing on/off
+deph = 1
+
+#pure dephasing  time for the inj -> ull transition[ps]
+Tdeph_1 = .4;
+#pure dephasing  times for the inj -> lll and ull->lll transition[ps]
+Tdeph_2 = 1.25;
+Tdeph_3 = 1.25;
+
+#cavity loss in 1/cm; 
+loss = 10
+
+
+################# simuation parameters #################
+
+#number of round trips to be simulated (dimensionless)
+simRT = 5000; 
+#how many iterations should the program plot on;
+plotCtr = 10000
+#number of round trips to record the data for (should be smaller than the total simRT);
+recordRT = 5000
+#number of steps for the MS solver (choose 5):
+nr_steps = 5
+
+#### Hamiltonian matrix in the TB Basis in (eV): ordering is as follows [INJ1,INJ2,ULL,LLL1,LLL2,DEPOP1,DEPOP2]
+HTB = [0.098119  3.9698e-05   0.0013299   0.0003995 -0.00025728  6.6917e-07  3.5948e-07  3.9698e-05    0.093939  -0.0012584 -0.00037699   0.0002426 -6.2826e-07 -3.3736e-07   0.0014405  -0.0012302    0.095292  -2.202e-05  1.4336e-05 -3.9779e-08 -2.1514e-08  0.00062848 -0.00053438  -2.202e-05    0.080001  4.4728e-06 -1.2436e-08 -6.7275e-09 -0.00045673  0.00038773  1.4336e-05  4.4728e-06    0.074954  8.1045e-09  4.3844e-09  2.6297e-06 -2.2048e-06 -3.9779e-08 -1.2436e-08  8.1045e-09    0.041173 -1.2246e-11  1.5593e-06 -1.3051e-06 -2.1514e-08 -6.7275e-09  4.3844e-09 -1.2246e-11    0.036981]
+
+# scattering rates matrix in linear form
+# for NLVL levels Wmtx((i-1)*NLVL+j) gives the outscattering rate from level i to level j, where i,j = 1,2... NLVL
+Wmtx = [0      0.8294    0.020008   0.0011673  0.00061368   0.0029254   0.0033775     0.47111           0    0.019146   0.0010111  0.00041657   0.0021391   0.0026366    0.053464    0.066001           0     0.11372    0.099904    0.049116    0.052147     0.03852    0.040984    0.067482           0     0.51335       0.884     0.84723    0.021952    0.026155    0.027667     0.30216           0       0.798      1.1311   0.0025079   0.0032322   0.0017838   0.0019913   0.0020236           0      0.8294   0.0018256   0.0025174   0.0011098   0.0010426   0.0023051     0.47111           0]

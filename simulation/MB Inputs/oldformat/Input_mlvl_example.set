@@ -1,0 +1,77 @@
+# % or ! are comments 
+
+#simulattion name 
+name = EXAMPLE
+#shall I include spatial hole burning or not
+shb = 1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N = 2500 
+
+#diffusion constant in cm^2/sec
+D = 46
+
+#dispersion constant in [ps^2/mm]! 
+disp = +0.125
+
+#cavity length (mm) 
+Ltot = 5
+
+#period length [nm]
+Lp = 54.8
+
+#doping density in [cm^-3]
+dN = 1.9E16
+
+#doping region thickness [nm] (set equal to Lp if average doping density is known)
+Ld = 16.2;
+
+#mode overlap factor [dimensionless]
+Overlap = 0.8
+
+#refractive index
+n = 3.6
+
+####dipole mtx elements (in C-nm)
+zUL = 3.6
+
+#pure dephasing on/off
+deph = 1
+
+#pure dephasing  time [ps]
+Tdeph = 1.0
+
+#cavity loss in 1/cm; 
+loss = 10
+
+
+################# simuation parameters #################
+
+#number of round trips to be simulated (dimensionless)
+simRT = 200; 
+#how many iterations should the program plot on;
+plotCtr = 500
+#number of round trips to record the data for (should be smaller than the total simRT);
+recordRT = 200
+#number of steps for the MS solver (choose 5):
+nr_steps = 5
+
+#### energies (eV): E1 > E3 > E2 Optical transition is 3->2 TUNNELING transition is 1->3
+## E1 = 0.1641002581
+Energies = 0.1641     0.15931     0.16256     0.14641     0.14091      0.1082     0.10341
+O13 = -1.3E-3
+
+# Injector, upper laser level, lower laser level and depop level index specifier  
+INJ  = 2 
+ULL = 3
+LLL = 4  
+DEPOP = 7
+
+# scattering rates matrix in linear form
+# for NLVL levels Wmtx((i-1)*NLVL+j) gives the outscattering rate from level i to level j, where i,j = 1,2... NLVL
+# Wmtx = [0     0.79044    0.063889   0.0011547  0.00091321   0.0017835   0.0028863     0.36052  0    0.010895  0.00058931  0.00030939   0.0010773   0.0015036     0.06706    0.032079     0     0.10961     0.15087    0.046763    0.059051    0.016054     0.02008    0.060975  0     0.60012     0.74497  1.008    0.010269   0.0116    0.024713     0.31441  0     0.52349   1.1157   0.0016258   0.0020183   0.0010601   0.0022287   0.0012179           0     0.79044   0.0011697   0.0014309  0.00076994  0.00068228   0.0025436     0.36052           0]
+Wmtx = [0	0.7805	0.0345	0.0018	0.0021	0.0022	0.0028 0.381	0	0.0271	0.0015	0.0012	0.0016	0.002 0.0485	0.0647	0	0.1244	0.2098	0.0979	0.0902 0.0247	0.0321	0.0512	0	0.4996	1.4873	1.1121 0.0199	0.0313	0.0383	0.2432	0	0.4153	0.7922 0.0016	0.0026	0.0019	0.0111	0.0029	0	0.7805 0.0011	0.0016	0.0013	0.0022	0.0051	0.381	0]

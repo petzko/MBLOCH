@@ -1,0 +1,59 @@
+#shall I include spatial hole burning or not
+shb = 1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N = 2500 
+
+#diffusion constant in cm^2/sec
+D = 46
+
+#dispersion constant in [ps^2/mm]! 
+disp = +0.125
+
+#cavity length (mm) 
+Ltot = 5
+
+#period length [nm]
+Lp = 54.8
+
+#doping density in [cm^-3]
+dN = 1.9E16
+
+#doping region thickness [nm] (set equal to Lp if average doping density is known)
+Ld = 16.2;
+
+#mode overlap factor [dimensionless]
+Overlap = 0.85
+
+#refractive index
+n = 3.6
+
+####dipole mtx elements (in C-nm)
+zUL = 3.6
+
+#pure dephasing on/off
+deph = 1
+
+
+#pure dephasing  time for the inj -> lll and ull->lll transition[ps]
+Tdeph_1 = 1.0
+#pure dephasing  time for the inj -> ull transition[ps]
+Tdeph_2 = 0.5 
+#cavity loss in 1/cm; 
+loss = 10
+
+
+################# simuation parameters #################
+
+#number of round trips to be simulated (dimensionless)
+simRT = 500; 
+#how many iterations should the program plot on;
+plotCtr = 5000
+#number of round trips to record the data for (should be smaller than the total simRT);
+recordRT = 500
+#number of steps for the MS solver (choose 5):
+nr_steps = 5
