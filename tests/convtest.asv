@@ -1,0 +1,111 @@
+
+clear;clc;
+%analytic solution to our problem...
+%%%%%%%%%% Spatial error order measurement
+
+w = 4;
+clear;clc;
+%analytic solution to our problem...
+%%%%%%%%%% Spatial error order measurement
+v = +1;
+k = w/v;
+a = 0;
+b = 3;
+%analytic solution to our problem...
+constant = 1.5;
+u_analitic = @(x,t) (x*t.*exp(1i*(k*x-w*t)) + constant);
+f = @(x,t) (x + v*t).*exp(1i*(k*x-w*t));
+f_t = @(x,t) v*exp(1i*(k*x-w*t)) - 1i*w*(x+v*t).*exp(1i*(k*x-w*t));
+f_x = @(x,t) exp(1i*(k*x-w*t)) + 1i*k*(x+v*t).*exp(1i*(k*x-w*t));
+% u_analitic = @(x,t) (sin(2*pi*(x-t)));
+% f = @(x,t) 0*x;
+% f_t = @(x,t) 0*x;
+% f_x = @(x,t) 0*x;
+plot_ctr = 1;
+tend = 1;
+% which convergence criteria to measure
+x_measure = 1 ; t_measure = -1;
+
+%% dx- convergence general setup
+if(x_measure > 0)
+    
+    %%%%%%%%%%%%%%%
+    orderend = 1;
+    N_init = 64;
+    sizes(1) = N_init;
+    for i =2:orderend
+        sizes(i) = 2*sizes(i-1);
+    end
+    N_end = sizes(end);
+    sizes = sizes';
+    % simulation
+
+    %arrays to store the global error for euler and lax method for each dx configuration
+    dx_error_samples = zeros(orderend,1);
+    
+    dt = 1.1*((b-a)/sizes(end))/abs(v);
+    for order = 1:orderend
+        %% for loop dx - convergence
+        
+        display(['space error measurement : order = ' num2str(order)]);
+        N = sizes(order); % nr of grid points
+        display(['nr of grid points ' num2str(N)]);
+        x = linspace(a,b,N);
+        dx = x(2)-x(1);
+        
+    % simulation 
+    
+    %arrays to store the global error for euler and lax method for each dx configuration
+    dx_error_samples = zeros(orderend,1); 
+    compute_times = zeros(orderend,1);
+        %% for loop dx - convergence
+
+        display(['space error measurement : order = ' num2str(order)]);        
+        N = sizes(order); % nr of grid points        x = linspace(a,b,N);
+        dx = x(2)-x(1);
+        dt = 1.0*dx/abs(v);
+        
+        [ M, N ] = size(x);
+        N = max(M,N);
+        y_analytic = u_analitic(x,0);
+        u_euler = u_analitic(x,0);
+        %initialize lax and some parameters... x
+        u_num = u_analitic(x,0);
+        solver = RNFDSolver(N,dx,v/abs(v),abs(v), u_num);
+        t = dt;
+        ctr = 1;
+        num_err = 0;
+
+        while(t <= tend)
+        %% main loop dx convergence... 
+            if(mod(ctr,1000) == 0)
+                plot(x,real(u_num),'g',x,real(y_analytic),'--b');
+%                 axis([a b -1 1])
+%                 legend('lax-wendroff ','euler','analytic sol');
+
+                title(['accuracy comparison: @ t = ' num2str(t)])
+                getframe;
+            end
+            
+            num_err(ctr) = 0;
+            %analytic solution
+
+            y_analytic = u_analitic(x,t);
+            u_num = solver.make_step(f(x,t-dt),f_t(x,t-dt),0*ones(N,1),dt);
+            if(v < 0)
+                u_num = solver.set_bdry('no',y_analytic(end));
+            else
+                u_num = solver.set_bdry(y_analytic(1),'no');
+            end
+            %error estimate
+            num_err(ctr) =norm(u_num - y_analytic);
+            compute_time_order = compute_time_order + toc;
+            t = t+dt;
+            ctr = ctr+1;
+        end
+        %store the maximum errors...
+        dx_error_samples(order,:) = [max(num_err)];
+        
+    end
+    end
+end

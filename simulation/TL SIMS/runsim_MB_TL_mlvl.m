@@ -47,18 +47,16 @@ c_0 = Constants('c',{'time',tch},{'length',lch});
 Ltot = settings.Ltot; % mm
 
 %phase velocity inside the medium ( in mm per picosecond ... )
-n = settings.n;  c = c_0/n; T_R = 2*Ltot/c; f_R = 1/T_R;
+nTHz = settings.nTHz;  c = c_0/nTHz; T_R = 2*Ltot/c; f_R = 1/T_R;
+nRF  = settings.nRF; 
 
 %%%%dipole mtx elements (in Cnm)
 zUL = settings.zUL;
 % hbar in eV-ps
 hbar = Constants('hbar',{'time',tch})/Constants('q0');
 
-if abs(HTB(1,3))>abs(HTB(2,3))
-    INJ = 1; IGNORELEVEL = 7; DEPOP = 6;
-else
-    INJ =2; IGNORELEVEL = 6; DEPOP = 7;
-end
+INJ = 1; IGNORELEVEL = 7; DEPOP = 6;
+
 ULL = 3; LLL = 4;
 
 if (settings.shb > 0)
@@ -76,7 +74,9 @@ Overlap = settings.Overlap;  % overlap factor -> dimensionless
 %the overall electron population inside the system-> a quantity that shall
 %be perserved throughout the whole simulaiton ! !
 
-trace_rho = ((E0*1E12*Ncarriers*Overlap*((zUL*1E-9*Constants('q0'))^2))/(Constants('eps0')*n*Constants('c')*Constants('hbar')))/(1/(lch*tch));
+E0 =  3.8*2*pi;%(E32+E12)/2; % central OPTICAL frequency.
+
+trace_rho = ((E0*1E12*Ncarriers*Overlap*((zUL*1E-9*Constants('q0'))^2))/(Constants('eps0')*nTHz*Constants('c')*Constants('hbar')))/(1/(lch*tch));
 
 %cavity loss l_0 in (cm^-1) --> l_0*100 in (m^-1) --> 1 mm^-1
 l_0 = settings.loss*100/(1/lch);
@@ -102,6 +102,21 @@ if(init > 0)
     
     
     clc;
+    %%% transmission line params
+    % transmission line params:
+    bias = 11/1E1; %initial bias in kV/mm;
+    mag = bias*1E-1;
+    v_0 =@(tm) bias + mag*sin(2*pi*1/T_R*tm);
+    v_TL_new = v_0(0)*ones(N,1); % transmission line voltage per unit length (in units kV/mm);
+    
+    
+    NLVLS = 7; %nr of levels to consider !
+    idx_rest = setdiff(1:NLVLS,[INJ,ULL,LLL,DEPOP,IGNORELEVEL]);
+    N_rest = length(idx_rest); %take the number of residual levels!
+    G = zeros(settings.N,NLVLS);
+    
+ 
+    
     x_0 = Ltot/7; tp =1;
     aE_in = @(z,time) exp(-(time-(z-x_0)/c).^2/tp^2);
     
@@ -171,23 +186,8 @@ if(init > 0)
     U_solver = RNFDSolver(N,dx,+1,c, U);
     V_solver = RNFDSolver(N,dx,-1,c,V);
     
+       v_TL_old = v_TL_new;
     
-    %%% transmission line params
-    % transmission line params:
-    bias = 11/1E1; %initial bias in kV/mm;
-    mag = bias*1E-1;
-    v_0 =@(tm) bias + mag*sin(2*pi*1/T_R*tm);
-    v_TL_new = v_0(0)*ones(N,1); % transmission line voltage per unit length (in units kV/mm);
-    
-    
-    NLVLS = 7; %nr of levels to consider !
-    
-    idx_rest = setdiff(1:NLVLS,[INJ,ULL,LLL,DEPOP,IGNORELEVEL]);
-    N_rest = length(idx_rest); %take the number of residual levels!
-    G = zeros(settings.N,NLVLS);
-    v_TL_old = v_TL_new;
-    
-    J_TL = zeros(N,1); % QCL curr density (in units A/mm^2)
     rates = zeros(N,1); rates_t = zeros(N,1);
     %%% curr density calculation:
     rates = (r110).*W_fit{INJ,DEPOP}(v_TL_new) + (r220).*W_fit{LLL,DEPOP}(v_TL_new) + (r330).*W_fit{ULL,DEPOP}(v_TL_new);
@@ -199,8 +199,10 @@ if(init > 0)
     %convert the curr density in A/m^2 into A/mm^2 by dividing by 1E6;
     J_TL = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates)/1E6; %in A/mm^2
     v_tmp = v_TL_new;
-    eps_ch = 1E15*Constants('eps0');    mu_ch  = 1E3*Constants('mu0');
+    eps_ch = 1E15*Constants('eps0');   
+    mu_ch  = 1E3*Constants('mu0');
     %%%
+    
     
 end
 
@@ -284,7 +286,7 @@ while(t< tEnd)
     
     
     if(mod(iter_ctr+1,checkptIter) == 0 )
-        checkptname = ['CHCKPT_' settings.name '_' settings.scenario '_N_' num2str(settings.N) '_FP'];
+        checkptname = ['CHCKPT_' settings.name '_' settings.scenario '_N_TRANSMISSION_LINE_' num2str(settings.N) '_FP'];
         save(checkptname);
     end
     
@@ -297,7 +299,7 @@ while(t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-        plot(x,[abs(U),abs(V)]);
+        plotyy(x,[abs(U),abs(V)],x,v_TL_new);
         getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
@@ -332,7 +334,7 @@ while(t< tEnd)
     
     %%%%%% BLOCH PART %%%%%%
     %%%% POPULATIONS
-    r110_t = 1i*O13.*(r130-conj(r130)) +((W_fit{ULL,INJ}(v_TL_new) + W_fit{ULL,DEPOP}(v_TL_new)).*r330 + ( W_fit{LLL,INJ}(v_TL_new)+W_fit{LLL,DEPOP}(v_TL_new) ).*r220 - G(:,INJ).*r110;
+    r110_t = 1i*O13.*(r130-conj(r130)) +(W_fit{ULL,INJ}(v_TL_new) + W_fit{ULL,DEPOP}(v_TL_new)).*r330 + ( W_fit{LLL,INJ}(v_TL_new)+W_fit{LLL,DEPOP}(v_TL_new) ).*r220 - G(:,INJ).*r110;
     for p = 1:N_rest
         p_glob_idx = idx_rest(p);
         r110_t = r110_t + (W_fit{p_glob_idx,INJ}(v_TL_new)+W_fit{p_glob_idx,DEPOP}(v_TL_new)).*populations(:,p);
@@ -423,7 +425,9 @@ while(t< tEnd)
     J_TL = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates)/1E6; %in A/mm^2
     J_TL_t = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates_t)/1E6;
     
-    v_tmp(2:end-1) = v_TL_new(3:end)+v_TL_new(1:end-2)-v_TL_old(2:end-1)-dt^2/eps_ch/n^2*J_TL_t(2:end-1);
+%     v_tmp(2:end-1) = v_TL_new(3:end)+v_TL_new(1:end-2)-v_TL_old(2:end-1)-dt^2/eps_ch/nTHz^2*J_TL_t(2:end-1);
+    
+    v_tmp(2:end-1) = 2*v_TL_new(2:end-1)-v_TL_old(2:end-1) + (nTHz/nRF)^2.*(v_TL_new(3:end)-2*v_TL_new(2:end-1)+v_TL_new(1:end-2))- dt^2/eps_ch/nRF^2*J_TL_t(2:end-1); 
     
     %set bdry conditions for v at right end! 
     v_tmp(end) = v_tmp(end-1); v_tmp(1) = v_0(t); 
@@ -468,4 +472,3 @@ end
 savename = [settings.name '_' settings.scenario '_N_' num2str(settings.N) '_FP_' num2str(settings.simRT) ];
 save(savename);
 end
-
