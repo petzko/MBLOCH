@@ -17,9 +17,8 @@ if(length(varargin)>0)
             init = val;
         else if strcmp(name,'workspace')
                 %regexp to load all variables except init!
-                load(val,'-regexp','^(?!.*init.*).*$');
-                
-                
+            load(val,'-regexp','-regexp','^(?!(init|scenarioFile|simDataFile|varargin)$).');
+   
             else
                 display( ['Unknown input option name: ' name '. Aborting!' ]);
                 return;
@@ -46,7 +45,8 @@ c_0 = Constants('c',{'time',tch},{'length',lch});
 Ltot = settings.Ltot; % mm
 
 %phase velocity inside the medium ( in mm per picosecond ... )
-n = settings.n;  c = c_0/n; T_R = 2*Ltot/c; f_R = 1/T_R;
+nTHz = settings.nTHz;
+c = c_0/nTHz; T_R = 2*Ltot/c; f_R = 1/T_R;
 
 %%%%dipole mtx elements (in Cnm)
 zUL = settings.zUL;
@@ -129,7 +129,7 @@ Overlap = settings.Overlap;  % overlap factor -> dimensionless
 %the overall electron population inside the system-> a quantity that shall
 %be perserved throughout the whole simulaiton ! !
 
-trace_rho = ((E0*1E12*Ncarriers*Overlap*((zUL*1E-9*Constants('q0'))^2))/(Constants('eps0')*n*Constants('c')*Constants('hbar')))/(1/(lch*tch));
+trace_rho = ((E0*1E12*Ncarriers*Overlap*((zUL*1E-9*Constants('q0'))^2))/(Constants('eps0')*nTHz*Constants('c')*Constants('hbar')))/(1/(lch*tch));
 
 %cavity loss l_0 in (cm^-1) --> l_0*100 in (m^-1) --> 1 mm^-1
 l_0 = settings.loss*100/(1/lch);

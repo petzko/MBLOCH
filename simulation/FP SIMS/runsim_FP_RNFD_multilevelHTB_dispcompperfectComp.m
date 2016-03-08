@@ -17,7 +17,7 @@ if(length(varargin)>0)
             init = val;
         else if strcmp(name,'workspace')
                 %regexp to load all variables except init!
-                load(val,'-regexp','^(?!.*init.*).*$');
+            load(val,'-regexp','-regexp','^(?!(init|scenarioFile|simDataFile|varargin)$).');
                 
                 
             else

@@ -3,7 +3,7 @@ clear;clc;
 %analytic solution to our problem...
 %%%%%%%%%% Spatial error order measurement
 
-w = 4;
+w = 16;
 v = +1;
 
 k = w/v;
@@ -23,8 +23,8 @@ x_measure = 1 ; t_measure = -1;
 if(x_measure > 0)
     
     %%%%%%%%%%%%%%%
-    orderend = 8;
-    N_init = 64;
+    orderend = 4;
+    N_init = 512;
     sizes(1) = N_init;
     for i =2:orderend
         sizes(i) = 2*sizes(i-1);
@@ -54,7 +54,7 @@ if(x_measure > 0)
         num_err = 0;
         
         while(t <= tend)
-            if(mod(ctr,1000) == 0)
+            if(mod(ctr,500) == 0)
                 plot(x,real(u_num),'g',x,real(y_analytic),'--b');
                 title(['Numerical and analytic solution @ t = ' num2str(t)])
                 getframe;
@@ -73,7 +73,7 @@ if(x_measure > 0)
             end
             
             %error estimate
-            num_err(ctr) =norm(u_num - y_analytic);
+            num_err(ctr) =max(abs(u_num - y_analytic));
             t = t+dt;
             ctr = ctr+1;
         end
@@ -82,6 +82,6 @@ if(x_measure > 0)
         
     end
 end
-
+dx_error_samples
 plot(2:orderend,dx_error_samples(1:end-1)./dx_error_samples(2:end))
 

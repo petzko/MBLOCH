@@ -34,7 +34,7 @@ Ld = 16.2;
 Overlap = 0.85
 
 #refractive index
-n = 3.6
+nTHz = 3.6
 
 #pure dephasing on/off
 deph = 1

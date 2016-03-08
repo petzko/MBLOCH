@@ -1,11 +1,10 @@
 clear; close all; clc;
-in_folder = 'MB Inputs';  sim_folder = 'FP SIMS';  exec_folder = sim_folder; 
-
+in_folder = '..\MB Inputs';  
 init = -1;
 
 simfiles = {'mlvl_11p0.sim'};
 scenariofiles = {'standarddeph.set'};
-executables = {runsim_FP_RNFD_multilevelHTB_quadphase,@runsim_FP_RNFD_multilevelHTB_dispcompperfectComp,@runsim_FP_RNFD_multilevelHTB};
+executables = {@runsim_FP_RNFD_multilevelHTB_quadphase,@runsim_FP_RNFD_multilevelHTB_dispcompPHASE,@runsim_FP_RNFD_multilevelHTB};
 workspacefiles  = {...
 'qcl183s(MLVL,11kVpCm)_(standard-SHB)_WITH_QUADRATIC_PHASE_N_4000_FP_RT_1000.mat',...
 'qcl183s(MLVL,11kVpCm)_(standard-SHB)_WITH_phase_compensation_after500_N_4000_FP_RT_1000.mat',...
@@ -17,7 +16,7 @@ Nk =length(executables);
 
 workers = Ni*Nj*Nk;
 
-% spmd(workers)
+spmd(workers)
     tidx = labindex;    
     i = floor((tidx-1)/((Nj)*(Nk)))+1; 
     j = floor(((tidx-1)-(i-1)*Nj*Nk)/Nk)+1;
@@ -26,4 +25,5 @@ workers = Ni*Nj*Nk;
     scenariofile = [in_folder '\' scenariofiles{j}];
     executable =  executables{k};
     savename = executable(scenariofile,simfile,'init',init,'workspace',workspacefiles{tidx});
-% end
+
+end

@@ -34,7 +34,7 @@ Ld = 16.2;
 Overlap = 0.8
 
 #refractive index
-n = 3.6
+nTHz = 3.6
 
 #pure dephasing on/off
 deph = 1
@@ -51,10 +51,10 @@ loss = 10
 ################# simuation parameters #################
 
 #number of round trips to be simulated (dimensionless)
-simRT = 1000; 
+simRT = 5000; 
 #how many iterations should the program plot on;
 plotCtr = 5000
 #number of round trips to record the data for (should be smaller than the total simRT);
-recordRT = 1000
+recordRT = 5000
 #number of steps for the MS solver (choose 5):
 nr_steps = 5
