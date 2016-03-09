@@ -314,8 +314,8 @@ while(t< tEnd)
         intensity = U.*conj(U) + V.*conj(V) ;
         info.maxInt  =  max(intensity);
         printINFO(info);
-        plot(x,real(U),x,real(V));
-        getframe;
+      %  plot(x,real(U),x,real(V));
+      %  getframe;
     end
     
     %%%% obtain the field, field intensity and the total population at position "idx" ...

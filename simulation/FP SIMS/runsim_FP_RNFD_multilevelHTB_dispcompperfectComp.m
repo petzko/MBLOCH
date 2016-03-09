@@ -286,8 +286,8 @@ while(t< tEnd)
         intensity = U.*conj(U) + V.*conj(V) ;
         info.maxInt  =  max(intensity);
         printINFO(info);
-        plotyy(x,[real(U),real(V)],x,[r110,r330,r220]);
-        getframe;
+       % plotyy(x,[real(U),real(V)],x,[r110,r330,r220]);
+       % getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     

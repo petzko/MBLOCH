@@ -22,7 +22,7 @@ NFFTfunc = @(elem) 2^nextpow2(8*elem);
 
 %% Prep data:
 %%% get the time domain envelope from the desired rtrips.
-rt_start = 500; rt_end =995;
+rt_start = 500; rt_end =2495;
 
 Dt = dt*iterperrecord;  iter_per_rt = round(T_R/Dt);
 A_t = E_p(rt_start*iter_per_rt+1:rt_end*iter_per_rt)+E_m(rt_start*iter_per_rt+1:rt_end*iter_per_rt);

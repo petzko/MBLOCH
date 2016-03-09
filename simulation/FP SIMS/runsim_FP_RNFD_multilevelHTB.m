@@ -270,8 +270,8 @@ while(t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-        plot(x,[abs(U),abs(V)]);
-        getframe;
+%         plot(x,[abs(U),abs(V)]);
+%         getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     

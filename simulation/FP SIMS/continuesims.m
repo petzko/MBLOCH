@@ -25,5 +25,4 @@ spmd(workers)
     scenariofile = [in_folder '\' scenariofiles{j}];
     executable =  executables{k};
     savename = executable(scenariofile,simfile,'init',init,'workspace',workspacefiles{tidx});
-
 end
