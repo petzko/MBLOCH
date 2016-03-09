@@ -35,10 +35,10 @@ Overlap = 0.8
 
 #refractive index
 nTHz = 3.6
-nRF = 4.0
+nRF = 4
 
 #modulation amplitude factor 
-modA = 1/12
+modA = 1/20
 
 #modulation frequency factor as a fraction of the RT freq. 
 modF = .95;
