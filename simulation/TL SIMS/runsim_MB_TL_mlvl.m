@@ -299,8 +299,8 @@ while(t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-        plotyy(x,[abs(U),abs(V)],x,v_TL_new);
-        getframe;
+%         plotyy(x,[abs(U),abs(V)],x,v_TL_new);
+%         getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     

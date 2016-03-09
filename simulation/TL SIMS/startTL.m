@@ -7,7 +7,7 @@ init = +1;
 simfiles = {'mlvl_11p0.sim'};
 % scenariofiles = {'weakdeph.set','standarddeph.set','strongdeph.set'};
 % executables = {@runsim_FP_RNFD_multilevelHTB_quadphase,@runsim_FP_RNFD_multilevelHTB_dispcompperfectComp};
-scenariofiles = {'standardTL.set'};
+scenariofiles = {'TL04.set','TL05.set','TL06.set'};
 
 
 Ni = length(simfiles); 
@@ -16,7 +16,7 @@ Nk = 1;
 
 workers = Ni*Nj*Nk;
 
-% spmd(workers)
+spmd(workers)
     tidx = labindex;    
     i = floor((tidx-1)/((Nj)*(Nk)))+1; 
     j = floor(((tidx-1)-(i-1)*Nj*Nk)/Nk)+1;
@@ -24,4 +24,4 @@ workers = Ni*Nj*Nk;
     simfile = [in_folder '/' simfiles{i}];
     scenariofile = [in_folder '/' scenariofiles{j}];
     savename = runsim_MB_TL_3lvl(scenariofile,simfile,ratesfile,'init',init);
-% end
+end

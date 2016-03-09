@@ -185,7 +185,7 @@ if(init > 0)
     
     rates = zeros(N,1);     rates_t = zeros(N,1);
     %%% curr density calculation:
-    rates = (r110).*W{INJ,DEPOP}(v_TL_new) + (r220).*W{LLL,DEPOP}(v_TL_new) + (r330).*W{ULL,DEPOP}(v_TL_new);
+    rates = (r110).*W(INJ,DEPOP) + (r220).*W(LLL,DEPOP) + (r330).*W(ULL,DEPOP);
       
     %convert the curr density in A/m^2 into A/mm^2 by dividing by 1E6;
     J_TL = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates)/1E6; %in A/mm^2
@@ -272,7 +272,7 @@ while(t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,100) == 0)
+    if(mod(iter_ctr,plotCtr) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = t/T_R;
@@ -349,15 +349,15 @@ while(t< tEnd)
     if(settings.shb > 0 )
         
         %%% r11+
-        r11p_t = 1i*O13.*(r13p-conj(r13m)) + (W{ULL,INJ}(v_TL_new)+W{ULL,DEPOP}(v_TL_new)).*r33p+ (W{LLL,INJ}(v_TL_new)+W{LLL,DEPOP}(v_TL_new)).*r22p - (G(:,INJ)+diffusion).*r11p;
+        r11p_t = 1i*O13.*(r13p-conj(r13m)) + (W(ULL,INJ)+W(ULL,DEPOP)).*r33p+ (W(LLL,INJ)+W(LLL,DEPOP)).*r22p - (G(INJ)+diffusion).*r11p;
         r11p_solver.make_step(r11p_t,dt);
         
         %%% r33+
-        r33p_t = 1i*O13.*(conj(r13m)-r13p)+1i/2*(conj(V).*(n32p) -(U).*conj(n32m)) +  W{INJ,ULL}(v_TL_new).*r11p + W{LLL,ULL}(v_TL_new).*r22p - (G(:,ULL)+diffusion).*r33p;
+        r33p_t = 1i*O13.*(conj(r13m)-r13p)+1i/2*(conj(V).*(n32p) -(U).*conj(n32m)) +  W(INJ,ULL)*r11p + W(LLL,ULL)*r22p - (G(ULL)+diffusion)*r33p;
         r33p_solver.make_step(r33p_t,dt);
         
         %%% r22+
-        r22p_t = -1i/2*(conj(V).*(n32p) -(U).*conj(n32m)) + W{INJ,LLL}(v_TL_new).*r11p + W{ULL,LLL}(v_TL_new).*r33p - (G(:,LLL)+diffusion).*r22p;
+        r22p_t = -1i/2*(conj(V).*(n32p) -(U).*conj(n32m)) + W(INJ,LLL)*r11p + W(ULL,LLL).*r33p - (G(LLL)+diffusion).*r22p;
         r22p_solver.make_step(r22p_t,dt);
         
         %%% r13+
@@ -372,7 +372,7 @@ while(t< tEnd)
      %%%%% Begin TRANSMISSION LINE EQUATIONS %%%%%%%%%%%%%
      
     %%% curr density derivative calculation:
-    rates = (r110).*W{INJ,DEPOP}(v_TL_new) + (r220).*W{LLL,DEPOP}(v_TL_new) + (r330).*W{ULL,DEPOP}(v_TL_new);
+    rates = (r110).*W(INJ,DEPOP) + (r220).*W(LLL,DEPOP) + r330.*W(ULL,DEPOP);
     %convert the curr density in A/m^2 into A/mm^2 by dividing by 1E6;
     J_TL = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates)/1E6; %in A/mm^2
     J_TL_t = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates_t)/1E6;
