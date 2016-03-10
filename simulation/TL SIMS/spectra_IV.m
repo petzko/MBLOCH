@@ -1,5 +1,5 @@
 %% clean clear and close stuff
-close all; clc; 
+close all; clc; clear;
 
 convention = 'physics';
 
@@ -20,9 +20,13 @@ NFFTfunc = @(elem) 2^nextpow2(4*elem);
 % apodizefunc = @(elem) ones(elem,1); 
 % NFFTfunc = @(elem) elem; 
 
+
+iterperrecord = 1;
 %% Prep data:
+load('CHCKPT_qcl183s(MLVL,11kVpCm)_(TL08)_N_TRANSMISSION_LINE_4000_FP.mat','E_p','E_m','V_TL_t','J_TL_t','dt','T_R','E0','f_R'); 
+
 %%% get the time domain envelope from the desired rtrips.
-rt_start = 20; rt_end = 100;
+rt_start = 20; rt_end = 100; 
 
 Dt = dt*iterperrecord;  iter_per_rt = round(T_R/Dt);
 A_t = E_p(rt_start*iter_per_rt+1:rt_end*iter_per_rt)+E_m(rt_start*iter_per_rt+1:rt_end*iter_per_rt);

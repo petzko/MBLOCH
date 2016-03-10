@@ -266,7 +266,7 @@ while(t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,plotCtr) == 0)
+    if(mod(iter_ctr,100) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = t/T_R;
@@ -275,11 +275,11 @@ while(t< tEnd)
         printINFO(info);
         
 
-%         subplot(2,1,1)
-%         plot(x,[abs(U),abs(V)]);
-%         subplot(2,1,2)
-%         plotyy(x,v_TL_new*10,x,J_TL);
-%         getframe;
+        subplot(2,1,1)
+        plot(x,[abs(U),abs(V)]);
+        subplot(2,1,2)
+        plotyy(x,v_TL_new*10,x,J_TL);
+        getframe;
 
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
@@ -369,18 +369,19 @@ while(t< tEnd)
      
     %%% curr density derivative calculation:
     rates = (r110).*W_fit{INJ,DEPOP}(v_TL_new) + (r220).*W_fit{LLL,DEPOP}(v_TL_new) + (r330).*W_fit{ULL,DEPOP}(v_TL_new);
-    %convert the curr density in A/m^2 into A/mm^2 by dividing by 1E6;
+    %convert the curr density from A/m^2 into A/mm^2 by dividing by 1E6;
     J_TL = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates)/1E6; %in A/mm^2
     J_TL_t = (Constants('q0')*(settings.Lp*1E-9)*Ncarriers/trace_rho*1E12*rates_t)/1E6;
     
     
     v_tmp(2:end-1) = 2*v_TL_new(2:end-1)-v_TL_old(2:end-1) + Acoeff*(v_TL_new(3:end)-2*v_TL_new(2:end-1)+v_TL_new(1:end-2)) - Bcoeff*J_TL_t(2:end-1); 
-        
-    v_tmp(1) = v_0(t); 
+
+% %     open circuit bdry cond:
+    v_tmp(1) = v_0(t); v_tmp(end) = v_tmp(end-1); 
     
-    %absorbing bdry cond:
-    v_tmp(end)= v_TL_new(end-1)+(nTHz-nRF)/(nTHz+nRF)*(v_tmp(end-1)-v_TL_new(end));
-    v_TL_old = v_TL_new; v_TL_new = v_tmp ;  
+% %     absorbing bdry cond:
+%     v_tmp(end)= v_TL_new(end-1)+(nTHz-nRF)/(nTHz+nRF)*(v_tmp(end-1)-v_TL_new(end));
+    v_TL_old = v_TL_new; v_TL_new = v_tmp;  
     
     %%%%% END TRANSMISSION LINE EQUATIONS %%%%%%%%%%%%%
     
