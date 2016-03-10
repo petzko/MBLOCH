@@ -266,7 +266,7 @@ while(t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,plotCtr) == 0)
+    if(mod(iter_ctr,plot) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = t/T_R;
