@@ -33,6 +33,7 @@ function [ const ] = Constants(name,varargin)
 % constants in SI units. 
 c = 2.99792458e+8;        % Speed of light in vacuum, m/s
 eps0 = 8.854187817e-12;   % Electric constant, F/m (or Coulomb^2/Joules) 
+mu0  = 4*pi*1E-7;         % permeability in H/m 
 hbar = 1.05457266e-34;    % Planck constant/(2*pi), J-s 
 q0 = 1.60217733e-19;     % Elementary charge Coulombs
 me = 9.1093897e-31;       % Electron mass, kg
@@ -51,6 +52,7 @@ kb = 1.380658e-23;         % Boltzmann constant, J/Kelvin
         lch = argi{2};
         c = c/lch;
         eps0 = eps0/1/lch; % F/lch
+        mu0 = mu0/1/lch; %H/lch
        end
        
        if(strcmp(argi{1},'mass'))
@@ -67,6 +69,7 @@ kb = 1.380658e-23;         % Boltzmann constant, J/Kelvin
 if(strcmp(name,''))
  const.c =c ;        % Speed of light in vacuum, m/s
  const.eps0 = eps0;   % Electric constant, F/m (or Coulomb^2/Joules) 
+ const.mu0 = mu0;     % permeability in H/m 
  const.hbar = hbar;    % Planck constant/(2*pi), J-s 
  const.q0 = q0;     % Elementary charge Coulombs
  const.me = me;       % Electron mass, kg
@@ -78,6 +81,9 @@ else
     end
     if(strcmp(name,'eps0'))
         const = eps0;
+    end
+    if(strcmp(name,'mu0'))
+        const = mu0;
     end
     if(strcmp(name,'hbar'))
         const = hbar; 

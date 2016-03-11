@@ -1,7 +1,7 @@
 mkdir(['OUTPUT/' num2str(Biasbase) ])
-PSIname = ['OUTPUT/' num2str(Biasbase) '/WFs_at_' num2str(Biasbase) '_kVpcm.txt']; 
-ENname = ['OUTPUT/' num2str(Biasbase) '/ENs_at_' num2str(Biasbase) '_kVpcm.txt'];
-Potname = ['OUTPUT/' num2str(Biasbase) '/POT_at_' num2str(Biasbase) '_kVpcm.txt'];
+PSIname = ['OUTPUT/' num2str(Biasbase) '/WFs_at_' num2str(Biasbase) '_kVpcm(07.08.2015).txt']; 
+ENname = ['OUTPUT/' num2str(Biasbase) '/ENs_at_' num2str(Biasbase) '_kVpcm(07.08.2015).txt'];
+Potname = ['OUTPUT/' num2str(Biasbase) '/POT_at_' num2str(Biasbase) '_kVpcm(07.08.2015).txt'];
 
 x_all = [];  wf_all = []; E_all = []; 
 skipsize = 3;  dz = 0.3;
@@ -36,7 +36,7 @@ for p = 1:length(selector)
         E_all = [E_all Ens(wfs(i),p)]; 
         x_all = [x_all ; x_neg(1:skipsize:end) ];
         wf_all = [wf_all ; TB_A(1:skipsize:end,wfs(i),p) ];
-        plot(x_neg(1:skipsize:end),abs(TB_A(1:skipsize:end,wfs(i),p)).^2 + Ens(wfs(i),p),'Linewidth',2.0,'color',colors(wfs(i),:));
+%         plot(x_neg(1:skipsize:end),abs(TB_A(1:skipsize:end,wfs(i),p)).^2 + Ens(wfs(i),p),'Linewidth',2.0,'color',colors(wfs(i),:));
     end
 end
 

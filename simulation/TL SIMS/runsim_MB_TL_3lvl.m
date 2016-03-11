@@ -266,7 +266,7 @@ while(t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,plotCtr) == 0)
+    if(mod(iter_ctr,2000) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = t/T_R;
@@ -275,11 +275,11 @@ while(t< tEnd)
         printINFO(info);
         
 
-%         subplot(2,1,1)
-%         plot(x,[abs(U),abs(V)]);
-%         subplot(2,1,2)
-%         plotyy(x,v_TL_new*10,x,J_TL);
-%         getframe;
+        subplot(2,1,1)
+        plot(x,[real(U),real(V)]);
+        subplot(2,1,2)
+        plotyy(x,v_TL_new*10,x,J_TL);
+        getframe;
 
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...

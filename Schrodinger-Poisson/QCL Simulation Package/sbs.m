@@ -1,4 +1,4 @@
-function sbs(outdir,efield,infile,nlevel,T,nonpar_flag)
+function [structure,dipoles,H] = sbs(outdir,efield,infile,nlevel,T,nonpar_flag)
 % sbs solves the energy states and the wave-functions
 % of quantum cascade laser
 % sbs - solve band structure
@@ -28,11 +28,10 @@ dx = 1e-10;                 % grid size in m
 
 %efield.direction = '<-';    % polarity of the external applied electric potential
 boundary = 'zero';          % boundary condition
+%  boundary = 'periodic';
 %nlevel = 20;                % number of eigenvalues/energy states
 guess = 1e-6;               % eigenvalues will be calculated closest to this value
 
-idpl = 12;                  % initial energy level for dipole calculation
-fdpl = 8;                   % final energy level for dipole calculation
 ilife = 2;                  % initial energy level for lifetime calculation
 flife = 1;                  % final energy level for lifetime calculation
 
@@ -49,8 +48,8 @@ errorcontrol_flag = 0;
 
 % Following flags control the calculation of
 % different parameters for the QCL.
-%nonpar_flag = 1;
-dipole_flag = 0;
+% nonpar_flag = 1;
+dipole_flag = 1;
 neff_flag = 0;
 lifetime_flag = 0;
 dope_flag = 0;
@@ -188,11 +187,16 @@ end % end if dope_flag == 1
 
 %E
 
-% Dipole matrix element between two energy eigenvalues
-% i and f is calculated if dipole_flag is set to 1.
+dipoles = zeros(nlevel);
 if dipole_flag == 1
-    Psi = NormalizePsi(Psi,E,Egx,Vx,dx,2);
-    dplmtxelt = 1e10*abs(CalcDplMtxElt(E(idpl),E(fdpl),Psi(:,idpl),Psi(:,fdpl),Egx,Vx,mx))
+      Psi = NormalizePsi(Psi,E,Egx,Vx,dx,2);
+    for idpl = 1:nlevel
+        for fdpl = idpl+1:nlevel 
+            dipoles(idpl,fdpl) = 1e10*abs(CalcDplMtxElt(E(idpl),E(fdpl),Psi(:,idpl),Psi(:,fdpl),Egx,Vx,mx));
+            dipoles(fdpl,idpl) = dipoles(idpl,fdpl);
+        end
+    end
+    
 end
 
 % Effective refractive index for the quantum structure
@@ -223,7 +227,6 @@ if dipole_flag == 1
     fprintf(fid,'\n%s\n','Dipole matrix element');
     fprintf(fid,'    %s %2.0f %2.0f\n','Levels:',idpl,fdpl);
     fprintf(fid,'    %s %2.4f %s\n','Ei-Ef =',E(idpl)-E(fdpl),'eV');
-    fprintf(fid,'    %s %3.6f %s\n','<zif> =',dplmtxelt,'Angstrom');
 end
 if lifetime_flag == 1
     fprintf(fid,'\n%s\n','Lifetime');
@@ -293,3 +296,4 @@ fclose(fid);
 fid = fopen(strcat(outdir,'/','Infile.txt'),'w');
 fprintf(fid,'%s',infile);
 fclose(fid);
+H = A;

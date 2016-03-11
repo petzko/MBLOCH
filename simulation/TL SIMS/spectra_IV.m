@@ -23,7 +23,7 @@ NFFTfunc = @(elem) 2^nextpow2(4*elem);
 
 iterperrecord = 1;
 %% Prep data:
-load('CHCKPT_qcl183s(MLVL,11kVpCm)_(TL08)_N_TRANSMISSION_LINE_4000_FP.mat','E_p','E_m','V_TL_t','J_TL_t','dt','T_R','E0','f_R'); 
+load('CHCKPT_qcl183s(MLVL,11kVpCm)_(TL07)_N_TRANSMISSION_LINE_4000_FP.mat','E_p','E_m','V_TL_t','J_TL_t','dt','T_R','E0','f_R'); 
 
 %%% get the time domain envelope from the desired rtrips.
 rt_start = 20; rt_end = 100; 

@@ -28,9 +28,10 @@ function [Psi,E] = SolveEigWaves(A,nx,nlevel,guess)
 
 const = Constants();
 
-options.tol = 1e-12;
+options.tol = 1E-12;
 options.disp = 0;           % suppress output
 
+%note that the WFs are accurate up to a random phase!
 [v,d] = eigs(A,speye(size(A)),nlevel,guess,options);
 
 E = diag(d)/(2/const.hbar^2);  % energy levels in joules

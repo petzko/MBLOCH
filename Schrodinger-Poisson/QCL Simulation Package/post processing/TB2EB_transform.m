@@ -97,7 +97,7 @@ for i = 2:length(x_fin)
     end
 end
 figure;
-plot(x_fin,V_fin,'Linewidth',2.0,'color','k'); hold on; plot(x_fin,Vtb,'--r','Linewidth',2.0); xlim([x_fin(1),x_fin(end)])
+% plot(x_fin,V_fin,'Linewidth',2.0,'color','k'); hold on; plot(x_fin,Vtb,'--r','Linewidth',2.0); xlim([x_fin(1),x_fin(end)])
 hold on; 
 
 %now interpolate the WFs onto the final grid! 
@@ -111,22 +111,7 @@ for p =1:Nper
 for i = 1:NrWF
         TB_WF2(:,i,p) = interp1(xTB1-dLp/2+(p-1)*(Lp),TB_WF1(:,i),x_fin,'linear',0);
         Ens(i,p) = Energies(i)+(p-1)*Lp*Bias;
-        plot(x_fin,abs((TB_WF2(:,i,p))).^2+Ens(i,p),'-','Linewidth',2);
+%         plot(x_fin,abs((TB_WF2(:,i,p))).^2+Ens(i,p),'-','Linewidth',2);
 end
 end
 
-
-% %with 1 position and reset the first point = hb! 
-% % Vtb = circshift(Vtb,1);   Vtb(1) = hb;
-% 
-% figure; 
-% plot(x_fin,V_fin,'Linewidth',1.0); hold on; plot(x_fin,Vtb,'--r','Linewidth',1.0); plot(x_fin,(V_fin-Vtb),'-b','Linewidth',1.0);
-% %V+(5,1)
-% plot(x_fin,abs(TB_WF2(:,5,central_per)).^2,'-','Linewidth',1);
-% plot(x_fin,abs(TB_WF2(:,1,central_per+1)).^2,'-','Linewidth',1);
-% %V-(1,5);
-% plot(x_fin,abs(TB_WF2(:,1,central_per)).^2,'-','Linewidth',1);
-% plot(x_fin,abs(TB_WF2(:,5,central_per-1)).^2,'-','Linewidth',1);
-% % dV = V_fin-Vtb;
-% 
-% 

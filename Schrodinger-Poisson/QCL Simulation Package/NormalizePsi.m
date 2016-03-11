@@ -20,7 +20,6 @@ function Psi = NormalizePsi(Psi,E,Egx,Vx,dx,type)
 
 % Author - Muhammad Anisuzzaman Talukder (anisuzzaman@umbc.edu)
 %--------------------------------------------------------------
-
 nlevel = length(E);
 nx = length(Psi(:,1));
 

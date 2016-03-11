@@ -7,7 +7,7 @@ for i = 1:length(files)-1
     fname = files(i).name;
     if(strfind(fname,'WF'))  
     
-        fid = fopen([folder '\' fname],'r'); 
+        fid = fopen(fname,'r'); 
         %get first line -> number of WFs 
         tline = fgetl(fid);
         NrWF = str2num(tline); 

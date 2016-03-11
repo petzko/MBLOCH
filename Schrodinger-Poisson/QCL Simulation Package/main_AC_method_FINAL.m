@@ -9,12 +9,14 @@
 
 clear;
 close all;
-bias = 11;
-AC_energies = zeros(length(bias),2); 
+bias = 9:.1:12;
 const = Constants();
 nper = 3;
-dEnergies = zeros(length(bias),3); 
-H_TB = zeros(7,7,length(bias)); 
+
+AC_energies = zeros(length(bias),2);
+Energies = zeros(length(bias),7);
+
+H_TB = zeros(7,7); 
 
 ctr =1; 
 for b = bias
@@ -147,7 +149,7 @@ for b = bias
         dV(:,3) = VL+V0-Vd_R;
         
         [Hext,D,S] = calculateHamiltonianNEW(Psi_periods,E_periods,dV,x);
-        VTB = Vtot(1)*(x<(Lp+CB_W))+ Vtot(1)*(x>=(2*Lp))+x*1E5*bias;
+        VTB = Vtot(1)*(x<(Lp+CB_W))+ Vtot(1)*(x>=(2*Lp))+x*1E5*b;
         
         indices01 = [7 6 5 4 3 2 1];
         indices02 = [12 11 10 9 8 7 6];
@@ -165,28 +167,29 @@ for b = bias
         end
         
         
-        INJ1 = 7 ; INJ2 = 6; ULL = 5; LLL1 = 4; LLL2 =3;
+        INJ1 = 7 ; INJ2 = 6; ULL = 5; LLL1 = 4; LLL2 =3; DEPOP1 = 2; DEPOP2 = 1; 
         
-        dEnergies(ctr,1) = Hext(INJ1,INJ1)-Hext(ULL,ULL); 
-        dEnergies(ctr,2) = Hext(INJ2,INJ2)-Hext(ULL,ULL); 
-        dEnergies(ctr,3) = Hext(INJ1,INJ1)-Hext(INJ2,INJ2); 
-        dEnergies(ctr,4) = Hext(ULL,ULL)-Hext(LLL1,LLL1); 
-        dEnergies(ctr,5) = Hext(ULL,ULL)-Hext(LLL2,LLL2); 
-
         
-              
+        Energies(ctr,1) = Hext(INJ1,INJ1); 
+        Energies(ctr,2) = Hext(INJ2,INJ2); 
+        Energies(ctr,3) = Hext(ULL,ULL); 
+        Energies(ctr,4) = Hext(LLL1,LLL1); 
+        Energies(ctr,5) = Hext(LLL2,LLL2); 
+        Energies(ctr,6) = Hext(DEPOP1,DEPOP1); 
+        Energies(ctr,7) = Hext(DEPOP2,DEPOP2); 
+        
        
         AC_energies(ctr,1) = S(INJ1,ULL); 
 %         AC_energies(ctr,2) = S(ULL,INJ1); 
-        AC_energies(ctr,3) = S(INJ2,ULL); 
+        AC_energies(ctr,2) = S(INJ2,ULL); 
 %         AC_energies(ctr,4) = S(ULL,INJ2); 
         
         
         
-%        Hnew = inv(D)*Hext; 
+%       Hnew = inv(D)*Hext; 
+
         [a,d] = eigs(Hext,D,length(Hext),'sr'); 
         d = diag(d); 
-        
             
         Psi_new = 0*Psi_tot; 
         for j = 1:3*nlevel
@@ -195,14 +198,14 @@ for b = bias
             end
             Psi_new(:,j) = Psi_new(:,j)/(sqrt(trapz(Psi_new(:,j).^2)));
         end
-        
- 
-          ctr = ctr + 1; 
-        plotQCL(Psi_tot,E_tot,[Vx,VTB],x,0,1,0,'TB');  
+        ctr = ctr + 1; 
+
+%         plotQCL(Psi_tot,E_tot,[Vx,VTB],x,0,1,0,'TB');  
 %         plotQCL(Psi_ext,E_ext,Vx,x,0,1,0,'Coupled');  
 %         plotQCL(Psi_new,d,Vx,x,0,1,0,'TB->Coupled');  
-        display(['HTB @ bias: ' num2str(b)]); 
-        display(num2str(reshape(H_TB',1,49)));
+
+%         display(['HTB @ bias: ' num2str(b)]); 
+%         display(num2str(reshape(H_TB',1,49)));
 
 end 
 

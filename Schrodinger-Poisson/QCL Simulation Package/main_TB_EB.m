@@ -67,26 +67,30 @@ Lp = 590E-10; %% 54nm
 Vx_TB = (vx').*(x<Lp)+ (VB+vx').*(x>=Lp).*(x<=Lp+epsilon);
 plot(x,Vx,x,Vx_TB);
 dV = (Vx_TB-Vx);
-% plot(x,dV);
+plot(x,dV);
 
-Psi_tb = zeros(nx,nlevel);
-E_tb = zeros(length(E),1); 
-x_Angstrom = x*1E10;
+% Psi_tb = zeros(nx,nlevel);
+% E_tb = zeros(length(E),1); 
+% x_Angstrom = x*1E10;
+% 
+% for jj = 1 : nlevel
+%     E_tb(jj) = E(jj) +VB*trapz(dV.*abs(Psi(:,jj)).^2,x_Angstrom);
+%     
+%     Psi_tb(:,jj) = Psi(:,jj);
+%     for ii = 1:nlevel
+%         if ii == jj 
+%             continue; 
+%         else
+%             Psi_tb(:,jj) = Psi_tb(:,jj) + VB/(E(jj)-E(ii))*trapz(dV.*conj(Psi(:,ii)).*Psi(:,jj),x_Angstrom)*Psi(:,ii);
+%         end
+%     end
+% end
+% % plotQCL(Psi,E,Vx,x,0,1,0,'EB');
+% plotQCL(Psi_tb,E,Vx,x,0,1,0,'TB');
 
-%calculate the TB WFs from the EB!
-for jj = 1 : nlevel
-    E_tb(jj) = E(jj) +VB*trapz(dV.*abs(Psi(:,jj)).^2,x_Angstrom);
-    Psi_tb(:,jj) = Psi(:,jj);
-    for ii = 1:nlevel
-        if ii == jj 
-            continue; 
-        else
-            Psi_tb(:,jj) = Psi_tb(:,jj) + VB/(E(jj)-E(ii))*trapz(dV.*conj(Psi(:,ii)).*Psi(:,jj),x_Angstrom)*Psi(:,ii);
-        end
-    end
-end
-
-% plotQCL(Psi,E,Vx,x,0,1,0,'EB');
-plotQCL(Psi_tb,E,Vx,x,0,1,0,'TB');
-
+% write_WF(x*1E10,Psi,E,Vx,efield.value,f_1_name,f_2_name)
+% 
+% movefile(f_1_name,[ pwd '\post processing\' f_1_name] )
+% movefile(f_2_name,[ pwd '\post processing\' f_2_name] )
+% 
 

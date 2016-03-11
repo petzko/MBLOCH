@@ -40,9 +40,9 @@ INJ = 2; ULL = 3; LLL = 4;
 dfigure; 
 subplot(3,1,1); %plot the energies
 hold on;
-plot(vals_inter,E_fit{INJ}(vals_inter),vals_fit,E_v(:,INJ)); 
-plot(vals_inter,E_fit{ULL}(vals_inter),vals_fit,E_v(:,ULL)); 
-plot(vals_inter,E_fit{LLL}(vals_inter),vals_fit,E_v(:,LLL)); 
+% plot(vals_inter,E_fit{INJ}(vals_inter),vals_fit,E_v(:,INJ)); 
+plot(vals_inter,E_fit{ULL}(vals_inter)-E_fit{LLL}(vals_inter),vals_fit,E_v(:,ULL)-E_v(:,LLL)); 
+% plot(vals_inter,E_fit{LLL}(vals_inter),vals_fit,E_v(:,LLL)); 
 hold off; 
 subplot(3,1,2); %plot the anticrossings
 plot(vals_inter,O_13_fit(vals_inter),vals_fit,O_13_v/2); 

@@ -35,13 +35,22 @@ Overlap = 0.8
 
 #refractive index
 nTHz = 3.6
-nRF  = 3.6
+nRF = 4.0
 
 #modulation amplitude factor 
 modA = 0
 
 #modulation frequency factor as a fraction of the RT freq. 
-modF = 0
+modF = 0;
+
+# varying scattering rates?
+Zorder = 1
+
+#initial bias value! 
+bias = 11;
+
+#initial current value (A/mm)
+current = 20
 
 #pure dephasing on/off
 deph = 1
