@@ -1,7 +1,7 @@
 # % or ! are comments 
 
 #simulattion name 
-scenario = (TL04)
+scenario = (CURR02)
 #shall I include spatial hole burning or not
 shb = +1
 
@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N =4000 
+N = 4000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -38,10 +38,10 @@ nTHz = 3.6
 nRF = 3.6
 
 #modulation amplitude factor 
-modA = 0.2
+modA = 0
 
 #modulation frequency factor as a fraction of the RT freq. 
-modF = .9;
+modF = 0;
 
 # varying scattering rates?
 Zorder = 1
@@ -66,10 +66,10 @@ loss = 10
 
 ################# simuation parameters #################
 #number of round trips to be simulated (dimensionless)
-simRT = 500; 
+simRT = 300; 
 #how many iterations should the program plot on;
 plotCtr = 5000
 #number of round trips to record the data for (should be smaller than the total simRT);
-recordRT = 5000
+recordRT = 300
 #number of steps for the MS solver (choose 5):
 nr_steps = 5

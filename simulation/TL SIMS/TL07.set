@@ -50,7 +50,7 @@ Zorder = 1
 bias = 11;
 
 #initial current value (A/mm)
-current = 20
+current = 30
 
 #pure dephasing on/off
 deph = 1

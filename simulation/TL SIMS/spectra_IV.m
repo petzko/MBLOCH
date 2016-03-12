@@ -23,13 +23,14 @@ NFFTfunc = @(elem) 2^nextpow2(4*elem);
 
 iterperrecord = 1;
 %% Prep data:
-load('CHCKPT_qcl183s(MLVL,11kVpCm)_(TL07)_N_TRANSMISSION_LINE_4000_FP.mat','E_p','E_m','V_TL_t','J_TL_t','dt','T_R','E0','f_R'); 
-
+load('CHCKPT_qcl183s(MLVL,11kVpCm)_(CURR04)_N_TRANSMISSION_LINE_3000_FP','record_U','record_V','record_v_TL','record_i_TL','record_J_TL','dat'); 
+E0 =dat.E0;dt =dat.dt;T_R = dat.T_R; f_R = dat.f_R;
+display(['current is: ' num2str(dat.i0)])
 %%% get the time domain envelope from the desired rtrips.
-rt_start = 20; rt_end = 100; 
+rt_start = 30; rt_end = 100; 
 
-Dt = dt*iterperrecord;  iter_per_rt = round(T_R/Dt);
-A_t = E_p(rt_start*iter_per_rt+1:rt_end*iter_per_rt)+E_m(rt_start*iter_per_rt+1:rt_end*iter_per_rt);
+Dt = dat.dt*iterperrecord;  iter_per_rt = round(dat.T_R/Dt);
+A_t = record_U(rt_start*iter_per_rt+1:rt_end*iter_per_rt)+record_V(rt_start*iter_per_rt+1:rt_end*iter_per_rt);
 % A_t = E_p((rt_start*iter_per_rt+1:rt_end*iter_per_rt));
 
 A_t = reshape(A_t,[length(A_t),1]); Npts = length(A_t); tms = Dt*[0:Npts-1].';  E_t = real(A_t.*exp(-cs*1i*E0*tms));

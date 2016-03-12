@@ -1,6 +1,7 @@
 function dat = makeBlochVars(settings,dat)
     
-
+    dtype = dat.dtype;
+    
 
     tau2B = 1E-12/dat.W(dat.LLL,dat.DEPOP);
     tau3B = 1E-12/dat.W(dat.ULL,dat.DEPOP); 
@@ -9,21 +10,21 @@ function dat = makeBlochVars(settings,dat)
         
     init_r22 = 1-init_r33;
     % population vectors together with first derivative vectors
-    dat.r110 = dat.trace_rho*zeros(settings.N,1); 
-    dat.r330 = dat.trace_rho*init_r33*ones(settings.N,1);
-    dat.r220 = dat.trace_rho*init_r22*ones(settings.N,1);
+    dat.r110 = dat.trace_rho*zeros(settings.N,1,dtype); 
+    dat.r330 = dat.trace_rho*init_r33*ones(settings.N,1,dtype);
+    dat.r220 = dat.trace_rho*init_r22*ones(settings.N,1,dtype);
     
  
  
     % coherence terms together with first derivative vectors!
-    dat.r130 =0*((ones(settings.N,1)-0.5) +1i*(ones(settings.N,1)-0.5)); 
+    dat.r130 =0*((ones(settings.N,1,dtype)-0.5) +1i*(ones(settings.N,1,dtype)-0.5)); 
    
     
-    dat.n32p =  1E-15*((rand(settings.N,1)-0.5) +1i*(rand(settings.N,1)-0.5));
-    dat.n32m =  1E-15*((rand(settings.N,1)-0.5) +1i*(rand(settings.N,1)-0.5)); 
+    dat.n32p =  1E-15*((rand(settings.N,1,dtype)-0.5) +1i*(rand(settings.N,1,dtype)-0.5));
+    dat.n32m =  1E-15*((rand(settings.N,1,dtype)-0.5) +1i*(rand(settings.N,1,dtype)-0.5)); 
     
-    dat.n12p =  1E-15*((rand(settings.N,1)-0.5) +1i*(rand(settings.N,1)-0.5)); 
-    dat.n12m =  1E-15*((rand(settings.N,1)-0.5) +1i*(rand(settings.N,1)-0.5)); 
+    dat.n12p =  1E-15*((rand(settings.N,1,dtype)-0.5) +1i*(rand(settings.N,1,dtype)-0.5)); 
+    dat.n12m =  1E-15*((rand(settings.N,1,dtype)-0.5) +1i*(rand(settings.N,1,dtype)-0.5)); 
  
     
     dat.r110_solver = MS(settings.nr_steps,settings.N,[],dat.r110); 
@@ -39,11 +40,11 @@ function dat = makeBlochVars(settings,dat)
     
     if (settings.shb > 0)
         
-        dat.r11p = zeros(settings.N,1);
-        dat.r33p = zeros(settings.N,1);
-        dat.r22p = zeros(settings.N,1);
-        dat.r13p = zeros(settings.N,1); 
-        dat.r13m = zeros(settings.N,1);
+        dat.r11p = zeros(settings.N,1,dtype);
+        dat.r33p = zeros(settings.N,1,dtype);
+        dat.r22p = zeros(settings.N,1,dtype);
+        dat.r13p = zeros(settings.N,1,dtype); 
+        dat.r13m = zeros(settings.N,1,dtype);
         
         dat.r13p_solver = MS(settings.nr_steps,settings.N,[],dat.r13p); 
         dat.r13m_solver = MS(settings.nr_steps,settings.N,[],dat.r13m);

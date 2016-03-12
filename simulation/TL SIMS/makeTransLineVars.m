@@ -22,8 +22,9 @@ function dat = makeTransLineVars(settings,dat)
     dat.v0 = settings.bias/1E1;
     %voltage modulation funciton
     dat.v0_t = @(tm) dat.v0*(1+settings.modA*sin(2*pi*settings.modF*dat.f_R*tm));
-    dat.v_TL = dat.v0*ones(settings.N,1); % transmission line voltage per unit length (in units kV/mm);
-    dat.v_TL_old = dat.v_TL;
+    dat.v_TL = dat.v0*ones(settings.N,1,dat.dtype); % transmission line voltage per unit length (in units kV/mm);
+    dat.v_TL_old = dat.v0*ones(settings.N,1,dat.dtype);;
+    dat.v_tmp = zeros(settings.N,1,dat.dtype);
 
     dat.i0 = trapz(dat.x,dat.J_TL);
     %current

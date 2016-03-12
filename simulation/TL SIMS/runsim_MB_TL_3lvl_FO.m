@@ -42,6 +42,8 @@ load(ratesfile);
 %frequency 
 dat.c = Constants('c',{'time',settings.tch},{'length',settings.lch})/settings.nTHz; dat.T_R = 2*settings.Ltot/dat.c; dat.f_R = 1/dat.T_R;
 
+dat.dtype = 'double'
+
 %%%%dipole mtx elements (in Cnm)
 % hbar in eV-ps
 dat.hbar = Constants('hbar',{'time',settings.tch})/Constants('q0');
@@ -70,6 +72,9 @@ dat.l_0 = settings.loss*100/(1/settings.lch);
 
 %grid size in x direction
 dat.x = linspace(0,settings.Ltot,settings.N)';
+if strcmp(dat.dtype,'single')
+       dat.x = single(dat.x);
+end
 dat.dx = dat.x(2) - dat.x(1); dat.dt = dat.dx/dat.c;
 
 dat.diffusion = 4*dat.E0/dat.c^2*settings.D*10^2/(1/settings.tch);
@@ -95,10 +100,13 @@ if(init > 0)
     %reshape into a matrix
     dat.W = reshape(W,dat.NLVLS,dat.NLVLS).';
     
+    if strcmp(dat.dtype,'single')
+        W = single(W);
+    end
     
     
-    dat.G = zeros(dat.NLVLS,1);
-    dat.i0 =  17%A/mm
+    dat.G = zeros(dat.NLVLS,1,dat.dtype);
+    dat.i0 =  settings.current;%A/mm
     
     dat = makeMaxwellVars(settings,dat);
     dat = makeBlochVars(settings,dat);  
@@ -130,14 +138,14 @@ end
 
 iterperrecord = 1;
 recordingiter  = round(recordingduration/iterperrecord/dat.dt);
-padsize = recordingiter-length(record_U);
+padsize = double(recordingiter-length(record_U));
 
 %preallocate memory for optical field, curr density voltage wave, etc.
 %strorage...
 record_U= padarray(record_U,padsize,'post'); record_V = padarray(record_V,padsize,'post');
 
 record_v_TL = padarray(record_v_TL,padsize,'post'); 
-record_i_TL = padarray(record_i_TL,padsize,'post');
+% record_i_TL = padarray(record_i_TL,padsize,'post');
 record_J_TL = padarray(record_J_TL,padsize,'post');
 
 %store population info
@@ -145,11 +153,27 @@ record_r110 = padarray(record_r110,padsize,'post');
 record_r330 = padarray(record_r330,padsize,'post');
 record_r220 = padarray(record_r220,padsize,'post');    
 
+
+if(strcmp(dat.dtype,'single'))
+    
+    record_U= single(record_U); record_V = single(record_V);
+
+    record_v_TL = single(record_v_TL); 
+%     record_i_TL = single(record_i_TL);
+    record_J_TL = single(record_J_TL);
+
+    %store population info
+    record_r110 = single(record_r110);    
+    record_r330 = single(record_r330);
+    record_r220 = single(record_r220);   
+    
+end
+
 info.settings = settings;
 info.cavity = 'FP';
 info.Ltot = settings.Ltot;
 info.N = settings.N;
-info.SIMTYPE = 'WITHOUT DISP. COMP';
+info.SIMTYPE = ['TL with (i0,v0) = (' num2str(settings.current*10) ',' num2str(settings.bias) ') in units (A/cm,kV/cm)'];
 
 dat.G(dat.INJ) = dat.W(dat.INJ,dat.ULL)+ dat.W(dat.INJ,dat.LLL);
 dat.G(dat.ULL) = dat.W(dat.ULL,dat.INJ)+dat.W(dat.ULL,dat.LLL)+dat.W(dat.ULL,dat.DEPOP);
@@ -195,7 +219,7 @@ while(dat.t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,100) == 0)
+    if(mod(iter_ctr,2000) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = dat.t/dat.T_R;
@@ -203,14 +227,15 @@ while(dat.t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-        subplot(3,1,1)
-        plot(dat.x,[real(dat.U),real(dat.V)]);
-        subplot(3,1,2)
-        plotyy(dat.x,[dat.v_TL*10],dat.x,dat.i_TL);
-        subplot(3,1,3)
-        plot(dat.x,dat.J_TL);
-
-        getframe;
+%         subplot(3,1,1)
+%         plot(dat.x,[real(dat.U),real(dat.V)]);
+%         subplot(3,1,2)
+%         plotyy(dat.x,[dat.v_TL*10],dat.x,dat.i_TL);
+%         title(info.SIMTYPE);
+%         subplot(3,1,3)
+%         plot(dat.x,dat.J_TL);
+%     
+%         getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     
@@ -219,7 +244,7 @@ while(dat.t< tEnd)
         %store fields info
         record_U(ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
         record_v_TL(ctr) = dat.v_TL(idx);
-        record_i_TL(ctr) = dat.i_TL(idx);
+%         record_i_TL(ctr) = dat.i_TL(idx);
         record_J_TL(ctr) = dat.J_TL(idx);
     
         record_r110(ctr) = dat.r110(idx);
