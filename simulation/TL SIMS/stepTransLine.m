@@ -31,8 +31,8 @@ function dat = stepTransLine(settings,dat)
 %      dat.v_tmp(end) = 2*dat.v_TL(end)-dat.v_TL_old(end)+2*(settings.nTHz/settings.nRF)^2*(dat.v_TL(end-1)-dat.v_TL(end)); 
      dat.v_tmp(end) =  dat.v_tmp(end-1);
     %absorbing boundaries. 
-    %absorbing bdry cond:
-%     v_tmp(end)= dat.v_TL(end-1)+(settings.nTHz-settings.nRF)/(settings.nTHz+settings.nRF)*(dat.v_tmp(end-1)-dat.v_TL(end));
+%     %absorbing bdry cond:
+%     dat.v_tmp(end)= dat.v_TL(end-1)+(settings.nTHz-settings.nRF)/(settings.nTHz+settings.nRF)*(dat.v_tmp(end-1)-dat.v_TL(end));
 
     %%%%% END Transmission Line Current-Voltage equation %%%%%%%%%%%%%
      dat.v_TL_old = dat.v_TL; dat.v_TL =  dat.v_tmp ;  

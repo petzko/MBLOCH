@@ -8,7 +8,7 @@ function dat = makeMaxwellVars(settings,dat)
         dat.U = single(dat.U);
     end
     %normalize
-    ampl = 3;
+    ampl = 0;
     dat.U = ampl*dat.U/max(abs(dat.U));
     dat.V = 0*dat.U;
     

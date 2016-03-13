@@ -69,7 +69,7 @@ dat.trace_rho = ((dat.E0*1E12*dat.Ncarriers*settings.Overlap*((settings.zUL*1E-9
 dat.l_0 = settings.loss*100/(1/settings.lch);
 
 %%%%%%%%%%%%%%%%% simuation parameters %%%%%%%%%%%%%%%%%
-
+settings.N = 3000;
 %grid size in x direction
 dat.x = linspace(0,settings.Ltot,settings.N)';
 if strcmp(dat.dtype,'single')
@@ -219,7 +219,7 @@ while(dat.t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,2000) == 0)
+    if(mod(iter_ctr,200) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = dat.t/dat.T_R;
@@ -227,15 +227,15 @@ while(dat.t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-%         subplot(3,1,1)
-%         plot(dat.x,[real(dat.U),real(dat.V)]);
-%         subplot(3,1,2)
-%         plotyy(dat.x,[dat.v_TL*10],dat.x,dat.i_TL);
-%         title(info.SIMTYPE);
-%         subplot(3,1,3)
-%         plot(dat.x,dat.J_TL);
-%     
-%         getframe;
+        subplot(3,1,1)
+        plot(dat.x,[real(dat.U),real(dat.V)]);
+        subplot(3,1,2)
+        plotyy(dat.x,[dat.v_TL*10],dat.x,dat.i_TL);
+        title(info.SIMTYPE);
+        subplot(3,1,3)
+        plot(dat.x,dat.J_TL);
+    
+        getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     

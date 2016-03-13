@@ -50,7 +50,7 @@ Zorder = 1
 bias = 11;
 
 #initial current value (A/mm)
-current = 29
+current = 30
 
 #pure dephasing on/off
 deph = 1
@@ -66,10 +66,10 @@ loss = 10
 
 ################# simuation parameters #################
 #number of round trips to be simulated (dimensionless)
-simRT = 300; 
+simRT = 500; 
 #how many iterations should the program plot on;
 plotCtr = 5000
 #number of round trips to record the data for (should be smaller than the total simRT);
-recordRT = 300
+recordRT = 5000
 #number of steps for the MS solver (choose 5):
 nr_steps = 5
