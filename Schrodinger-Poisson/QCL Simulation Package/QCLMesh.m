@@ -73,38 +73,38 @@ for ii = 1 : nlayers
     
     switch material
  %%%%%%%%%%%%%%%%%% begin PetZ %%%%%%%%
-% %   case 0
-% %             Eg = 1.519 - 5.41e-4*T*T/(T + 204); % Ref. 1
-% %             V = 0;
-% %             m = 0.063 * const.me; % Ref. 1
-% %             rindex = 3.3; % Ref. 1 
-% %             epsr.high = 10.89; % Ref. 1
-% %             epsr.static = 12.9; % Ref. 1
-% %             hbarwlo = 0.036; % Ref. 1
-% %             
-% %         case 1
-% %             Eg = 1.519 + 1.155*y + 0.37*y*y - 5.41e-4*T*T/(T + 204); % Ref. 1
-% %             V = 0.62 * (1.155*y + 0.37*y*y);
-% %             m = (0.063 + 0.083*y) * const.me; % Ref. 1
-% %             rindex = 3.3 - 0.53*y + 0.09*y*y; % Ref. 1
+  case 0
+            Eg = 1.519 - 5.41e-4*T*T/(T + 204); % Ref. 1
+            V = 0;
+            m = 0.063 * const.me; % Ref. 1
+            rindex = 3.3; % Ref. 1 
+            epsr.high = 10.89; % Ref. 1
+            epsr.static = 12.9; % Ref. 1
+            hbarwlo = 0.036; % Ref. 1
             
-        case 0
-            
-           V=0;
-           m=1/(1+2*FGaAs+EpGaAs*(EgGaAs+2*DsoGaAs/3)/EgGaAs/(EgGaAs+DsoGaAs))*const.me; 
-           Eg=EgGaAs;
-           rindex = 3.3; % Ref. 1 
-           epsr.high = 10.89; % Ref. 1
-           epsr.static = 12.9; % Ref. 1
-           hbarwlo = 0.036; % Ref. 1
-
         case 1
-            V=cob;
-            m=y/(1+2*FAlAs+EpAlAs*(EgAlAs+2*DsoAlAs/3)/EgAlAs/(EgAlAs+DsoAlAs));
-            m=m+(1-y)/(1+2*FGaAs+EpGaAs*(EgGaAs+2*DsoGaAs/3)/EgGaAs/(EgGaAs+DsoGaAs));
-            m = m*const.me;
-            Eg=EgGaAs*(1-y)+EgAlAs*y+y*(1-y)*0.127 ;
+            Eg = 1.519 + 1.155*y + 0.37*y*y - 5.41e-4*T*T/(T + 204); % Ref. 1
+            V = 0.62 * (1.155*y + 0.37*y*y);
+            m = (0.063 + 0.083*y) * const.me; % Ref. 1
             rindex = 3.3 - 0.53*y + 0.09*y*y; % Ref. 1
+            
+%         case 0
+%             
+%            V=0;
+%            m=1/(1+2*FGaAs+EpGaAs*(EgGaAs+2*DsoGaAs/3)/EgGaAs/(EgGaAs+DsoGaAs))*const.me; 
+%            Eg=EgGaAs;
+%            rindex = 3.3; % Ref. 1 
+%            epsr.high = 10.89; % Ref. 1
+%            epsr.static = 12.9; % Ref. 1
+%            hbarwlo = 0.036; % Ref. 1
+% 
+%         case 1
+%             V=cob;
+%             m=y/(1+2*FAlAs+EpAlAs*(EgAlAs+2*DsoAlAs/3)/EgAlAs/(EgAlAs+DsoAlAs));
+%             m=m+(1-y)/(1+2*FGaAs+EpGaAs*(EgGaAs+2*DsoGaAs/3)/EgGaAs/(EgGaAs+DsoGaAs));
+%             m = m*const.me;
+%             Eg=EgGaAs*(1-y)+EgAlAs*y+y*(1-y)*0.127 ;
+%             rindex = 3.3 - 0.53*y + 0.09*y*y; % Ref. 1
 %%%%%%%%%%%%%%%%%% end PetZ %%%%%%%%
 
 

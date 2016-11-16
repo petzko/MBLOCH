@@ -17,9 +17,7 @@ if(length(varargin)>0)
             init = val;
         else if strcmp(name,'workspace')
                 %regexp to load all variables except init!
-            load(val,'-regexp','-regexp','^(?!(init|scenarioFile|simDataFile|varargin)$).');
-                
-                
+                load(val,'-regexp','-regexp','^(?!(init|scenarioFile|simDataFile|varargin)$).');
             else
                 display( ['Unknown input option name: ' name '. Aborting!' ]);
                 return;
@@ -71,7 +69,6 @@ LLL = 4;
 E1 = HTB(INJ,INJ)/hbar;
 E3 = HTB(ULL,ULL)/hbar;
 E2 = HTB(LLL,LLL)/hbar; % in rad/ps
-
 
 %%%% energies: E1 > E3 > E2 Optical transition is 3->2 TUNNELING transition is 1->3
 O13 = HTB(INJ,ULL)/hbar; % in rad/ps
@@ -145,44 +142,55 @@ k0 = E0/c; D = settings.D*10^2/(1/tch); diffusion = 4*k0^2*D;
 
 %%%% specify some of the mainloop control parameters %%%%
 iter_per_rt = round(T_R/dt);
-checkptIter = iter_per_rt*100; %make a checkpoint every 100RTs. 
-tEnd = settings.simRT*T_R; % end time in tps
-plotCtr = settings.plotCtr; %% set on how many iterations should the program plot the intensity
+checkptIter = iter_per_rt*100; %make a checkpoint every 100RTs.
+
+N_t = 10000; % how many ps should we record the pulse for
+
+tEnd = N_t*dt; % end time in tps
+
 %simulation info storage arrays -> preallocate
-recordingduration = settings.recordRT*T_R; % how many ps should we record the pulse for
+recordingduration = N_t;
 
 if(init > 0)
     
-    
     clc;
-     x_0 = Ltot/7; tp =1;
+    x_0 = 6*Ltot/7; tp =1;
     aE_in = @(z,time) exp(-(time-(z-x_0)/c).^2/tp^2);
     
-    U = aE_in(x,0);
     %normalize
-    U = 3*U/max(abs(U));
+    ampl = 0;
+    U = ampl*aE_in(x,0);
     V = 0*U;
     
-    
     % population vectors together with first derivative vectors
-    r110 = trace_rho*(ones(N,1)*1/3); r110(1) = r110(end);
-    r330 = trace_rho*(ones(N,1)*1/3); r330(1) = r330(end);
-    r220 = trace_rho*(ones(N,1)*1/3); r220(1)=r220(end);
+    r110 = trace_rho*(ones(N,1)*1/2); r110(1) = r110(end);
+    r330 = trace_rho*(ones(N,1)*1/2); r330(1) = r330(end);
+    r220 = trace_rho*(ones(N,1)*0); r220(1)=r220(end);
     
     r11p = zeros(N,1);r33p = zeros(N,1);r22p = zeros(N,1);
     %rate populations
     populations = zeros(N,N_rest);
     gratings = zeros(N,N_rest);
     
-    % coherence terms together with first derivative vectors!
-    r130 =0*((ones(N,1)-0.5) +1i*(ones(N,1)-0.5)); r130(1) = r130(end);
+    %     % coherence terms together with first derivative vectors!
+    %     r130 =0*((ones(N,1)-0.5) +1i*(ones(N,1)-0.5)); r130(1) = r130(end);
+    %     r13p = zeros(N,1); r13m = zeros(N,1);
+    %
+    %     n32p =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n32p(1) = n32p(end);
+    %     n32m =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n32m(1) = n32m(end);
+    %
+    %     n12p =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n12p(1) = n12p(end);
+    %     n12m =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n12m(1) = n12m(end);
+    
+    
+    r130 =  1E-15*ones(N,1);
+    n32p =  1E-15*ones(N,1);
+    n32m =  1E-15*ones(N,1);
+    
+    n12p =  1E-15*ones(N,1);
+    n12m =  1E-15*ones(N,1);
+    
     r13p = zeros(N,1); r13m = zeros(N,1);
-    
-    n32p =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n32p(1) = n32p(end);
-    n32m =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n32m(1) = n32m(end);
-    
-    n12p =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n12p(1) = n12p(end);
-    n12m =  1E-15*((rand(N,1)-0.5) +1i*(rand(N,1)-0.5)); n12m(1) = n12m(end);
     
     t = dt; nr_steps = settings.nr_steps;
     
@@ -190,17 +198,17 @@ if(init > 0)
     iter_ctr = 0;    ctr = 1;   % nr of iterations after which to record new statistics!
     %preallocate memory
     
-    E_p= 1;  E_m = 1; r11_time = 1;   r33_time = 1;r22_time = 1;
-    r11_p_time =1; r33_p_time = 1;  r22_p_time = 1;
+    record_U= 1;  record_V = 1; record_r110 = 1;   record_r330 = 1;record_r220 = 1;
+    record_r11p =1; record_r33p = 1;  record_r22p = 1;
     pop_time = cell(N_rest,1);
     for i=1:N_rest
         pop_time{i} =1;
     end
-    r130_time = 1;
-    r13p_time =1;
-    r13m_time = 1;
+    record_r130 = 1;
+    record_r13p = 1;
+    record_r13m = 1;
     
-    r110_solver = MS(nr_steps,N,[],r110); r11p_solver =MS(nr_steps,N,[],r11p);
+    r110_solver = MS(nr_steps,N,[],r110); r11p_solver = MS(nr_steps,N,[],r11p);
     r330_solver = MS(nr_steps,N,[],r330); r33p_solver = MS(nr_steps,N,[],r33p);
     r220_solver = MS(nr_steps,N,[],r220); r22p_solver = MS(nr_steps,N,[],r22p);
     
@@ -219,29 +227,27 @@ if(init > 0)
     r130_solver = MS(nr_steps,N,[],r130);
     r13p_solver = MS(nr_steps,N,[],r13p); r13m_solver = MS(nr_steps,N,[],r13m);
     
-    U_solver = RNFDSolver(N,dx,+1,c, U);
+    U_solver = RNFDSolver(N,dx,+1,c,U);
     V_solver = RNFDSolver(N,dx,-1,c,V);
     
 end
 
-iterperrecord = 1;
-recordingiter  = round(recordingduration/iterperrecord/dt);
-padsize = recordingiter-length(E_p);
+padsize = N_t-length(record_U);
 
 %preallocate memory
-E_p= padarray(E_p,padsize,'post');  E_m = padarray(E_m,padsize,'post');
+record_U= padarray(record_U,padsize,'post');  record_V = padarray(record_V,padsize,'post');
 %store population info
-r11_time = padarray(r11_time,padsize,'post');    r33_time = padarray(r33_time,padsize,'post');
-r22_time = padarray(r22_time,padsize,'post');    r11_p_time = padarray(r11_p_time,padsize,'post');
-r33_p_time = padarray(r33_p_time,padsize,'post');  r22_p_time = padarray(r22_p_time,padsize,'post');
+record_r110 = padarray(record_r110,padsize,'post');    record_r330 = padarray(record_r330,padsize,'post');
+record_r220 = padarray(record_r220,padsize,'post');    record_r11p = padarray(record_r11p,padsize,'post');
+record_r33p = padarray(record_r33p,padsize,'post');  record_r22p = padarray(record_r22p,padsize,'post');
 
 for p = 1:N_rest
     pop_time{p} = padarray(pop_time{p},padsize,'post');
 end
 
-r130_time = padarray(r130_time,padsize,'post');
-r13p_time = padarray(r13p_time,padsize,'post');
-r13m_time = padarray(r13m_time,padsize,'post');
+record_r130 = padarray(record_r130,padsize,'post');
+record_r13p = padarray(record_r13p,padsize,'post');
+record_r13m = padarray(record_r13m,padsize,'post');
 
 
 
@@ -253,8 +259,7 @@ info.SIMTYPE = 'WITHOUT DISP. COMP';
 info.l_0 = l_0;
 
 
-
-while(t< tEnd)
+while(iter_ctr< N_t)
     
     if(mod(iter_ctr+1,checkptIter) == 0 )
         checkptname = ['CHCKPT_' settings.name '_' settings.scenario '_N_' num2str(settings.N) '_FP'];
@@ -262,7 +267,7 @@ while(t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,plotCtr) == 0)
+    if(mod(iter_ctr,100) == 0)
         clc;
         info.iter_ctr = iter_ctr;
         info.RT = t/T_R;
@@ -270,38 +275,36 @@ while(t< tEnd)
         info.maxInt  =  max(intensity);
         printINFO(info);
         
-%         plot(x,[abs(U),abs(V)]);
-%         getframe;
+        %         plot(x,[abs(U),abs(V)]);
+        %         getframe;
     end
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     
-    if((t >= tEnd - recordingduration) && mod(iter_ctr,iterperrecord) == 0)
-        
-        %store fields info
-        E_p(ctr)= U(idx);  E_m(ctr)= V(idx);
-        %store population info
-        r11_time(ctr)= r110(idx);
-        r33_time(ctr)= r330(idx);
-        r22_time(ctr) = r220(idx);
-        
-        r11_p_time(ctr) = r11p(idx);
-        r33_p_time(ctr) = r33p(idx);
-        r22_p_time(ctr) = r22p(idx);
-        
-        %calculate total populations
-        for p = 1:N_rest
-            pop_time{p}(ctr) = populations(idx,p);
-        end
-        
-        r130_time(ctr) = r130(idx);
-        r13p_time(ctr) = r13p(idx);
-        r13m_time(ctr) = r13m(idx);
-        
-        ctr = ctr+1;
+    %store fields info
+    record_U(ctr)= U(idx);  record_V(ctr)= V(idx);
+    %store population info
+    record_r110(ctr)= r110(idx);
+    record_r330(ctr)= r330(idx);
+    record_r220(ctr) = r220(idx);
+    
+    record_r11p(ctr) = r11p(idx);
+    record_r33p(ctr) = r33p(idx);
+    record_r22p(ctr) = r22p(idx);
+    
+    %calculate total populations
+    for p = 1:N_rest
+        pop_time{p}(ctr) = populations(idx,p);
     end
     
+    record_r130(ctr) = r130(idx);
+    record_r13p(ctr) = r13p(idx);
+    record_r13m(ctr) = r13m(idx);
+    
+    ctr = ctr+1;
+    
+    
     %%%%%% BLOCH PART %%%%%%
-    %%%% POPULATIONS
+    %     %%%% POPULATIONS
     r110_t = 1i*O13.*(r130-conj(r130)) +( W(ULL,INJ) + W(ULL,DEPOP) )*r330 + ( W(LLL,INJ)+W(LLL,DEPOP) )*r220 - G(INJ)*r110;
     for p = 1:N_rest
         p_glob_idx = global_idx_rest(p);
@@ -309,15 +312,15 @@ while(t< tEnd)
     end
     r110_solver.make_step(r110_t,dt);
     
-    lmInteraction = conj(U).*n32p + conj(V).*n32m;
-    r330_t = 1i*O13.*(conj(r130) - r130) +1i/2.*(lmInteraction-conj(lmInteraction)) + r110*W(INJ,ULL) + r220*W(LLL,ULL) - G(ULL)*r330;
+    LM = conj(U).*n32p + conj(V).*n32m;
+    r330_t = 1i*O13.*(conj(r130) - r130) +1i/2.*(LM-conj(LM)) + r110*W(INJ,ULL) + r220*W(LLL,ULL) - G(ULL)*r330;
     for p = 1:N_rest
         p_glob_idx = global_idx_rest(p);
         r330_t = r330_t + W(p_glob_idx,ULL)*populations(:,p);
     end
     r330_solver.make_step(r330_t,dt);
     
-    r220_t = -1i/2.*(lmInteraction-conj(lmInteraction)) + r110*W(INJ,LLL) + r330*W(ULL,LLL) - G(LLL)*r220;
+    r220_t = -1i/2.*(LM-conj(LM)) + r110*W(INJ,LLL) + r330*W(ULL,LLL) - G(LLL)*r220;
     for p = 1:N_rest
         p_glob_idx = global_idx_rest(p);
         r220_t = r220_t + W(p_glob_idx,LLL)*populations(:,p);
@@ -376,11 +379,13 @@ while(t< tEnd)
         r13m_solver.make_step(r13m_t,dt);
     end
     
-    %%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%
     losses = -c*l_0.*ones(N,1);
     
     U = U_solver.make_step(-1i*c*n32p,-1i*c*n32p_t,losses,dt);
     V = V_solver.make_step(-1i*c*n32m,-1i*c*n32m_t,losses,dt);
+    
+    
     
     %set the boundaries... and obtain the final solution
     U = U_solver.set_bdry(V(1),'no');
@@ -395,8 +400,11 @@ while(t< tEnd)
         populations(:,p) = rate_eqn_solvers{p}.get_latest_solution();
     end
     
-    r130 = r130_solver.get_latest_solution(); n32p = n32p_solver.get_latest_solution();
-    n32m = n32m_solver.get_latest_solution(); n12p = n12p_solver.get_latest_solution(); n12m = n12m_solver.get_latest_solution();
+    r130 = r130_solver.get_latest_solution();
+    n32p = n32p_solver.get_latest_solution();
+    n32m = n32m_solver.get_latest_solution();
+    n12p = n12p_solver.get_latest_solution();
+    n12m = n12m_solver.get_latest_solution();
     
     if(settings.shb > 0)
         r11p = r11p_solver.get_latest_solution();

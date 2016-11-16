@@ -11,7 +11,7 @@ function [ SP,freq,Y01,Y02 ] = SpectrumProduct( E_t,times,dt,skipctr,dv,tch,vara
     
     
     
-    Eshift = shiftRealSig(E_t,dt,skipctr,dv,times);
+     Eshift = shiftRealSig(E_t,dt,skipctr,dv,times);
 
     [I01,lags] = InterferogramFast(E_t,E_t,dt,skipctr,{'no','truncate'}); % to obtain E_w;
     [freq01,Y01] = FourierTransf(I01,dt,0,skipctr,tch,options); % to obtain E_w;

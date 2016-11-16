@@ -21,7 +21,8 @@ my_FontName = 'Arial';
 my_AxesLineWidth = 1.0;
 my_LineWidth = 1.0;
 my_Color = 'w';
-my_ColorOrder =   [  0.3482    0.7424    0.5473
+my_ColorOrder =   [  
+    20/255   43/255    140/255
     1.0000         0         0
      0.5556    0.3472    0.2211
     0    0.5000         0  

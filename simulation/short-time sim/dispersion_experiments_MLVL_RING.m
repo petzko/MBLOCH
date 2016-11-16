@@ -175,7 +175,7 @@ for tau_idx = 1:length(taus)
         
         if(init > 0)
             
-            x_0 = Ltot/7; tp =0.3;
+            x_0 = Ltot/7; tp =1.0;
             aE_in = @(z,time) exp(-(time-(z-x_0)/c).^2/tp^2);
             U = zeros(N,1);
             dw = 2*pi/T_R; sig = 2;

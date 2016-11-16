@@ -7,6 +7,7 @@ classdef Controller < handle
         viewhandle; 
         sim_settings; 
         job; 
+        x;
     
     end
     
@@ -16,6 +17,8 @@ classdef Controller < handle
         function obj = Controller(view)
             display('controller initialized');
             obj.viewhandle = view; 
+            
+            obj.x = [1,2,3];
         end
         
         function filename = openfile(obj,srcHandle,eventData)
@@ -30,6 +33,10 @@ classdef Controller < handle
         
         function saveworkspacedata(obj,srcHandle,eventData)
             display('save data launched');
+            display(obj.x);
+            x = obj.x;
+            save('testsave.mat','x');
+            
          end
         
         function startsim(obj,srcHandle,eventData)

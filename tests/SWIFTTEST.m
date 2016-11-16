@@ -1,4 +1,4 @@
-
+ 
 clear; close;
 %periodic pulse of gaussians with repetition rate f_r (period T = 1/f_r); 
 
@@ -23,7 +23,7 @@ for i = 1:length(centers)
     signal = signal + gauss(times,centers(i));
 end
 
-signal = shiftRealSig(signal,dt,1,30);
+% signal = shiftRealSig(signal,dt,1,30);
 window_duration = 10*Tr; window_vector_len = window_duration/dt;
 
 num_win = floor(length(signal)/window_vector_len); 

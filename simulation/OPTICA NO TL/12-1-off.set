@@ -1,0 +1,78 @@
+# % or ! are comments 
+
+#simulattion name 
+scenario = (12-1-off)
+#shall I include spatial hole burning or not
+shb = +1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N = 3000 
+
+#diffusion constant in [cm^2/sec]
+D = 46
+
+#dispersion constant in [ps^2/mm]! 
+disp = +0.125
+
+#cavity length (mm) 
+Ltot = 3
+
+#period length [nm]
+Lp = 48.0
+
+#doping density in [cm^-3]
+dN = 3.0E16
+
+#doping region thickness [nm] (set equal to Lp if average doping density is known)
+Ld = 5;
+
+#mode overlap factor [dimensionless]
+Overlap = 0.8
+
+#refractive index
+nTHz = 3.6
+nRF = 4.0
+
+#modulation amplitude factor 
+modA = 0
+
+#modulation frequency factor as a fraction of the RT freq. 
+modF = 0
+
+# varying scattering rates?
+Zorder = 1
+
+#initial bias value! 
+bias = 9.0
+
+#initial current value (A/mm)
+current = 25
+
+#voltage applied to the laser (in volts) 
+voltage = 12
+
+#pure dephasing on/off
+deph = 1
+
+#pure dephasing  time for the inj -> ull transition[ps]
+Tdeph_1 =   0.4;
+#pure dephasing  times for the inj -> lll and ull->lll transition[ps]
+Tdeph_2 =  1.25;
+Tdeph_3 =  1.25;
+
+#cavity loss in 1/cm;  (from optica paper) 
+loss = 12
+
+################# simuation parameters #################
+#number of round trips to be simulated (dimensionless)
+simRT = 500 
+#how many iterations should the program plot on;
+plotCtr = 5000
+#number of round trips to record the data for (should be smaller than the total simRT);
+recordRT = 500
+#number of steps for the MS solver (choose 5):
+nr_steps = 5

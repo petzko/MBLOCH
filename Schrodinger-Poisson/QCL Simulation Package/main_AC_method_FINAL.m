@@ -13,10 +13,15 @@ bias = 9:.1:12;
 const = Constants();
 nper = 3;
 
-AC_energies = zeros(length(bias),2);
-Energies = zeros(length(bias),7);
+AC_energies = zeros(length(bias),1);
+Energies = zeros(length(bias),5);
+H_TB = zeros(5,5,length(bias)); 
 
-H_TB = zeros(7,7); 
+dipoles_RES_nm = zeros(length(bias),1);
+dipoles_LLL_nm = zeros(length(bias),1);
+dipoles_ULL_nm = zeros(length(bias),1);
+dipoles_INJ_nm = zeros(length(bias),1);
+dipoles_UL_nm = zeros(length(bias),1); 
 
 ctr =1; 
 for b = bias
@@ -24,10 +29,10 @@ for b = bias
         efield.direction = '->';            % electric field direction
         efield.value = b;                  % electric field value
         indir = 'Input';
-        infile = strcat(indir,'/','QCL183S.m');  % input file
+        infile = strcat(indir,'/','QCLOPTICA.m');  % input file
         outdir = 'Output';
         nlevel = 9;                        % number of states to be solved
-        T = 50;                            % Temperature
+        T = 77;                            % Temperature
         nonpar_flag = 0;                    % non-parabolicity flag
 
         %--------------------------------------------------------------------------
@@ -51,8 +56,9 @@ for b = bias
             sindex = (kk-1)*nx + 1;
             findex = sindex+nx-1;
             Psi_ext(:,kk) = A(sindex : findex);
+            dipole_ext(kk,kk) = trapz(x,abs(Psi_ext(:,kk)).^2.*x)*1e10;
         end
-
+        
 
         efield.value = efield.value * 1e3 * 1e2;
 
@@ -72,10 +78,10 @@ for b = bias
         efield.value = b;                  % electric field value
         indir = 'Input';
 
-        infile = strcat(indir,'/','QCL183STB.m');  % input file
+        infile = strcat(indir,'/','QCLOPTICATB.m');  % input file
         outdir = 'Output';
-        nlevel = 5;                       % number of states to be solved
-        T = 50;                            % Temperature
+        nlevel = 4;                       % number of states to be solved
+        T = 77;                            % Temperature
         nonpar_flag = 0;                    % non-parabolicity flag
 
         %--------------------------------------------------------------------------
@@ -127,7 +133,19 @@ for b = bias
             Psi_tot(:,kk+nlevel) = Psi_periods(:,kk,2); E_tot(kk+nlevel) = E_periods(kk,2); 
             Psi_tot(:,kk+2*nlevel) = Psi_periods(:,kk,3); E_tot(kk+2*nlevel) = E_periods(kk,3); 
         end
-
+        centroids = zeros(1,size(Psi_tot,2)); 
+        for c = 1:size(centroids,2); 
+            centroids(c) = trapz(x,Psi_tot(:,c).^2.*x)*1e10;
+        end
+        dipoles_simple = zeros(size(Psi_tot,2));
+        
+        for r = 1:size(dipoles_simple,1)
+            for c = 1:size(dipoles_simple,2) 
+           dipoles_simple(r,c) = trapz(x,Psi_tot(:,r).*Psi_tot(:,c).*x)*1e10;
+            end
+        end
+        
+        
         %x in m and Vx in eV, bias in kV/cm 
         VB = Vx(1);
         
@@ -151,8 +169,8 @@ for b = bias
         [Hext,D,S] = calculateHamiltonianNEW(Psi_periods,E_periods,dV,x);
         VTB = Vtot(1)*(x<(Lp+CB_W))+ Vtot(1)*(x>=(2*Lp))+x*1E5*b;
         
-        indices01 = [7 6 5 4 3 2 1];
-        indices02 = [12 11 10 9 8 7 6];
+        indices01 = [5 4 3 2 1];
+        indices02 = [9 8 7 6 5];
         
         for i = 1:length(indices01)
             idx_i = indices01(i);
@@ -167,24 +185,22 @@ for b = bias
         end
         
         
-        INJ1 = 7 ; INJ2 = 6; ULL = 5; LLL1 = 4; LLL2 =3; DEPOP1 = 2; DEPOP2 = 1; 
+        INJ = 9 ; ULL = 8; LLL = 7; RES = 6; DEPOP = 5;
         
-        
-        Energies(ctr,1) = Hext(INJ1,INJ1); 
-        Energies(ctr,2) = Hext(INJ2,INJ2); 
-        Energies(ctr,3) = Hext(ULL,ULL); 
-        Energies(ctr,4) = Hext(LLL1,LLL1); 
-        Energies(ctr,5) = Hext(LLL2,LLL2); 
-        Energies(ctr,6) = Hext(DEPOP1,DEPOP1); 
-        Energies(ctr,7) = Hext(DEPOP2,DEPOP2); 
+        Energies(ctr,1) = Hext(INJ,INJ); 
+        Energies(ctr,2) = Hext(ULL,ULL); 
+        Energies(ctr,3) = Hext(LLL,LLL); 
+        Energies(ctr,4) = Hext(RES,RES); 
+        Energies(ctr,5) = Hext(DEPOP,DEPOP); 
         
        
-        AC_energies(ctr,1) = S(INJ1,ULL); 
-%         AC_energies(ctr,2) = S(ULL,INJ1); 
-        AC_energies(ctr,2) = S(INJ2,ULL); 
-%         AC_energies(ctr,4) = S(ULL,INJ2); 
-        
-        
+        AC_energies(ctr,1) = S(INJ,ULL); 
+        dipoles_RES_nm(ctr) = dipoles_simple(RES,RES)/10;
+        dipoles_LLL_nm(ctr) = dipoles_simple(LLL,LLL)/10;
+        dipoles_ULL_nm(ctr) = dipoles_simple(ULL,ULL)/10;
+        dipoles_INJ_nm(ctr) = dipoles_simple(INJ,INJ)/10;
+        dipoles_UL_nm(ctr) = dipoles_simple(ULL,LLL)/10;
+
         
 %       Hnew = inv(D)*Hext; 
 
@@ -196,11 +212,11 @@ for b = bias
             for i = 1:nlevel
                 Psi_new(:,j) = Psi_new(:,j) + a(i,j)*Psi_periods(:,i,1) +a(i+nlevel,j)*Psi_periods(:,i,2) +a(i+2*nlevel,j)*Psi_periods(:,i,3) ;
             end
-            Psi_new(:,j) = Psi_new(:,j)/(sqrt(trapz(Psi_new(:,j).^2)));
+            Psi_new(:,j) = Psi_new(:,j)/(sqrt(trapz(Psi_new(:,j).^2))); 
         end
         ctr = ctr + 1; 
 
-%         plotQCL(Psi_tot,E_tot,[Vx,VTB],x,0,1,0,'TB');  
+%         plotQCL(Psi_tot,E_tot,[Vx],x,0,1,0,'TB');  
 %         plotQCL(Psi_ext,E_ext,Vx,x,0,1,0,'Coupled');  
 %         plotQCL(Psi_new,d,Vx,x,0,1,0,'TB->Coupled');  
 
@@ -208,7 +224,8 @@ for b = bias
 %         display(num2str(reshape(H_TB',1,49)));
 
 end 
-
+% save('HTB.mat','Energies','AC_energies','bias','dipoles_RES_nm', ...
+%     'dipoles_LLL_nm','dipoles_ULL_nm','dipoles_INJ_nm','dipoles_UL_nm');
 val_field = b*1e3*1e2;
 V_TB = val_field*x + Vd_0;
 

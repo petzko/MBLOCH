@@ -53,7 +53,7 @@ epsp = const.eps0/(1/epsr.high - 1/epsr.static);
 meffi = 0;
 mefff = 0;
 
-if i > f
+if Ei > Ef
     status = 'Emission';
 else
     status = 'Absorption';
@@ -114,10 +114,11 @@ if Ei-Ef > hbarwlo
             invtouif = No*meffi*abs(const.qe)^3*hbarwlo*I/(2*const.hbar^3*epsp*qif);
     end % end switch status
 %invtouif
-touif = 1e12/invtouif;
+% touif = 1e12/invtouif;
+touif = 1./invtouif
 Ei - Ef;
 else
-    touif = 1e8;
+    touif = 0*1e8;
     %Ei - Ef
 end % end if Ei-Ef > hbarwlo
 

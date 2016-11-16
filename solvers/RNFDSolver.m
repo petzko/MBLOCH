@@ -38,7 +38,7 @@ classdef RNFDSolver < handle
         function res = make_step(obj,F,F_t,k,dt)
          
                 %%% The solver assumes an equation of the form 
-                %%% D_t(E) = -/+ D_x(E) + f(x,t) + k E 
+                %%% D_t(E) = -/+ v*D_x(E) + F(x,t) + k.*E 
                 %%% 
                 
                 E = obj.SOLUTION; % alias for the solution vector

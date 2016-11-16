@@ -32,7 +32,7 @@ boundary = 'zero';          % boundary condition
 %nlevel = 20;                % number of eigenvalues/energy states
 guess = 1e-6;               % eigenvalues will be calculated closest to this value
 
-ilife = 2;                  % initial energy level for lifetime calculation
+ilife = 3;                  % initial energy level for lifetime calculation
 flife = 1;                  % final energy level for lifetime calculation
 
 %T = 300% temperature, K
@@ -191,7 +191,7 @@ dipoles = zeros(nlevel);
 if dipole_flag == 1
       Psi = NormalizePsi(Psi,E,Egx,Vx,dx,2);
     for idpl = 1:nlevel
-        for fdpl = idpl+1:nlevel 
+        for fdpl = idpl:nlevel 
             dipoles(idpl,fdpl) = 1e10*abs(CalcDplMtxElt(E(idpl),E(fdpl),Psi(:,idpl),Psi(:,fdpl),Egx,Vx,mx));
             dipoles(fdpl,idpl) = dipoles(idpl,fdpl);
         end
@@ -208,14 +208,21 @@ end
 % Phonon scattering rate is calculated between two 
 % energy eigenvalues i and f is lifetime_flag is set to 1.
 if lifetime_flag == 1
-   Psi = NormalizePsi(Psi,E,Egx,Vx,dx,1);
-   touifemit = CalcLifetime(Psi,E,ilife,flife,Egx,Vx,mx,dx,hbarwlo,T,epsr);
-   %touifabs = CalcLifetime(Psi,E,ilife,flife,Egx,Vx,mx,dx,hbarwlo,T,epsr,'Absorption')
-   %touif = 1/(1/touifemit + 1/touifabs)
-   touif = touifemit
-   scatrate = 1/touif
-end
+life_times = zeros(nlevel); 
+% 
+%    Psi = NormalizePsi(Psi,E,Egx,Vx,dx,1);
+%    for i_idx = 1:nlevel
+%        for j_idx = 1:nlevel
+%         touifemit = CalcLifetime(Psi,E,i_idx,j_idx,Egx,Vx,mx,dx,hbarwlo,T,epsr);
+%         life_times(i_idx,j_idx) = real(touifemit);
+%         touif = touifemit
+%        end
+%    end
 
+% life_times
+% scat_rates = 1./life_times;
+% scat_rates
+end
 %plotQCL(Psi,E,Vx,x,wavefunc_flag,modulisqr_flag,modulisqrtrunc_flag);
 
 fid = fopen(strcat(outdir,'/','SolveBandStructure.txt'),'a');

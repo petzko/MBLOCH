@@ -3,7 +3,7 @@ function settings = parseInputv_mlvl(filename)
 assert(exist(filename) == 2,'the specified file does not exist. please try again'); 
 
 optnames = {'scenario','shb','tch','lch','N','D','disp','Ltot','Lp','dN','Ld','Overlap','nTHz','nRF','modF','modA',...
-            'Zorder','bias','current','deph','Tdeph_1','Tdeph_2','Tdeph_3','loss','simRT','plotCtr','recordRT','nr_steps'};
+            'Zorder','bias','current','voltage','deph','Tdeph_1','Tdeph_2','Tdeph_3','loss','simRT','plotCtr','recordRT','nr_steps'};
 
 n = length(optnames);
 comments = '#%!';

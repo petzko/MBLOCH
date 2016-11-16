@@ -1,0 +1,13 @@
+# % or ! are comments 
+
+#simulattion name 
+name = OPTICA(GHOSTCELL-newDRY-petzko)
+
+####dipole mtx elements (in C-nm)
+zUL = 3.6
+
+#### Hamiltonian matrix in the TB Basis in (eV): ordering is as follows [INJ,ULL,LLL,RES,DEPOP]
+HTB = [0.1183 -8.8071e-4 0 0 0 -8.8071e-4 0.1184 0 0 0 0 0 0.1075 0 0 0 0 0  0.1040 0 0 0 0  0  0.0713 ]
+# scattering rates matrix in linear form
+# for NLVL levels Wmtx((i-1)*NLVL+j) gives the outscattering rate from level i to level j, where i,j = 1,2... NLVL
+Wmtx = [0 0.0289 0.0015 0.0007 0.0003 0.0416 0  0.1061 0.0486 0.0452 0.0396 0.0976 0 0.6829 1.6362  0.0121 0.0229 0.4861 0  1.5737 0.0001 0.0004 0.0133 0.0158 0]

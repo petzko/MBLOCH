@@ -16,7 +16,7 @@ Nk =length(executables);
 
 workers = Ni*Nj*Nk;
 
-spmd(workers)
+% spmd(workers)
     tidx = labindex;    
     i = floor((tidx-1)/((Nj)*(Nk)))+1; 
     j = floor(((tidx-1)-(i-1)*Nj*Nk)/Nk)+1;
@@ -24,5 +24,5 @@ spmd(workers)
     simfile = [in_folder '\' simfiles{i}];
     scenariofile = [in_folder '\' scenariofiles{j}];
     executable =  executables{k};
-    savename = executable(scenariofile,simfile,'init',init,'workspace',workspacefiles{tidx});
-end
+    savename = executable(scenariofile,simfile,'init',-init,'workspace',workspacefiles{tidx});
+% end
