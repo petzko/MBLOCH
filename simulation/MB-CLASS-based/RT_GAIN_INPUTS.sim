@@ -4,7 +4,7 @@
 name = GAIN-SLOWLIGHT
 
 ####dipole mtx elements (in C-nm)
-zUL = 4.5
+zUL = 4.6
 
 # EIGENENERGY OF UPPER AND LOWER LEVEL in eV
 E_UL = 0.0209
@@ -35,10 +35,10 @@ Lp_g = 48.0
 Lp_a = 48.0
 
 # doping density in [cm^-3]
-Ncarriers_cm = 2.3e12
+Ncarriers_cm = 5.2e14
 
 #mode overlap factor [dimensionless] -> ignore these (for Olfa)
-Gamma = 1
+Gamma = .95
 
 #refractive index
 nTHz = 3.6

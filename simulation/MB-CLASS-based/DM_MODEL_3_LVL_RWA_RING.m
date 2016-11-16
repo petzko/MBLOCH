@@ -24,7 +24,7 @@ classdef DM_MODEL_3_LVL_RWA_RING < handle
         
         % Hamiltonian in units (1/time)
         H;
-        E0; 
+        E0;
         
         
         % Indices of the Excited, Spin and the Ground state
@@ -36,8 +36,8 @@ classdef DM_MODEL_3_LVL_RWA_RING < handle
         W;
         % 1/lifetime array!
         TOT_RTS;
-        DEPH; 
-                
+        DEPH;
+        
         IDX;
         
         NORM_FACTOR_FIELD; % factor that I have to multiply the eta_ul with
@@ -67,8 +67,8 @@ classdef DM_MODEL_3_LVL_RWA_RING < handle
     methods
         
         function obj  = DM_MODEL_3_LVL_RWA_RING(params)
-        
-           
+            
+            
             assert(strcmp(params.cavity,obj.CAVITY),'DM MODEL ERROR! CAVITY TYPE MISMATCH.');
             
             obj.name = params.name;
@@ -76,19 +76,19 @@ classdef DM_MODEL_3_LVL_RWA_RING < handle
             obj.tch = params.tch;
             obj.lch = params.lch;
             
-            %eigenenergies and dephasing times 
-             
+            %eigenenergies and dephasing times
+            
             hbar =  Constants('hbar',{'time',obj.tch})/Constants('q0');
             obj.H = params.H/hbar; % in units of 2pi/time
-            obj.E0 = params.E0/hbar; 
+            obj.E0 = params.E0/hbar;
             
             obj.W = params.W;
             
             % nomalization constant params
             obj.Gamma = params.Gamma;  % overlap factor
             obj.zUL = params.zUL ; % dipole element in units of nm
-            obj.nTHz = params.nTHz;            
-           
+            obj.nTHz = params.nTHz;
+            
             obj.N_pts = params.N_pts;
             % initialize the variables
             obj.rho_ex = 1/3*ones(obj.N_pts,1);
@@ -98,57 +98,56 @@ classdef DM_MODEL_3_LVL_RWA_RING < handle
             % some very small correlation
             obj.eta_eg = 1e-15*((rand(obj.N_pts,1)-1/2)+ ...
                 1i*(rand(obj.N_pts,1)-1/2));
-            obj.eta_eg_t = 0*obj.eta_eg;
-            
-            obj.eta_sg = 1e-15*((rand(obj.N_pts,1)-1/2)+ ...
-                1i*(rand(obj.N_pts,1)-1/2));
-            obj.eta_sg_t = 0*obj.eta_sg;
-            
             obj.rho_se = 1e-15*((rand(obj.N_pts,1)-1/2)+ ...
                 1i*(rand(obj.N_pts,1)-1/2));
+            obj.eta_sg = 1e-15*((rand(obj.N_pts,1)-1/2)+ ...
+                1i*(rand(obj.N_pts,1)-1/2));
+            
+            obj.eta_eg_t = 0*obj.eta_eg;
+            obj.eta_sg_t = 0*obj.eta_sg;
             obj.rho_se_t = 0*obj.rho_se;
             
             obj.rho_spin_solver = MS(5,obj.N_pts,[],obj.rho_spin);
             obj.rho_ex_solver = MS(5,obj.N_pts,[],obj.rho_ex);
             obj.rho_grnd_solver = MS(5,obj.N_pts,[],obj.rho_grnd);
-        
+            
             obj.rho_se_solver = MS(5,obj.N_pts,[],obj.rho_se);
             obj.eta_eg_solver = MS(5,obj.N_pts,[],obj.eta_eg);
             obj.eta_sg_solver = MS(5,obj.N_pts,[],obj.eta_sg);
             
             obj.Ex_ = params.Ex_;
-            obj.Spin_ = params.Spin_; 
-            obj.Grnd_ = params.Grnd_; 
+            obj.Spin_ = params.Spin_;
+            obj.Grnd_ = params.Grnd_;
             
             
             obj.SE = 1; obj.EG = 2; obj.SG = 3;
             
-            obj.TOT_RTS = zeros(3,1); 
-            obj.TOT_RTS(obj.Spin_) = obj.W(obj.Spin_,obj.Grnd_) + ... 
+            obj.TOT_RTS = zeros(3,1);
+            obj.TOT_RTS(obj.Spin_) = obj.W(obj.Spin_,obj.Grnd_) + ...
                 obj.W(obj.Spin_,obj.Ex_);
-            obj.TOT_RTS(obj.Ex_) = obj.W(obj.Ex_,obj.Grnd_) + ... 
+            obj.TOT_RTS(obj.Ex_) = obj.W(obj.Ex_,obj.Grnd_) + ...
                 obj.W(obj.Ex_,obj.Spin_);
-            obj.TOT_RTS(obj.Grnd_) = obj.W(obj.Grnd_,obj.Spin_) + ... 
+            obj.TOT_RTS(obj.Grnd_) = obj.W(obj.Grnd_,obj.Spin_) + ...
                 obj.W(obj.Grnd_,obj.Ex_);
             
-            obj.DEPH = zeros(3,1); 
+            obj.DEPH = zeros(3,1);
             obj.DEPH(obj.SE) = 1/2*(obj.TOT_RTS(obj.Spin_)+obj.TOT_RTS(obj.Ex_));
             obj.DEPH(obj.EG) = 1/2*(obj.TOT_RTS(obj.Ex_)+obj.TOT_RTS(obj.Grnd_));
             obj.DEPH(obj.SG) = 1/2*(obj.TOT_RTS(obj.Spin_)+obj.TOT_RTS(obj.Grnd_));
             
             
-            obj.loss = params.linear_loss*100/(1/obj.lch)*ones(obj.N_pts,1); 
+            obj.loss = params.linear_loss*100/(1/obj.lch)*ones(obj.N_pts,1);
             obj.IDX = params.IDX;
-       
-            % Carrier density in 1/m^3! 
-            obj.Ncarriers = params.Ncarriers_cm*(100^3); 
+            
+            % Carrier density in 1/m^3!
+            obj.Ncarriers = params.Ncarriers_cm*(100^3);
             obj.TRACE_RHO = ((obj.E0*1e12*obj.Ncarriers*obj.Gamma*...
                 (obj.zUL*1E-9*Constants('q0'))^2)...
                 /(Constants('eps0')*obj.nTHz*Constants('c')*Constants('hbar')))...
                 /(1/(obj.lch*obj.tch));
             obj.NORM_FACTOR_FIELD = obj.TRACE_RHO*params.zNORM/obj.zUL;
             obj.NORM_FACTOR_DM = obj.zUL/params.zNORM;
-        
+            
         end
         
         function [] = propagate(obj,FIELD,dt)

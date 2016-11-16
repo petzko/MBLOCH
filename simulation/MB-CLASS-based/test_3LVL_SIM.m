@@ -1,3 +1,5 @@
+clear; clc;close all;
+
 params_gain = input_parser('RT_GAIN_INPUTS.sim');
 params_sl = input_parser('RT_SLOWLIGHT.sim');
 
@@ -7,9 +9,12 @@ tch = params_sl.tch;
 lch = params_sl.lch; 
 Ex_ = params_sl.Ex_; 
 Grnd_ = params_sl.Grnd_;
+Spin_ = params_sl.Spin_;
 
 NLVLS = 3;
 params_sl.H = reshape(params_sl.H,NLVLS,NLVLS).';
+params_sl.H(Spin_,Spin_) = params_sl.H(Ex_,Ex_);
+
 params_sl.W = reshape(params_sl.W,NLVLS,NLVLS).';
 
 E0_sd = (params_sl.H(Ex_,Ex_)-params_sl.H(Grnd_,Grnd_));
@@ -20,7 +25,7 @@ params_sl.cavity = 'RING';
 
 params_gain.E0 = 1/2*(E0_sd+E0_gain); 
 params_sl.E0 = 1/2*(E0_sd+E0_gain); 
-N = 3000; 
+N = 2000; 
 glob_idx = 1:N;
 
 % number of regions
@@ -59,11 +64,28 @@ params_sl.N_pts = N_sl;
 F = zeros(N,1);
 c = Constants('c',{'time',tch},{'length',lch})/params_sl.nTHz;
 dt = dx/c; 
-tp = 30;
-A0  = 1e-6/tp;
-t0 = tp*4;
+%%%%%%
+FWHM = 30*2/sqrt(2); %psec
+t0 = +50;
+sig = FWHM/(2*sqrt(2*log(2))); % std. dev
+A0 = 0.001;
+gauss = @(t,mu,s) A0*exp(-(t-mu).^2/(2*s^2));
+
+NBits =  8;
+NUM2SEND = 125;
+code = de2bi(NUM2SEND,NBits);
+message = @(t) 0;
+
+for i = 1:NBits
+    message = @(t) message(t) + code(i)*gauss(t,t0+i*4*FWHM,sig)
+end
+%%%%%%%%%%%%
+U_in = []; 
+U_out = []; 
+
+
 F_solver = RNFDSolver(N,dx,1,c,F);
-zNORM = params_gain.zUL; % with respect to which dipole transition do you
+zNORM = params_sl.zUL; % with respect to which dipole transition do you
 % normalize the field !?!?! 
 
 
@@ -74,10 +96,12 @@ gain_model = DM_MODEL_2_LVL_RWA_RING(params_gain);
 sl_model = DM_MODEL_3_LVL_RWA_RING(params_sl);
 P = zeros(N,1); P_t = zeros(N,1); losses = zeros(N,1); 
 
-t = 1; N_t = 100000;
+t = 1; N_t = 1000000;
+U_in = zeros(N_t,1);  U_out = zeros(N_t,1);
+
 while t < N_t
     
-    if mod(t,100) == 0
+    if mod(t,1000) == 0
         plot(x,abs(F).^2,'b','Linewidth',2.0);
 %         plot(sl_model.rho_ex-sl_model.rho_grnd);
         
@@ -87,11 +111,22 @@ while t < N_t
         set(fobj,'EdgeColor','none','FaceAlpha',0.3);
         hold off;
         getframe;
-    end
+        clc;
+        display(['gain:' num2str(gain_model.calculate_optical_gain(3.6)*1e-2)] )
     
-    gain_model.propagate(F(gain_model.IDX),dt);
-    sl_model.propagate(F(sl_model.IDX),dt); 
-       
+    
+    end
+    U_in(t) = F(1); 
+    U_out(t) = F(end);
+    
+    
+    F_eff = F.*i_core;
+    gain_model.propagate(F_eff(gain_model.IDX),dt);
+    sl_model.propagate(F_eff(sl_model.IDX),dt); 
+    ftr = ones(length(F),1); 
+    ftr(sl_model.IDX) = -1i*c*sl_model.NORM_FACTOR_FIELD;
+    ftr(gain_model.IDX) = -1i*c*gain_model.NORM_FACTOR_FIELD;
+    
     [dummy1,dummy2,dummy3] = sl_model.get_polarization_and_losses();
     P(sl_model.IDX) = dummy1; 
     P_t(sl_model.IDX) = dummy2; 
@@ -103,12 +138,12 @@ while t < N_t
     losses(gain_model.IDX) = dummy3; 
     
     F = F_solver.make_step(-1i*c*P.*i_core,-1i*c*P_t.*i_core,-c*losses.*i_core,dt); 
-    F = F_solver.set_bdry(A0*sech((t*dt-t0)/tp),'no');
-
+    F = F_solver.set_bdry(message(t*dt),'no');
+    
     gain_model.update_state();
+    
     sl_model.update_state();
     
- 
     F = F;
     t = t+1;
 end

@@ -27,22 +27,22 @@ lch = 1E-3
 N = 6000 
 
 #cavity length (mm) 
-L = 5
+L = 2
 
 #period length [nm]
 Lp = 57
 
 # average doping density in [cm^-3]
-Ncarriers_cm = 1E15
+Ncarriers_cm = 5e16*9/57
 
 #mode overlap factor [dimensionless]
-Gamma = 1 
+Gamma = .95
 
 #refractive index
 nTHz = 3.6
 
 #cavity loss in 1/cm; 
-linear_loss = 10
+linear_loss = 0
 
 # reflection coeff [dimensionless] 
 R = 1

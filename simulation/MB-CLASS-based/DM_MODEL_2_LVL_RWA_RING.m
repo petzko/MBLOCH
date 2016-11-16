@@ -29,6 +29,7 @@ classdef DM_MODEL_2_LVL_RWA_RING < handle
         TRACE_RHO; % =  Ncarriers*Gamma*E0*(qzUL^2)/eps0*nthz*c*hbar
         
         N_pts;
+        hbar;
         Gamma,zUL;
         Ncarriers;
         loss,nTHz;
@@ -52,10 +53,10 @@ classdef DM_MODEL_2_LVL_RWA_RING < handle
             
             %eigenenergies and dephasing times 
              
-            hbar =  Constants('hbar',{'time',obj.tch})/Constants('q0');
-            obj.E_UL = params.E_UL/hbar; % in units of 2pi/time
-            obj.E_LL = params.E_LL/hbar; % in units of 2pi/time
-            obj.E0 = params.E0/hbar; % central freq in units 2pi/time;
+            obj.hbar =  Constants('hbar',{'time',obj.tch})/Constants('q0');
+            obj.E_UL = params.E_UL/obj.hbar; % in units of 2pi/time
+            obj.E_LL = params.E_LL/obj.hbar; % in units of 2pi/time
+            obj.E0 = params.E0/obj.hbar; % central freq in units 2pi/time;
             
             obj.T1 = params.T_1;
             obj.T2 = params.T_2;
@@ -76,6 +77,8 @@ classdef DM_MODEL_2_LVL_RWA_RING < handle
             %some very small correlation
             obj.eta_ul = 1e-15*((rand(obj.N_pts,1)-1/2)+ ...
                 1i*(rand(obj.N_pts,1)-1/2));
+             obj.eta_ul = 1E-50*((ones(obj.N_pts,1)-1/2)+ ...
+                1i*(ones(obj.N_pts,1)-1/2));
             obj.eta_ul_t = 0*obj.eta_ul;
             
             
@@ -117,9 +120,7 @@ classdef DM_MODEL_2_LVL_RWA_RING < handle
         
         function [] = update_state(obj)
             obj.eta_ul = obj.eta_ul_solver.get_latest_solution(); 
-            
             obj.rho_l = obj.rho_l_solver.get_latest_solution(); 
-            
             obj.rho_u = obj.rho_u_solver.get_latest_solution(); 
         end
         
@@ -128,6 +129,15 @@ classdef DM_MODEL_2_LVL_RWA_RING < handle
             P = obj.NORM_FACTOR_FIELD*obj.eta_ul;
             P_t = obj.NORM_FACTOR_FIELD*obj.eta_ul_t;
             LOSSES = obj.loss;
+        end
+        
+        function [gn] = calculate_optical_gain(obj,nthz)
+            avg_inv = mean(obj.rho_u-obj.rho_l);
+            
+            gn = (obj.E0*obj.T2/(Constants('hbar')*Constants('eps0')*...
+                Constants('c')*nthz))*obj.Ncarriers*...
+                (obj.zUL*1e-9*Constants('q0'))^2*avg_inv;
+        
         end
         
     end

@@ -147,7 +147,7 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
             obj.DEPH(obj.SE) = 1/2*(obj.TOT_RTS(obj.Spin_)+obj.TOT_RTS(obj.Ex_));
             obj.DEPH(obj.EG) = 1/2*(obj.TOT_RTS(obj.Ex_)+obj.TOT_RTS(obj.Grnd_));
             obj.DEPH(obj.SG) = 1/2*(obj.TOT_RTS(obj.Spin_)+obj.TOT_RTS(obj.Grnd_));
-            
+            obj.DEPH = obj.DEPH;
             
             obj.loss = params.linear_loss*100/(1/obj.lch)*ones(obj.N_pts,1); 
             obj.IDX = params.IDX;
