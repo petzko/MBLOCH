@@ -17,7 +17,7 @@ classdef TL_solver < handle
             
         %Definition of constants
         obj.dx = params.dx;        %unit: mm
-        obj.dt = params.dt;        %unit: s
+        obj.dt = params.dt*1e-12;        %unit: ps
         obj.Zin = params.Zin;      %unit: ohm
         obj.Vs = params.Vs;        %unit: V
         obj.IDX = params.IDX;
