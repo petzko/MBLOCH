@@ -12,7 +12,7 @@ rlgc.L = 1.6e-10;  %unit: H/mm
 dat.Zin = 50;      %unit: ohm
 dat.Vs = 9;        %unit: V
 dat.width = 50e-3; %unit: mm
-
+dat.height = 10e-3;%unit: mm
 %Initial conditions
 %At t=0, the voltage on the line was set to be equal with the source, and
 %no current flows to the line. Due to tunneling of electrons (J) which is 
@@ -30,6 +30,8 @@ dat.v_TL(1) = 1/(rlgc.C*dat.dx/dat.dt+1/2/dat.Zin)*...
                     ((rlgc.C*dat.dx/dat.dt-1/2/dat.Zin)*...
                     dat.v_TL(1)-dat.i_TL(1)+dat.width*dat.dx/2*...
                     dat.J_TL(1)+dat.Vs/dat.Zin);
+                
+                
 dat.v_TL(2:end) = dat.v_TL(2:end)-dat.dt/rlgc.C/dat.dx*(dat.i_TL(2:end)-...
                     dat.i_TL(1:end-1))-dat.width*dat.dx*dat.J_TL(2:end);
 
