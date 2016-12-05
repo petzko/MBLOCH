@@ -32,6 +32,7 @@ dat.v_2TL(1:end) = dat.Vs/2;    % V(0)    V(1)....   V(M)
 dat.i_2TL(1:end) = 0;           % I(1/2)  I(3/2).... I(M+1/2)
 dat.J_2TL(1:end) = 0;           % J(0)    J(1).....  J(M)      A/mm^2
 
+temp_v2 = dat.Vs/2;
 %Boundary conditions
 %right side open circuit,image current
 dat.i_1TL(end) = -dat.i_1TL(end-1);
@@ -42,24 +43,31 @@ dat.i_2TL(end) = -dat.i_2TL(end-1);
 dat.v_2TL(end) = dat.v_2TL(end)-dat.dt/rlgc.C/dat.dx*(-2*dat.i_2TL(end-1)-...
                     -dat.w2*dat.dx*dat.J_2TL(end));
 
-
 %Voltage and current updating
         % Section 1 §
 temp_v1 = dat.v_1TL(1); % store the old voltage on section 1
-dat.v_1TL(1) = 1/(rlgc.C1*dat.dx/dat.dt/2+1/2/dat.Zin)*...
-                    ((rlgc.C1*dat.dx/dat.dt/2-1/2/dat.Zin)*...
-                    dat.v_1TL(1)-dat.i_1TL(1)-dat.width*dat.dx/2*...
-                    dat.J_1TL(1)+(dat.Vs-dat.v_2TL(1))/dat.Zin);
+% dat.v_1TL(1) = 1/(rlgc.C1*dat.dx/dat.dt/2+1/2/dat.Zin)*...
+%                     ((rlgc.C1*dat.dx/dat.dt/2-1/2/dat.Zin)*...
+%                     dat.v_1TL(1)-dat.i_1TL(1)-dat.width*dat.dx/2*...
+%                     dat.J_1TL(1)+(dat.Vs-(dat.v_2TL(1)+temp_v2)/2)/dat.Zin);
+
+dat.v_1TL(1) = 2*(dat.Vs-(temp_v2+dat.v_2TL(1))/2-dat.Zin*(dat.i_2TL(1)+dat.w2*dat.dx*dat.J_2TL(1)+...
+                rlgc.C2*dat.dx*dat.dt/2*(dat.v_2TL(1)-temp_v2)))-dat.v_1TL(1);
 
 dat.v_1TL(2:end-1) = dat.v_1TL(2:end-1)-dat.dt/rlgc.C1/dat.dx*(dat.i_1TL(2:end-1)-...
                     dat.i_1TL(1:end-2)-dat.w1*dat.dx*dat.J_1TL(2:end-1));
 
 dat.i_1TL(1:end-1) = dat.i_1TL(1:end-1)-dat.dt/rlgc.L1/dat.dx*(dat.v_1TL(2:end)...
                     -dat.v_1TL(1:end-1));
+                
+dat.i_1TL(end) = -dat.i_1TL(end-1);
+dat.v_1TL(end) = dat.v_1TL(end)-dat.dt/rlgc.C1/dat.dx*(-2*dat.i_1TL(end-1)-...
+                    -dat.w1*dat.dx*dat.J_1TL(end));
 
         % Section 2 §
-dat.v_2TL(1) = dat.Vs-dat.v_1TL(1)-dat.Zin*(dat.i_1TL(1)+dat.w1*dat.dx*dat.J_1TL(1)+...
-                rlgc.C1*dat.dx*dat.dt/2*(dat.v_1TL(1)-temp_v1));
+temp_v2 = dat.v_2TL(1); % store the old voltage on section 2       
+dat.v_2TL(1) = 2*(dat.Vs-(temp_v1+dat.v_1TL(1))/2-dat.Zin*(dat.i_1TL(1)+dat.w1*dat.dx*dat.J_1TL(1)+...
+                rlgc.C1*dat.dx*dat.dt/2*(dat.v_1TL(1)-temp_v1)))-dat.v_2TL(1);
 
 dat.v_2TL(2:end-1) = dat.v_2TL(2:end-1)-dat.dt/rlgc.C2/dat.dx*(dat.i_2TL(2:end-1)-...
                     dat.i_2TL(1:end-2)-dat.w2*dat.dx*dat.J_2TL(2:end-1));
@@ -67,6 +75,10 @@ dat.v_2TL(2:end-1) = dat.v_2TL(2:end-1)-dat.dt/rlgc.C2/dat.dx*(dat.i_2TL(2:end-1
 dat.i_2TL(1:end-1) = dat.i_2TL(1:end-1)-dat.dt/rlgc.L2/dat.dx*(dat.v_2TL(2:end)...
                     -dat.v_2TL(1:end-1));
 
-                 
+dat.i_2TL(end) = -dat.i_2TL(end-1);
+
+dat.v_2TL(end) = dat.v_2TL(end)-dat.dt/rlgc.C/dat.dx*(-2*dat.i_2TL(end-1)-...
+                    -dat.w2*dat.dx*dat.J_2TL(end));
+
                 
 end
