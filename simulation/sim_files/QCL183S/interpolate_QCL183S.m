@@ -6,6 +6,7 @@
 %divide by 10 to normalize to kv/mm; 
 vals_fit = vals'/10; 
 
+zUL_fit = fit(vals_fit,dipoles/10,'linearinterp');
 
 ac_fit_type = 'poly2';
 O_13_fit = fit(vals_fit,O_13_v'/2,ac_fit_type); %in eV
@@ -29,7 +30,7 @@ for lvl_i = 1:N_lvls
     end
 end
 
-% save('fitted_data');
+save('fitted_data');
 
 %plot some of the results 
 %%

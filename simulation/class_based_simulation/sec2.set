@@ -1,17 +1,16 @@
 # % or ! are comments 
 
-#simulattion name 
-name = (QCL183S-TL-sim)
-#shall I include spatial hole burning or not
+# simulattion name 
+name = (QCL183S-TL-sim-section-2)
+# shall I include spatial hole burning or not
 shb = +1
-
 
 #characteristic time.. seconds per picosecond and length meters per millimeter 
 tch = 1E-12 
 lch = 1E-3 
 
 #grid size in x direction
-N = 3000 
+N_pts = 3000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -29,7 +28,10 @@ Lp = 54.8
 dN = 1.9E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
-Ld = 16.2;
+Ld = 16.2
+
+# the impedence of Vs
+Zin = 50 
 
 #mode overlap factor [dimensionless]
 Overlap = 0.8
@@ -48,10 +50,15 @@ modF = 0;
 bias = 11;
 
 #boundary voltage value! in V
-voltage = 15
+Vs = 15
 
 #initial current value (A/mm)
 current = 30
+
+# section 1 width height and legnth in mm 
+width = 50e-3
+height = 16e-3 
+length = 2;
 
 
 #pure dephasing  time for the inj -> ull transition[ps]

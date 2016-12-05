@@ -100,7 +100,6 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
             obj.INJ = params.INJ;
             obj.LLL = params.LLL;
             obj.DEPOP = params.DEPOP;
-            obj.IGNORELEVEL = params.IGNORELEVEL;
             
             obj.i_13 = 1; obj.i_32 = 2; obj.i_12 = 3;
             obj.zNORM = params.zNORM;
@@ -326,7 +325,7 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
         
         function [] = interpolate(obj,v_TL,W_fit,E_fit,AC_fit,zUL_fit)
             
-            v_TL = v_TL(obj.IDX); INJ = obj.INJ; ULL = obj.ULL; LLL = obj.LLL;
+            INJ = obj.INJ; ULL = obj.ULL; LLL = obj.LLL;
             DEPOP = obj.DEPOP;
             
             for i_ = 1:obj.NLVLS
@@ -414,8 +413,7 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
                 end
             end
         end
-        
-        
+    
         function [P,P_t,M,M_t,LOSSES] = get_polarization_and_losses(obj)
             % additionally the polarizaiton should be multiplied by -1i*c/n
             
