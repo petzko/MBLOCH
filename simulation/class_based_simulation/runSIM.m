@@ -74,13 +74,13 @@ record_popsum = 1; record_v_TL =1;
 record_i_TL = 1; record_J_TL =1;
 
 
-v_TL = bias/10*ones(N,1);
+TL_bias = bias/10*ones(N,1);
 
 dm_model_s1 = DM_MODEL_3_LVL_RWA_FP(params_s1);
-dm_model_s1.interpolate(v_TL(params_s1.IDX),W_fit,E_fit,AC_fit,zUL_fit);
+dm_model_s1.interpolate(TL_bias(params_s1.IDX),W_fit,E_fit,AC_fit,zUL_fit);
 
 dm_model_s2 = DM_MODEL_3_LVL_RWA_FP(params_s2);
-dm_model_s2.interpolate(v_TL(params_s2.IDX),W_fit,E_fit,AC_fit,zUL_fit);
+dm_model_s2.interpolate(TL_bias(params_s2.IDX),W_fit,E_fit,AC_fit,zUL_fit);
 
 dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
@@ -151,9 +151,9 @@ while( t< tEnd)
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,interpCtr) == 0
-        dm_model_s1.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
-        dm_model_s2.interpolate(TL_model_s2.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
+    if mod(iter_ctr,100) == 0
+        dm_model_s1.interpolate(TL_model_s1.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
+        dm_model_s2.interpolate(TL_model_s2.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
     end
     
 
@@ -164,7 +164,7 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,1) == 0)
+    if(mod(iter_ctr,100) == 0)
         clc;
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
         getframe;

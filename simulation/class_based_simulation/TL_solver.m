@@ -59,7 +59,7 @@ classdef TL_solver < handle
         
         
         function v = get_bias(obj)
-            v = obj.v_TL;
+            v = obj.v_TL*1e-3/obj.height;
         end
           
     end

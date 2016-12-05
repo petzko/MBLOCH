@@ -324,11 +324,11 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
         end
         
         function [] = interpolate(obj,v_TL,W_fit,E_fit,AC_fit,zUL_fit)
-            
+            %%%
             %%% interpolate the structure based on the bias (i.e. voltage
             %%% per unit length) at each point of the section grid! The
-            %%% bias should be normalized in units kV/mm!
-            
+            %%% 
+            %%%
             INJ = obj.INJ; ULL = obj.ULL; LLL = obj.LLL;
             DEPOP = obj.DEPOP;
             
@@ -434,9 +434,7 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
         end
         
         function [J_TL] = get_current_density(obj,params)
-            %%% returns the section's current density in units A/mm^2,
-            %%% calculated based on the periodic rate equations' formula. 
-            %%%
+            
             shb11 = obj.r11p.*exp(2*1i*params.x*obj.E0/params.c);
             shb33 = obj.r33p.*exp(2*1i*params.x*obj.E0/params.c);
             shb22 = obj.r22p.*exp(2*1i*params.x*obj.E0/params.c);
