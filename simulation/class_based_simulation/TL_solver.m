@@ -42,7 +42,7 @@ classdef TL_solver < handle
         obj.J_TL = J_TL;
 
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)-obj.dt/obj.rlgc.C/obj.dx*(obj.i_TL(2:end-1)-...
-                            obj.i_TL(1:end-2)-obj.width*obj.dx*J_TL(2:end-1));
+                            obj.i_TL(1:end-2)+obj.width*obj.dx*J_TL(2:end-1));
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)-obj.dt/obj.rlgc.L/obj.dx*(obj.v_TL(2:end)...
                             -obj.v_TL(1:end-1));
 
@@ -51,10 +51,10 @@ classdef TL_solver < handle
         function set_boundary(obj,v2old,v2new,i2new,width2,J_2TL,rlgc2)
             
             obj.v_TL(1) = 2*(obj.Vs-(v2old+v2new)/2-obj.Zin*(i2new+width2*obj.dx*J_2TL(1)+...
-                            rlgc2.C*obj.dx*obj.dt/2*(v2new-v2old)))-obj.v_TL(1);
+                            rlgc2.C*obj.dx/obj.dt/2*(v2new-v2old)))-obj.v_TL(1);
             obj.i_TL(end) = -obj.i_TL(end-1);
-            obj.v_TL(end) = obj.v_TL(end)-obj.dt/obj.rlgc.C/obj.dx*(-2*obj.i_TL(end-1)-...
-                        -obj.width*obj.dx*obj.J_TL(end));
+            obj.v_TL(end) = obj.v_TL(end)-obj.dt/obj.rlgc.C/obj.dx*(-2*obj.i_TL(end-1)...
+                        +obj.width*obj.dx*J_2TL(end));
         end
         
         
