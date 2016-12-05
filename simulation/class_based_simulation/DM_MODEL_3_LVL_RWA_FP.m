@@ -323,6 +323,15 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
             
         end
         
+        function [trace] = get_avg_trace(obj)
+            trace = obj.r110+obj.r330+obj.r220; 
+            for p=1:obj.N_rest
+                trace = trace + obj.rRES{p};
+            end
+            trace = mean(trace);
+            
+        end
+        
         function [] = interpolate(obj,v_TL,W_fit,E_fit,AC_fit,zUL_fit)
             
             %%% interpolate the structure based on the bias (i.e. voltage

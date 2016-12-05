@@ -164,9 +164,13 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,100) == 0)
+    if(mod(iter_ctr,1) == 0)
         clc;
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
+        trace1 = dm_model_s1.get_avg_trace();
+        trace2 = dm_model_s2.get_avg_trace();
+        display(['trace section 1: ' num2str(trace1)])
+        display(['trace section 2: ' num2str(trace2)])
         getframe;
     end
     
