@@ -145,7 +145,8 @@ while( t< tEnd)
     v2new = TL_model_s2.v_TL(1);
     i2new = TL_model_s2.i_TL(1);
     
-    TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)
+%     TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)
+    TL_model_s1.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
     TL_model_s2.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
     
     dm_model_s1.update_state();
