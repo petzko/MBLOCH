@@ -31,7 +31,7 @@ dN = 1.9E16
 Ld = 16.2
 
 # the impedence of Vs
-Zin = 50 
+Zin = 50
 
 #mode overlap factor [dimensionless]
 Overlap = 0.8
@@ -50,7 +50,7 @@ modF = 0;
 bias = 11;
 
 #boundary voltage value! in V
-Vs = 26
+Vs = 38
 
 #initial current value (A/mm)
 current = 30

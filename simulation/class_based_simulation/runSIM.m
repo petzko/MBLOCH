@@ -97,7 +97,9 @@ TL_model_s2 = TL_solver(params_s2,rlgc2);
 % TL_model_s1.i_TL = TL_model_s1.i_TL*0;
 v1old = TL_model_s1.v_TL(1); 
 v2old = TL_model_s2.v_TL(1);
+v1new = v1old;
 v2new = v2old;
+i1new = TL_model_s1.i_TL(1);
 i2new = TL_model_s2.i_TL(1);
 
 %%%% specify some of the mainloop control parameters %%%%
@@ -138,19 +140,19 @@ while( t< tEnd)
     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
-    
+
     v1old = TL_model_s1.v_TL(1);    
-    TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)    
+    TL_model_s1.set_boundary(v2old,v2new,i1new,params_s1.width,J_TL1,rlgc1)    
     TL_model_s1.propagate(J_TL1);
     v1new = TL_model_s1.v_TL(1);
     i1new = TL_model_s1.i_TL(1);
     
     v2old = TL_model_s2.v_TL(1); 
-    TL_model_s2.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)    
+    TL_model_s2.set_boundary(v1old,v1new,i2new,params_s2.width,J_TL2,rlgc2)    
     TL_model_s2.propagate(J_TL2);
     v2new = TL_model_s2.v_TL(1);
     i2new = TL_model_s2.i_TL(1);   
- 
+
  
 % %     TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)
 %     TL_model_s1.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
@@ -172,13 +174,26 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,1) == 0)
+    if(mod(iter_ctr,100) == 0)
         clc;
-        subplot(2,1,1);
+        subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
-        subplot(2,1,2); 
+        
+        subplot(4,1,2); 
         J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
         plot(x,J_TL);
+        title('J\_TL');
+        
+        subplot(4,1,3);        
+        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL;
+        plot(x,V_TL);
+        title('V\_TL');
+
+        subplot(4,1,4);
+        I_TL(dm_model_s1.IDX) = TL_model_s1.i_TL; I_TL(dm_model_s2.IDX) = TL_model_s2.i_TL;
+        plot(x,I_TL);
+        title('I\_TL');
+        
         trace1 = dm_model_s1.get_avg_trace();
         trace2 = dm_model_s2.get_avg_trace();
         display(['trace section 1: ' num2str(trace1)])

@@ -50,7 +50,7 @@ modF = 0;
 bias = 11;
 
 #boundary voltage value! in V
-Vs = 26
+Vs = 38
 
 #initial current value (A/mm)
 current = 30
