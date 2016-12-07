@@ -352,16 +352,14 @@ classdef DM_MODEL_3_LVL_RWA_FP < handle
             
             %%% bi_32in i_13tting up TL params!
             obj.TOT_RTS(:,INJ) = 0*obj.TOT_RTS(:,INJ);
-            for el = setdiff(1:obj.NLVLS,[INJ,DEPOP])
+            for el = setdiff(1:obj.NLVLS,[INJ,DEPOP,obj.IGNORELEVEL])
                 obj.TOT_RTS(:,INJ) = obj.TOT_RTS(:,INJ)+obj.W(:,INJ,el);
             end
             
             for lvl = setdiff(1:obj.NLVLS,[INJ,DEPOP,obj.IGNORELEVEL])
                 obj.TOT_RTS(:,lvl) = 0* obj.TOT_RTS(:,lvl);
-                for el = 1:obj.NLVLS
-                    if el ~=lvl
-                        obj.TOT_RTS(:,lvl) = obj.TOT_RTS(:,lvl) +  obj.W(:,lvl,el);
-                    end
+                for el = setdiff(1:obj.NLVLS,[lvl,obj.IGNORELEVEL])
+                    obj.TOT_RTS(:,lvl) = obj.TOT_RTS(:,lvl) +  obj.W(:,lvl,el);
                 end
             end
             
