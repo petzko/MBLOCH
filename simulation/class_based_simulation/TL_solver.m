@@ -34,7 +34,12 @@ classdef TL_solver < handle
         %relevant to position, the voltage as well as current along the lines 
         %will be changed until equilibrium.
         obj.v_TL = obj.Vs/2*ones(obj.N_pts,1);    % V(0)    V(1)....   V(M)
+%         obj.v_TL = (linspace(obj.Vs/2,0,obj.N_pts))';
         obj.i_TL = 0*ones(obj.N_pts,1);    % I(1/2)  I(3/2).... I(M+1/2)
+% %         obj.i_TL(end-1) = 13.8045*0.05*6.6678e-4;
+% %             for mm = 2: obj.N_pts-1
+% %                 obj.i_TL(obj.N_pts-mm) = obj.i_TL(obj.N_pts-mm+1)+13.8045*0.05*6.6678e-4;
+% %             end
         end
         
         function propagate(obj,J_TL)
@@ -46,18 +51,24 @@ classdef TL_solver < handle
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)-obj.dt/obj.rlgc.L/obj.dx*(obj.v_TL(2:end)...
                             -obj.v_TL(1:end-1));
 
+
         end
        
         function set_boundary(obj,v2old,v2new,i2new,width2,J_2TL,rlgc2)
             
-%             obj.v_TL(1) = 2*(obj.Vs-(v2old+v2new)/2-obj.Zin*(i2new+width2*obj.dx*J_2TL(1)+...
+%              obj.v_TL(1) = 2*(obj.Vs-(v2old+v2new)/2-obj.Zin*(i2new+width2*obj.dx*J_2TL(1)+...
 %                             rlgc2.C*obj.dx/obj.dt/2*(v2new-v2old)))-obj.v_TL(1);
-            obj.v_TL(1) = 1/(rlgc2.C*obj.dx/obj.dt/2+1/2/obj.Zin)*...
+             obj.v_TL(1) = 1/(rlgc2.C*obj.dx/obj.dt/2+1/2/obj.Zin)*...
                     ((rlgc2.C*obj.dx/obj.dt/2-1/2/obj.Zin)*v2new-i2new-width2*obj.dx/2*...
                     J_2TL(1)+(obj.Vs-(v2new+v2old)/2)/obj.Zin);
-            obj.i_TL(end) = -obj.i_TL(end-1);
-            obj.v_TL(end) = obj.v_TL(end)-obj.dt/obj.rlgc.C/obj.dx*(-2*obj.i_TL(end-1)...
-                        +obj.width*obj.dx*J_2TL(end));
+% % %3               obj.v_TL(1) = (obj.Vs-obj.Zin*obj.i_TL(1))/2;
+%             obj.i_TL(end) = -obj.i_TL(end-1);
+%             obj.v_TL(end) = obj.v_TL(end)-obj.dt/obj.rlgc.C/obj.dx*(-2*obj.i_TL(end-1)...
+%                         +obj.width*obj.dx*J_2TL(end));
+            obj.i_TL(end) = 0;
+            obj.v_TL(end) = obj.v_TL(end)-obj.dt/rlgc2.C/obj.dx*(-obj.i_TL(end-1)...
+                         +obj.width*obj.dx*J_2TL(end));
+          
         end
         
         
