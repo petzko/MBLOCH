@@ -184,10 +184,10 @@ while( t< tEnd)
         display(['trace section 1: ' num2str(trace1)])
         display(['trace section 2: ' num2str(trace2)])
         display(['Iteration: ' num2str(iter_ctr)])
-%         display(['v_1TL(1): ' num2str(v1new)])
-%         display(['i_1TL(1): ' num2str(i1new)])
-%         display(['v_2TL(1): ' num2str(v2new)])
-%         display(['i_2TL(1): ' num2str(i2new)])
+        display(['v_1TL(1): ' num2str(v1new)])
+        display(['i_1TL(1): ' num2str(i1new)])
+        display(['v_2TL(1): ' num2str(v2new)])
+        display(['i_2TL(1): ' num2str(i2new)])
         getframe;
     end
     
