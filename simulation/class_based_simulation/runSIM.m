@@ -95,6 +95,10 @@ TL_model_s1 = TL_solver(params_s1,rlgc1);
 TL_model_s2 = TL_solver(params_s2,rlgc2);
 % TL_model_s2.v_TL = TL_model_s2.v_TL*0;
 % TL_model_s1.i_TL = TL_model_s1.i_TL*0;
+v1old = TL_model_s1.v_TL(1); 
+v2old = TL_model_s2.v_TL(1);
+v2new = v2old;
+i2new = TL_model_s2.i_TL(1);
 
 %%%% specify some of the mainloop control parameters %%%%
 idx = 1; ctr = 1; iter_ctr = 1;
@@ -134,23 +138,24 @@ while( t< tEnd)
     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
-%     
-%     v1old = TL_model_s1.v_TL(1); 
-%     v2old = TL_model_s2.v_TL(1); 
-%     
-%     TL_model_s1.propagate(J_TL1);
-%     TL_model_s2.propagate(J_TL2);
-%     
-%     v1new = TL_model_s1.v_TL(1); 
-%     i1new = TL_model_s1.i_TL(1);
-%     
-%     v2new = TL_model_s2.v_TL(1);
-%     i2new = TL_model_s2.i_TL(1);
-%     
+    
+    v1old = TL_model_s1.v_TL(1);    
+    TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)    
+    TL_model_s1.propagate(J_TL1);
+    v1new = TL_model_s1.v_TL(1);
+    i1new = TL_model_s1.i_TL(1);
+    
+    v2old = TL_model_s2.v_TL(1); 
+    TL_model_s2.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)    
+    TL_model_s2.propagate(J_TL2);
+    v2new = TL_model_s2.v_TL(1);
+    i2new = TL_model_s2.i_TL(1);   
+ 
+ 
 % %     TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)
 %     TL_model_s1.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
 %     TL_model_s2.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
-%     
+    
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
