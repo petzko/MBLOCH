@@ -36,6 +36,8 @@ classdef TL_solver < handle
         obj.v_TL = obj.Vs/2*ones(obj.N_pts,1);    % V(0)    V(1)....   V(M)
 %          obj.v_TL = (linspace(obj.Vs/2,obj.Vs/2-1,obj.N_pts))';
         obj.i_TL = 0*ones(obj.N_pts,1);    % I(1/2)  I(3/2).... I(M+1/2)
+% %         AREA = 50*1e-3*16*1e-3;
+% %         J_tot = trapz(x,J_TL)*AREA;
         i_last = 13.8045*0.05*6.6678e-4*obj.dx;
         obj.i_TL(end-1) = i_last;
             for mm = 2: obj.N_pts-1
@@ -48,7 +50,7 @@ classdef TL_solver < handle
         obj.J_TL = J_TL;
 
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)-obj.dt/obj.rlgc.C/obj.dx*(obj.i_TL(2:end-1)-...
-                            obj.i_TL(1:end-2)+obj.width*obj.dx*J_TL(2:end-1));
+                            obj.i_TL(1:end-2)+obj.height*obj.width*obj.dx*J_TL(2:end-1));
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)-obj.dt/obj.rlgc.L/obj.dx*(obj.v_TL(2:end)...
                             -obj.v_TL(1:end-1));
 
@@ -60,7 +62,7 @@ classdef TL_solver < handle
 %              obj.v_TL(1) = 2*(obj.Vs-(v2old+v2new)/2-obj.Zin*(i2new+width2*obj.dx*J_2TL(1)+...
 %                             rlgc2.C*obj.dx/obj.dt/2*(v2new-v2old)))-obj.v_TL(1);
              obj.v_TL(1) = 1/(rlgc2.C*obj.dx/obj.dt/2+1/2/obj.Zin)*...
-                    ((rlgc2.C*obj.dx/obj.dt/2-1/2/obj.Zin)*obj.v_TL(1)-i2new-width2*obj.dx/2*...
+                    ((rlgc2.C*obj.dx/obj.dt/2-1/2/obj.Zin)*obj.v_TL(1)-i2new-obj.height*width2*obj.dx/2*...
                     J_2TL(1)+(obj.Vs-(v2new+v2old)/2)/obj.Zin);
 % % %3               obj.v_TL(1) = (obj.Vs-obj.Zin*obj.i_TL(1))/2;
 %             obj.i_TL(end) = -obj.i_TL(end-1);
@@ -68,7 +70,7 @@ classdef TL_solver < handle
 %                         +obj.width*obj.dx*J_2TL(end));
             obj.i_TL(end) = 0;
             obj.v_TL(end) = obj.v_TL(end)-obj.dt/rlgc2.C/obj.dx*(-obj.i_TL(end-1)...
-                         +obj.width*obj.dx*J_2TL(end));
+                         +obj.height*obj.width*obj.dx*J_2TL(end));
           
         end
         
