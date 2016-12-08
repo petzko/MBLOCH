@@ -140,7 +140,7 @@ while( t< tEnd)
     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
-
+    
     v1old = TL_model_s1.v_TL(1);    
     TL_model_s1.set_boundary(v2old,v2new,i1new,params_s1.width,J_TL1,rlgc1)    
     TL_model_s1.propagate(J_TL1);
@@ -199,6 +199,8 @@ while( t< tEnd)
         display(['trace section 1: ' num2str(trace1)])
         display(['trace section 2: ' num2str(trace2)])
         display(['Iteration: ' num2str(iter_ctr)])
+        display(['average bias sec 1: ' num2str(mean(TL_model_s1.get_bias())*10)]); 
+        display(['average bias sec 2: ' num2str(mean(TL_model_s2.get_bias())*10)]); 
         display(['v_1TL(1): ' num2str(v1new)])
         display(['i_1TL(1): ' num2str(i1new)])
         display(['v_2TL(1): ' num2str(v2new)])
