@@ -161,7 +161,7 @@ while( t< tEnd)
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,500) == 0
+    if mod(iter_ctr,100) == 0
         dm_model_s1.interpolate(TL_model_s1.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
         dm_model_s2.interpolate(TL_model_s2.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
     end
@@ -199,15 +199,14 @@ while( t< tEnd)
         display(['trace section 1: ' num2str(trace1)])
         display(['trace section 2: ' num2str(trace2)])
         display(['Iteration: ' num2str(iter_ctr)])
-        display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.get_bias())*10)]); 
-        display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.get_bias())*10)]); 
-        display(['v_1TL(1) (V): ' num2str(v1new)])
-        display(['i_1TL(1) (A): ' num2str(i1new)])
-        display(['v_2TL(1) (V): ' num2str(v2new)])
-        display(['i_2TL(1) (A): ' num2str(i2new)])
-        AREA = 50*1e-3*16*1e-3;
-        J_tot = trapz(x,J_TL)*AREA;
-        display(['i_out (A): ' num2str(J_tot)])
+        display(['average bias(kV/cm) sec 1: ' num2str(mean(TL_model_s1.get_bias())*10)]); 
+        display(['average bias(kV/cm) sec 2: ' num2str(mean(TL_model_s2.get_bias())*10)]); 
+        display(['v_1TL(1): ' num2str(v1new)])
+        display(['i_1TL(1): ' num2str(i1new)])
+        display(['v_2TL(1): ' num2str(v2new)])
+        display(['i_2TL(1): ' num2str(i2new)])
+        A = 50e-3*16e-3;       
+        display(['i_out (A): ' num2str(trapz(x,J_TL*A))])
         getframe;
     end
     

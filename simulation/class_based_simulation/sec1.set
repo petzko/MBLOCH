@@ -25,7 +25,7 @@ Ltot = 5
 Lp = 54.8
 
 #doping density in [cm^-3]
-dN = 1.9E16
+dN = 1.0E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
 Ld = 16.2

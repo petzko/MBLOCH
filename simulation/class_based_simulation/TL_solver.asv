@@ -36,10 +36,9 @@ classdef TL_solver < handle
         obj.v_TL = obj.Vs/2*ones(obj.N_pts,1);    % V(0)    V(1)....   V(M)
 %          obj.v_TL = (linspace(obj.Vs/2,obj.Vs/2-1,obj.N_pts))';
         obj.i_TL = 0*ones(obj.N_pts,1);    % I(1/2)  I(3/2).... I(M+1/2)
-        i_last = 13.8045*0.05*6.6678e-4*obj.dx;
-        obj.i_TL(end-1) = i_last;
+        obj.i_TL(end-1) = 13.8045*0.05*6.6678e-4;
             for mm = 2: obj.N_pts-1
-                obj.i_TL(obj.N_pts-mm) = obj.i_TL(obj.N_pts-mm+1)+i_last;
+                obj.i_TL(obj.N_pts-mm) = obj.i_TL(obj.N_pts-mm+1)+13.8045*0.05*6.6678e-4;
             end
         end
         
