@@ -93,8 +93,7 @@ rlgc2.L = 1.6e-10;  %unit: H/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc1);
 TL_model_s2 = TL_solver(params_s2,rlgc2);
-% TL_model_s2.v_TL = TL_model_s2.v_TL*0;
-% TL_model_s1.i_TL = TL_model_s1.i_TL*0;
+
 v1old = TL_model_s1.v_TL(1); 
 v2old = TL_model_s2.v_TL(1);
 v1new = v1old;
@@ -117,6 +116,7 @@ padsize = double(recordingiter-length(record_U));
 
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
+AREA = params_s1.width*params_s1.height;
 
 
 while( t< tEnd)
@@ -142,26 +142,22 @@ while( t< tEnd)
     
     
     v1old = TL_model_s1.v_TL(1);    
-    TL_model_s1.set_boundary(v2old,v2new,i1new,params_s1.width,J_TL1,rlgc1)    
+    TL_model_s1.set_boundary(v2old,v2new,i1new,J_TL1,rlgc1)    
     TL_model_s1.propagate(J_TL1);
     v1new = TL_model_s1.v_TL(1);
     i1new = TL_model_s1.i_TL(1);
     
     v2old = TL_model_s2.v_TL(1); 
-    TL_model_s2.set_boundary(v1old,v1new,i2new,params_s2.width,J_TL2,rlgc2)    
+    TL_model_s2.set_boundary(v1old,v1new,i2new,J_TL2,rlgc2)    
     TL_model_s2.propagate(J_TL2);
     v2new = TL_model_s2.v_TL(1);
     i2new = TL_model_s2.i_TL(1);   
 
- 
-% %     TL_model_s1.set_boundary(v2old,v2new,i2new,params_s2.width,J_TL2,rlgc2)
-%     TL_model_s1.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
-%     TL_model_s2.set_boundary(v1old,v1new,i1new,params_s1.width,J_TL1,rlgc1)
     
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,500) == 0
+    if mod(iter_ctr,100) == 0
         dm_model_s1.interpolate(TL_model_s1.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
         dm_model_s2.interpolate(TL_model_s2.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
     end
@@ -196,18 +192,18 @@ while( t< tEnd)
         
         trace1 = dm_model_s1.get_avg_trace();
         trace2 = dm_model_s2.get_avg_trace();
-        display(['trace section 1: ' num2str(trace1)])
-        display(['trace section 2: ' num2str(trace2)])
-        display(['Iteration: ' num2str(iter_ctr)])
+        display(['trace section 1: ' num2str(trace1)]);
+        display(['trace section 2: ' num2str(trace2)]);
+        display(['Iteration: ' num2str(iter_ctr)]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.get_bias())*10)]); 
         display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.get_bias())*10)]); 
-        display(['v_1TL(1) (V): ' num2str(v1new)])
-        display(['i_1TL(1) (A): ' num2str(i1new)])
-        display(['v_2TL(1) (V): ' num2str(v2new)])
-        display(['i_2TL(1) (A): ' num2str(i2new)])
-        AREA = 50*1e-3*16*1e-3;
-        J_tot = trapz(x,J_TL)*AREA;
-        display(['i_out (A): ' num2str(J_tot)])
+        display(['v_1TL(1) (V): ' num2str(v1new)]);
+        display(['i_1TL(1) (A): ' num2str(i1new)]);
+        display(['v_2TL(1) (V): ' num2str(v2new)]);
+        display(['i_2TL(1) (A): ' num2str(i2new)]);
+
+        J_tot = trapz(x(1:3000),J_TL1)*AREA;
+        display(['i_out (A): ' num2str(J_tot)]);
         getframe;
     end
     
