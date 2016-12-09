@@ -157,7 +157,7 @@ while( t< tEnd)
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,100) == 0
+    if mod(iter_ctr,10) == 0
         dm_model_s1.interpolate(TL_model_s1.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
         dm_model_s2.interpolate(TL_model_s2.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
     end
@@ -170,7 +170,7 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,100) == 0)
+    if(mod(iter_ctr,10) == 0)
         clc;
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);

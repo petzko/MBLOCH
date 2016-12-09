@@ -50,14 +50,14 @@ modF = 0;
 bias = 11;
 
 #boundary voltage value! in V
-Vs = 35
+Vs = 20
 
 #initial current value (A/mm)
 current = 30
 
 # section 1 width height and legnth in mm 
 width = 50e-3
-height = 16e-3 
+height = 10e-3 
 length = 2;
 
 
