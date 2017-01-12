@@ -232,7 +232,7 @@ end
 
 
 
-
+% Creat gif image
 filename = 'QCL dynamics.gif'; % Specify the output file name
         for idx = 1:999
             [A,map] = rgb2ind(GIF{idx},256);
@@ -243,7 +243,8 @@ filename = 'QCL dynamics.gif'; % Specify the output file name
             end
         end
 
-mydft(dat.U,dt);  % Fourier transformation
+% Fourier transformation 
+mydft(dat.U,dt);
         
 savename = [params.name '_' params.scenario '_N_' num2str(params.N) '_FP_' num2str(params.simRT) ];
 save(savename);

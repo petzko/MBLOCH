@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 3000 
+N_pts = 2600 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -56,9 +56,9 @@ Vs = 11
 current = 12
 
 # section 1 width height and legnth in mm 
-width = 20e-3
+width = 50e-3
 height = 10e-3 
-length = 2;
+length = 1.3;
 
 
 #pure dephasing  time for the inj -> ull transition[ps]
