@@ -86,20 +86,20 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc1.C = 1.5e-12;  %unit: F/mm
-rlgc1.L = 1.6e-10;  %unit: H/mm
-rlgc2.C = 1.5e-12;  %unit: F/mm
-rlgc2.L = 1.6e-10;  %unit: H/mm
+rlgc1.C = 1.3;    %unit: pF/mm
+rlgc1.L = 1.6e2;  %unit: pH/mm
+rlgc2.C = 1.3;    %unit: pF/mm
+rlgc2.L = 1.6e2;  %unit: pH/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc1);
 TL_model_s2 = TL_solver(params_s2,rlgc2);
 
-v1old = TL_model_s1.v_TL(1); 
-v2old = TL_model_s2.v_TL(1);
-v1new = v1old;
-v2new = v2old;
-i1new = TL_model_s1.i_TL(1);
-i2new = TL_model_s2.i_TL(1);
+% % % % % % v1old = TL_model_s1.v_TL(1); 
+% % % % % % v2old = TL_model_s2.v_TL(1);
+% % % % % % v1new = v1old;
+% % % % % % v2new = v2old;
+% % % % % % i1new = TL_model_s1.i_TL(1);
+% % % % % % i2new = TL_model_s2.i_TL(1);
 
 %%%% specify some of the mainloop control parameters %%%%
 idx = 1; ctr = 1; iter_ctr = 1;
@@ -116,7 +116,7 @@ padsize = double(recordingiter-length(record_U));
 
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-AREA = params_s1.width*params_s1.height;
+
 
 
 while( t< tEnd)
@@ -141,25 +141,35 @@ while( t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
     
-    v1old = TL_model_s1.v_TL(1);    
-    TL_model_s1.set_boundary(v2old,v2new,i1new,J_TL1,rlgc1)    
+%     v1old = TL_model_s1.v_TL(1);    
+%     TL_model_s1.set_boundary(v2old,v2new,i1new,J_TL1,rlgc1)    
     TL_model_s1.propagate(J_TL1);
-    v1new = TL_model_s1.v_TL(1);
-    i1new = TL_model_s1.i_TL(1);
+%     v1new = TL_model_s1.v_TL(1);
+%     i1new = TL_model_s1.i_TL(1);
     
-    v2old = TL_model_s2.v_TL(1); 
-    TL_model_s2.set_boundary(v1old,v1new,i2new,J_TL2,rlgc2)    
+%     v2old = TL_model_s2.v_TL(1); 
+%     TL_model_s2.set_boundary(v1old,v1new,i2new,J_TL2,rlgc2)    
     TL_model_s2.propagate(J_TL2);
-    v2new = TL_model_s2.v_TL(1);
-    i2new = TL_model_s2.i_TL(1);   
+%     v2new = TL_model_s2.v_TL(1);
+%     i2new = TL_model_s2.i_TL(1);   
 
     
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,10) == 0
-        dm_model_s1.interpolate(TL_model_s1.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
-        dm_model_s2.interpolate(TL_model_s2.get_bias(),W_fit,E_fit,AC_fit,zUL_fit);
+    if mod(iter_ctr,interpCtr) == 0
+            MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%10kV/cm--12kV/cm
+            if MM1 < 1.2 && NN1 > 1
+            VV_TL1 = TL_model_s1.v_TL;
+            end
+            
+            MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%10kV/cm--12kV/cm
+            if MM2 < 1.2 && NN2 > 1
+            VV_TL2 = TL_model_s2.v_TL;
+            end
+
+        dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);
+        dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);
     end
     
 
@@ -170,41 +180,44 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,10) == 0)
+    if(mod(iter_ctr,1000) == 0)
         clc;
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
+        title(['t=',num2str(t),' ps','     |E_z|^2']);
         
         subplot(4,1,2); 
         J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
         plot(x,J_TL);
-        title('J\_TL');
+        title('Current density J [A/mm^2]');
         
         subplot(4,1,3);        
-        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL;
+        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL*10; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL*10;
         plot(x,V_TL);
-        title('V\_TL');
+        title(['V [kV/cm]','   Iteration= ',num2str(iter_ctr)]);
 
         subplot(4,1,4);
         I_TL(dm_model_s1.IDX) = TL_model_s1.i_TL; I_TL(dm_model_s2.IDX) = TL_model_s2.i_TL;
         plot(x,I_TL);
-        title('I\_TL');
+        title('I [A/mm]');
         
         trace1 = dm_model_s1.get_avg_trace();
         trace2 = dm_model_s2.get_avg_trace();
         display(['trace section 1: ' num2str(trace1)]);
         display(['trace section 2: ' num2str(trace2)]);
         display(['Iteration: ' num2str(iter_ctr)]);
-        display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.get_bias())*10)]); 
-        display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.get_bias())*10)]); 
-        display(['v_1TL(1) (V): ' num2str(v1new)]);
-        display(['i_1TL(1) (A): ' num2str(i1new)]);
-        display(['v_2TL(1) (V): ' num2str(v2new)]);
-        display(['i_2TL(1) (A): ' num2str(i2new)]);
+        display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]); 
+        display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.v_TL)*10)]); 
+% % % %         display(['v_1TL(1) (V): ' num2str(v1new)]);
+% % % %         display(['i_1TL(1) (A): ' num2str(i1new)]);
+% % % %         display(['v_2TL(1) (V): ' num2str(v2new)]);
+% % % %         display(['i_2TL(1) (A): ' num2str(i2new)]);
 
-        J_tot = trapz(x(1:3000),J_TL1)*AREA;
+        J_tot = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
         display(['i_out (A): ' num2str(J_tot)]);
-        getframe;
+        
+        frame = getframe(1);
+        GIF{iter_ctr/1000} = frame2im(frame);
     end
     
     
@@ -216,6 +229,22 @@ while( t< tEnd)
     iter_ctr = iter_ctr + 1;
     
 end
+
+
+
+
+filename = 'QCL dynamics.gif'; % Specify the output file name
+        for idx = 1:999
+            [A,map] = rgb2ind(GIF{idx},256);
+            if idx == 1
+            imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.3);
+            else
+            imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.3);
+            end
+        end
+
+mydft(dat.U,dt);  % Fourier transformation
+        
 savename = [params.name '_' params.scenario '_N_' num2str(params.N) '_FP_' num2str(params.simRT) ];
 save(savename);
 
