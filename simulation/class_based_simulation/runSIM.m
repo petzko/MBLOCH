@@ -107,7 +107,7 @@ iter_per_rt = round(T_R/dat.dt);
 dat.simRT = 100; tEnd = dat.simRT*T_R; % end time in tps
 
 interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 100000; 
+checkptIter = 1039800; %100000
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -141,12 +141,10 @@ while( t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
     
-%     v1old = TL_model_s1.v_TL(1);    
-    TL_model_s1.propagate_1(v2new,J_TL1);
-    i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx;
- 
+%   Transmission line equations    
+    TL_model_s1.propagate_1(J_TL1);
+    i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
     TL_model_s2.propagate_2(i1new,J_TL2);
-    v2new = TL_model_s2.v_TL(1);
 
     
     dm_model_s1.update_state();
@@ -203,9 +201,9 @@ while( t< tEnd)
         display(['Iteration: ' num2str(iter_ctr)]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]); 
         display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.v_TL)*10)]); 
-% % % %         display(['v_1TL(1) (V): ' num2str(v1new)]);
+        display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
 % % % %         display(['i_1TL(1) (A): ' num2str(i1new)]);
-% % % %         display(['v_2TL(1) (V): ' num2str(v2new)]);
+        display(['v_2TL(1) (V): ' num2str(TL_model_s2.v_TL(1)*10)]);
 % % % %         display(['i_2TL(1) (A): ' num2str(i2new)]);
 
         J_tot = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
@@ -229,12 +227,12 @@ end
 
 % Creat gif image
 filename = 'QCL dynamics.gif'; % Specify the output file name
-        for idx = 1:999
+        for idx = 1:iter_ctr/1000
             [A,map] = rgb2ind(GIF{idx},256);
             if idx == 1
-            imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.3);
+            imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.5);
             else
-            imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.3);
+            imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.5);
             end
         end
 
