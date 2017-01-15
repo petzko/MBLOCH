@@ -19,7 +19,7 @@ D = 46
 disp = +0.125
 
 #cavity length (mm) 
-Ltot = 5
+#Ltot = 5
 
 #period length [nm]
 Lp = 54.8
