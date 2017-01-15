@@ -97,7 +97,7 @@ TL_model_s2 = TL_solver(params_s2,rlgc2);
 % % % % % % v1old = TL_model_s1.v_TL(1); 
 % % % % % % v2old = TL_model_s2.v_TL(1);
 % % % % % % v1new = v1old;
-% % % % % % v2new = v2old;
+v2new = TL_model_s2.v_TL(1);
 % % % % % % i1new = TL_model_s1.i_TL(1);
 % % % % % % i2new = TL_model_s2.i_TL(1);
 
@@ -142,22 +142,17 @@ while( t< tEnd)
     
     
 %     v1old = TL_model_s1.v_TL(1);    
-%     TL_model_s1.set_boundary(v2old,v2new,i1new,J_TL1,rlgc1)    
-    TL_model_s1.propagate(J_TL1);
-%     v1new = TL_model_s1.v_TL(1);
-%     i1new = TL_model_s1.i_TL(1);
-    
-%     v2old = TL_model_s2.v_TL(1); 
-%     TL_model_s2.set_boundary(v1old,v1new,i2new,J_TL2,rlgc2)    
-    TL_model_s2.propagate(J_TL2);
-%     v2new = TL_model_s2.v_TL(1);
-%     i2new = TL_model_s2.i_TL(1);   
+    TL_model_s1.propagate_1(v2new,J_TL1);
+    i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx;
+ 
+    TL_model_s2.propagate_2(i1new,J_TL2);
+    v2new = TL_model_s2.v_TL(1);
 
     
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,interpCtr) == 0
+    if mod(iter_ctr,interpCtr) == 0 %interpCtr
             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%10kV/cm--12kV/cm
             if MM1 < 1.2 && NN1 > 1
             VV_TL1 = TL_model_s1.v_TL;
@@ -245,6 +240,7 @@ filename = 'QCL dynamics.gif'; % Specify the output file name
 
 % Fourier transformation 
 mydft(dat.U,dt);
+
         
 savename = [params.name '_' params.scenario '_N_' num2str(params.N) '_FP_' num2str(params.simRT) ];
 save(savename);
