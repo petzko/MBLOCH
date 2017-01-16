@@ -53,7 +53,7 @@ bias = 11;
 Vs = 22
 
 #initial current value (A/mm)
-current = 8
+current = 10
 
 # section 1 width height and legnth in mm 
 width = 50e-3

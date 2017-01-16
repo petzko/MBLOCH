@@ -107,7 +107,7 @@ iter_per_rt = round(T_R/dat.dt);
 dat.simRT = 100; tEnd = dat.simRT*T_R; % end time in tps
 
 interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 1039800; %100000
+checkptIter = 519900;% 1039800; %100000
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -177,7 +177,7 @@ while( t< tEnd)
         clc;
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
-        title(['t=',num2str(t),' ps','     |E_z|^2']);
+        title(['t=',num2str(t),' ps','        |E_z|^2','        Iteration= ',num2str(iter_ctr)]);
         
         subplot(4,1,2); 
         J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
@@ -185,14 +185,14 @@ while( t< tEnd)
         title('Current density J [A/mm^2]');
         
         subplot(4,1,3);        
-        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL*10; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL*10;
-        plot(x,V_TL);
-        title(['V [kV/cm]','   Iteration= ',num2str(iter_ctr)]);
+        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL;
+        plot(x,V_TL*params_s1.height*1e3);
+        title('V [V]');
 
         subplot(4,1,4);
         I_TL(dm_model_s1.IDX) = TL_model_s1.i_TL; I_TL(dm_model_s2.IDX) = TL_model_s2.i_TL;
-        plot(x,I_TL);
-        title('I [A/mm]');
+        plot(x,I_TL*params_s1.width);
+        title('I [A]');
         
         trace1 = dm_model_s1.get_avg_trace();
         trace2 = dm_model_s2.get_avg_trace();
