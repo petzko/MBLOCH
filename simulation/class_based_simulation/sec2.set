@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 2600 
+N_pts = 2000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -31,7 +31,7 @@ dN = 1.0E16
 Ld = 16.2
 
 # the impedence of Vs
-Zin = 50
+Zin = 20
 
 #mode overlap factor [dimensionless]
 Overlap = 0.8

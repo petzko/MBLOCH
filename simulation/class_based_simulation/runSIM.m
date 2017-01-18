@@ -94,10 +94,13 @@ rlgc2.L = 1.6e2;  %unit: pH/mm
 TL_model_s1 = TL_solver(params_s1,rlgc1);
 TL_model_s2 = TL_solver(params_s2,rlgc2);
 
+VV_TL1 = TL_model_s1.v_TL;
+VV_TL2 = TL_model_s2.v_TL;
+
 % % % % % % v1old = TL_model_s1.v_TL(1); 
 % % % % % % v2old = TL_model_s2.v_TL(1);
 % % % % % % v1new = v1old;
-v2new = TL_model_s2.v_TL(1);
+% % % % % % v2new = TL_model_s2.v_TL(1);
 % % % % % % i1new = TL_model_s1.i_TL(1);
 % % % % % % i2new = TL_model_s2.i_TL(1);
 
@@ -107,7 +110,7 @@ iter_per_rt = round(T_R/dat.dt);
 dat.simRT = 100; tEnd = dat.simRT*T_R; % end time in tps
 
 interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 519900;% 1039800; %100000
+checkptIter = 1039800;% 1039800; %100000
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -143,21 +146,22 @@ while( t< tEnd)
     
 %   Transmission line equations    
     TL_model_s1.propagate_1(J_TL1);
-    i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-    TL_model_s2.propagate_2(i1new,J_TL2);
+%     i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
+    J_tot = trapz(x(1:params_s1.N_pts),J_TL1);
+    TL_model_s2.propagate_2(J_tot,J_TL2);
 
     
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,interpCtr) == 0 %interpCtr
+    if mod(iter_ctr,1) == 0 %interpCtr
             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%10kV/cm--12kV/cm
-            if MM1 < 1.2 && NN1 > 1
+            if MM1 < 1.2 && NN1 > 0.9
             VV_TL1 = TL_model_s1.v_TL;
             end
             
             MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%10kV/cm--12kV/cm
-            if MM2 < 1.2 && NN2 > 1
+            if MM2 < 1.2 && NN2 > 0.9
             VV_TL2 = TL_model_s2.v_TL;
             end
 
@@ -173,7 +177,7 @@ while( t< tEnd)
     end
     
     %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,1000) == 0)
+    if(mod(iter_ctr,10) == 0)
         clc;
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
@@ -206,11 +210,11 @@ while( t< tEnd)
         display(['v_2TL(1) (V): ' num2str(TL_model_s2.v_TL(1)*10)]);
 % % % %         display(['i_2TL(1) (A): ' num2str(i2new)]);
 
-        J_tot = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
-        display(['i_out (A): ' num2str(J_tot)]);
+%         J_tot = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
+        display(['i_out (A): ' num2str(J_tot*params_s1.width)]);
         
         frame = getframe(1);
-        GIF{iter_ctr/1000} = frame2im(frame);
+        GIF{iter_ctr/10} = frame2im(frame);
     end
     
     
