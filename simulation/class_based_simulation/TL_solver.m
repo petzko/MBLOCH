@@ -23,10 +23,10 @@ classdef TL_solver < handle
         obj.IDX = params.IDX;
         obj.N_pts = params.N_pts;
         
-        obj.Zin = params.Zin*1e-3;       %unit: kV/A
         obj.bias = params.bias/10;       %unit: kV/mm
         obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
         obj.current = params.current;    %unit:A/mm -->initial current
+        obj.Zin = params.Zin;            %unit: ohm
         
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
@@ -35,8 +35,8 @@ classdef TL_solver < handle
         obj.Acoeff = -obj.height/obj.width/obj.c/obj.rlgc.L*1e+3;   % for calculation of i_TL
         obj.Bcoeff = -obj.width/obj.height/obj.c/obj.rlgc.C*1e-3;   % for calculation of v_TL
         
-        obj.Ccoeff = 1/(obj.rlgc.C*obj.dx/2/obj.dt+1/2/(obj.Zin*1e+3))/(obj.height*1e3);
-        obj.Dcoeff = (obj.rlgc.C*obj.dx/2/obj.dt-1/2/(obj.Zin*1e+3))*(obj.height*1e3);
+        obj.Ccoeff = 1/(obj.rlgc.C*obj.dx/2/obj.dt+1/2/(obj.Zin))/(obj.height*1e3);
+        obj.Dcoeff = (obj.rlgc.C*obj.dx/2/obj.dt-1/2/(obj.Zin))*(obj.height*1e3);
         
         %Initial conditions
         obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(1)....   V(M)       
@@ -49,11 +49,12 @@ classdef TL_solver < handle
 
         end
         
-        function propagate_1(obj,J_TL1)
+        function propagate_1(obj,i1old,J_TL1)
             
-
-%         obj.v_TL(1) = obj.Vs/obj.height/2;
-        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width+obj.width*obj.dx*J_TL1(1)/2+obj.Vs/obj.Zin);
+        i1new = obj.i_TL(1)+J_TL1(1)*obj.dx;
+%         obj.v_TL(1) = obj.Vs/obj.height;
+%         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs/(obj.Zin*1e-3);
+        obj.v_TL(1) = (obj.Vs - (i1new-i1old)*obj.width*(obj.Zin*1e-3))/obj.height;
         obj.v_TL(2:end) = obj.v_TL(2:end)+obj.Bcoeff*(obj.i_TL(2:end)-obj.i_TL(1:end-1)+obj.dx*J_TL1(2:end));
 
 %         obj.i_TL(1) = obj.current; obj.i_TL(end) = -obj.i_TL(end-1);
@@ -62,10 +63,11 @@ classdef TL_solver < handle
 
         end
        
-        function propagate_2(obj,I1_TL,J_TL2)
+        function propagate_2(obj,J1_tot,J_TL2)
             
 
-        obj.v_TL(1) = obj.v_TL(1)+2*obj.Bcoeff*(obj.i_TL(1)-I1_TL+obj.dx*J_TL2(1)/2);
+%         obj.v_TL(1) = obj.v_TL(1)+2*obj.Bcoeff*(obj.i_TL(1)-I1_TL+obj.dx*J_TL2(1)/2);
+        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL2(1)/2+J1_tot*obj.width);
         obj.v_TL(2:end) = obj.v_TL(2:end)+obj.Bcoeff*(obj.i_TL(2:end)-obj.i_TL(1:end-1)+obj.dx*J_TL2(2:end));
 
 %         obj.i_TL(1) = I1_TL-J_TL2(1)*obj.dx/2;

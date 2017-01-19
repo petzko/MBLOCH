@@ -96,6 +96,7 @@ TL_model_s2 = TL_solver(params_s2,rlgc2);
 
 VV_TL1 = TL_model_s1.v_TL;
 VV_TL2 = TL_model_s2.v_TL;
+i1old = params_s2.current;
 
 % % % % % % v1old = TL_model_s1.v_TL(1); 
 % % % % % % v2old = TL_model_s2.v_TL(1);
@@ -119,7 +120,8 @@ padsize = double(recordingiter-length(record_U));
 
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-
+f_plot = 1000;
+f_display = 1000;
 
 
 while( t< tEnd)
@@ -140,64 +142,37 @@ while( t< tEnd)
     
     J_TL1 = dm_model_s1.get_current_density(params_s1);
     J_TL2 = dm_model_s2.get_current_density(params_s2);
-    
+    J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
+     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
-    
-%   Transmission line equations    
-    TL_model_s1.propagate_1(J_TL1);
-%     i1new = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-    J_tot = trapz(x(1:params_s1.N_pts),J_TL1);
-    TL_model_s2.propagate_2(J_tot,J_TL2);
+%   Transmission line equations
+    TL_model_s1.propagate_1(i1old,J_TL1);
+    i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
+
+    TL_model_s2.propagate_2(J_tot1,J_TL2);
 
     
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-    if mod(iter_ctr,1) == 0 %interpCtr
-            MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%10kV/cm--12kV/cm
+% % % %     if mod(iter_ctr,1) == 0 %interpCtr
+            MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
             if MM1 < 1.2 && NN1 > 0.9
             VV_TL1 = TL_model_s1.v_TL;
             end
-            
-            MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%10kV/cm--12kV/cm
+% % % %             
+            MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
             if MM2 < 1.2 && NN2 > 0.9
             VV_TL2 = TL_model_s2.v_TL;
             end
 
         dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);
         dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);
-    end
-    
+% % % %     end
 
-    %%%%% end of setting up the TL PARAMS %%%%%
-    if(mod(iter_ctr+1,checkptIter) == 0 )
-        checkptname = ['CHCKPT_' params.name '_N_TRANSMISSION_LINE_' num2str(params.N_pts) '_FP'];
-        save(checkptname);
-    end
-    
-    %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,10) == 0)
+    if(mod(iter_ctr,f_display) == 0)
         clc;
-        subplot(4,1,1);
-        plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
-        title(['t=',num2str(t),' ps','        |E_z|^2','        Iteration= ',num2str(iter_ctr)]);
-        
-        subplot(4,1,2); 
-        J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
-        plot(x,J_TL);
-        title('Current density J [A/mm^2]');
-        
-        subplot(4,1,3);        
-        V_TL(dm_model_s1.IDX) = TL_model_s1.v_TL; V_TL(dm_model_s2.IDX) = TL_model_s2.v_TL;
-        plot(x,V_TL*params_s1.height*1e3);
-        title('V [V]');
-
-        subplot(4,1,4);
-        I_TL(dm_model_s1.IDX) = TL_model_s1.i_TL; I_TL(dm_model_s2.IDX) = TL_model_s2.i_TL;
-        plot(x,I_TL*params_s1.width);
-        title('I [A]');
-        
         trace1 = dm_model_s1.get_avg_trace();
         trace2 = dm_model_s2.get_avg_trace();
         display(['trace section 1: ' num2str(trace1)]);
@@ -210,11 +185,44 @@ while( t< tEnd)
         display(['v_2TL(1) (V): ' num2str(TL_model_s2.v_TL(1)*10)]);
 % % % %         display(['i_2TL(1) (A): ' num2str(i2new)]);
 
-%         J_tot = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
-        display(['i_out (A): ' num2str(J_tot*params_s1.width)]);
+% % % %         i_out = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
+        display(['i_out (A): ' num2str(J_tot1*params_s1.width)]);
+    end  
+
+    
+    %%plot some of the results if neeed ariseth :D
+    if(mod(iter_ctr,f_plot) == 0)
+
+        subplot(4,1,1);
+        plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
+        title(['t=',num2str(t),' ps','        |E_z|^2','        Iteration= ',num2str(iter_ctr)]);
         
+        subplot(4,1,2); 
+%         J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
+        J_TL(1:params_s1.N_pts) = J_TL1; J_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = J_TL2;        
+        plot(x,J_TL);
+        title('Current density J [A/mm^2]');
+        
+        subplot(4,1,3);        
+        V_TL(1:params_s1.N_pts) = TL_model_s1.v_TL; V_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.v_TL;
+        plot(x,V_TL*params_s1.height*1e3);
+        title('V [V]');
+
+        subplot(4,1,4);
+        I_TL(1:params_s1.N_pts) = TL_model_s1.i_TL; I_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.i_TL;
+        plot(x,I_TL*params_s1.width);
+        title('I [A]');
+                
         frame = getframe(1);
-        GIF{iter_ctr/10} = frame2im(frame);
+        GIF{iter_ctr/f_plot} = frame2im(frame);
+    end
+    
+    
+    
+    %%%%% end of setting up the TL PARAMS %%%%%
+    if(mod(iter_ctr+1,checkptIter) == 0 )
+        checkptname = ['CHCKPT_' params.name '_N_TRANSMISSION_LINE_' num2str(params.N_pts) '_FP'];
+        save(checkptname);
     end
     
     
@@ -231,7 +239,7 @@ end
 
 % Creat gif image
 filename = 'QCL dynamics.gif'; % Specify the output file name
-        for idx = 1:iter_ctr/1000
+        for idx = 1:iter_ctr/f_plot
             [A,map] = rgb2ind(GIF{idx},256);
             if idx == 1
             imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.5);
