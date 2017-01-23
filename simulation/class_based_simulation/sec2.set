@@ -44,16 +44,16 @@ modA = 0
 modF = 0;
 
 #initial bias value! in kV/cm
-bias = 12;
+bias = 11;
 
 #boundary voltage value! in V
 Vs = 11
 
 # Input impedence (ohm)
-Zin = 20 
+Zin = 20
 
 #initial current value (A/mm)
-current = 6.9963
+current = 10
 
 # section 2 width height and legnth in mm 
 width = 50e-3
@@ -62,10 +62,10 @@ length = 1.5;
 
 
 #pure dephasing  time for the inj -> ull transition[ps]
-Tdeph_13 =   100;
+Tdeph_13 =   0.4
 #pure dephasing  times for the inj -> lll and ull->lll transition[ps]
-Tdeph_12 =  100;
-Tdeph_32 =  100;
+Tdeph_12 =  1
+Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
 linear_loss = 12

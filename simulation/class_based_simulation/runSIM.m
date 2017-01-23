@@ -147,9 +147,8 @@ while( t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
 %   Transmission line equations
-    TL_model_s1.propagate_1(i1old,J_TL1);
-    i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-
+    TL_model_s1.propagate_1(J_TL1);
+%     i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
     TL_model_s2.propagate_2(J_tot1,J_TL2);
 
     
@@ -228,7 +227,7 @@ while( t< tEnd)
     
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
-    record_U(ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
+    record_U(iter_ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
     
     t = t+dt;
     iter_ctr = iter_ctr + 1;
@@ -249,9 +248,10 @@ filename = 'QCL dynamics.gif'; % Specify the output file name
         end
 
 % Fourier transformation 
-mydft(dat.U,dt);
+mydft(record_U,dt);
 
+simname = 'sim-test';
         
-savename = [params.name '_' params.scenario '_N_' num2str(params.N) '_FP_' num2str(params.simRT) ];
+savename = [simname];
 save(savename);
 
