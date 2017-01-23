@@ -37,8 +37,8 @@ hbar = Constants('hbar',{'time',tch})/Constants('q0');
 E0 =  (E_fit{ULL}(bias/10)-E_fit{LLL}(bias/10))/hbar;
 
 %cavity loss l_0 in (cm^-1) --> l_0*100 in (m^-1) --> 1 mm^-1
-params_s1.linear_loss = params_s1.linear_loss*100/(1/params_s1.lch);
-params_s2.linear_loss = params_s2.linear_loss*100/(1/params_s2.lch);
+% params_s1.linear_loss = params_s1.linear_loss*100/(1/params_s1.lch);
+% params_s2.linear_loss = params_s2.linear_loss*100/(1/params_s2.lch);
 
 params_s1.E0 = E0; 
 params_s2.E0 = E0;
@@ -155,12 +155,12 @@ while( t< tEnd)
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-% % % %     if mod(iter_ctr,1) == 0 %interpCtr
+     if mod(iter_ctr,interpCtr) == 0 %interpCtr
             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
             if MM1 < 1.2 && NN1 > 0.9
             VV_TL1 = TL_model_s1.v_TL;
             end
-% % % %             
+             
             MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
             if MM2 < 1.2 && NN2 > 0.9
             VV_TL2 = TL_model_s2.v_TL;
@@ -168,7 +168,7 @@ while( t< tEnd)
 
         dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);
         dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);
-% % % %     end
+    end
 
     if(mod(iter_ctr,f_display) == 0)
         clc;
