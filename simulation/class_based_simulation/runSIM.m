@@ -145,11 +145,13 @@ while( t< tEnd)
     J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
      
     dat = stepWave(dat,P,P_t,M,M_t,losses);
-    
+
+    if iter_ctr>2000
 %   Transmission line equations
     TL_model_s1.propagate_1(J_TL1);
 %     i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-    TL_model_s2.propagate_2(J_tot1,J_TL2);
+       TL_model_s2.propagate_2(J_tot1,J_TL2);
+    end
 
     
     dm_model_s1.update_state();
@@ -219,10 +221,10 @@ while( t< tEnd)
     
     
     %%%%% end of setting up the TL PARAMS %%%%%
-    if(mod(iter_ctr+1,checkptIter) == 0 )
-        checkptname = ['CHCKPT_' params.name '_N_TRANSMISSION_LINE_' num2str(params.N_pts) '_FP'];
-        save(checkptname);
-    end
+%     if(mod(iter_ctr+1,checkptIter) == 0 )
+%         checkptname = ['CHCKPT_' params.name '_N_TRANSMISSION_LINE_' num2str(params.N_pts) '_FP'];
+%         save(checkptname);
+%     end
     
     
     %%%% obtain the field, field intensity and the total population at position "idx" ...

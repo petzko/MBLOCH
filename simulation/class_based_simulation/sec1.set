@@ -18,9 +18,6 @@ D = 46
 #dispersion constant in [ps^2/mm]! 
 disp = +0.125
 
-#cavity length (mm) 
-#Ltot = 5
-
 #period length [nm]
 Lp = 54.8
 
@@ -41,10 +38,10 @@ nRF = 3.8
 modA = 0
 
 #modulation frequency factor as a fraction of the RT freq. 
-modF = 0;
+modF = 0
 
 #initial bias value! in kV/cm
-bias = 11;
+bias = 11
 
 #boundary voltage value! in V
 Vs = 11
@@ -53,16 +50,16 @@ Vs = 11
 Zin = 20
 
 #initial current value (A/mm) 
-current = 10
+current = 3.6
 
 # section 1 width height and legnth in mm 
 width = 50e-3
 height = 10e-3 
-length = 1.5;
+length = 1
 
 
 #pure dephasing  time for the inj -> ull transition[ps]
-Tdeph_13 =   0.4
+Tdeph_13 =  0.4
 #pure dephasing  times for the inj -> lll and ull->lll transition[ps]
 Tdeph_12 =  1
 Tdeph_32 =  1
