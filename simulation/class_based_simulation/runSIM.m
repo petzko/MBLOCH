@@ -110,8 +110,6 @@ idx = 1; ctr = 1; iter_ctr = 1;
 iter_per_rt = round(T_R/dat.dt); 
 dat.simRT = 100; tEnd = dat.simRT*T_R; % end time in tps
 
-interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 1039800;% 1039800; %100000
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -120,11 +118,13 @@ padsize = double(recordingiter-length(record_U));
 
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
+interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
+checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 1000;
+f_display = 10000;
 
 
-while( t< tEnd)
+while( t< tEnd*5)
     
     dm_model_s1.propagate(dat.U,dat.V,dt);
     dm_model_s2.propagate(dat.U,dat.V,dt);
@@ -146,12 +146,12 @@ while( t< tEnd)
      
     dat = stepWave(dat,P,P_t,M,M_t,losses);
 
-    if iter_ctr>2000
+% %     if iter_ctr>900
 %   Transmission line equations
     TL_model_s1.propagate_1(J_TL1);
 %     i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-       TL_model_s2.propagate_2(J_tot1,J_TL2);
-    end
+    if iter_ctr>2000 TL_model_s2.propagate_2(J_tot1,J_TL2); end
+% %     end
 
     
     dm_model_s1.update_state();
@@ -188,11 +188,11 @@ while( t< tEnd)
 
 % % % %         i_out = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
         display(['i_out (A): ' num2str(J_tot1*params_s1.width)]);
-    end  
-
-    
-    %%plot some of the results if neeed ariseth :D
-    if(mod(iter_ctr,f_plot) == 0)
+%     end  
+% 
+%     
+%     %%plot some of the results if neeed ariseth :D
+%     if(mod(iter_ctr,f_plot) == 0)
 
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
@@ -213,9 +213,9 @@ while( t< tEnd)
         I_TL(1:params_s1.N_pts) = TL_model_s1.i_TL; I_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.i_TL;
         plot(x,I_TL*params_s1.width);
         title('I [A]');
-                
-        frame = getframe(1);
-        GIF{iter_ctr/f_plot} = frame2im(frame);
+%         getframe;        
+%         frame = getframe(1);
+%         GIF{iter_ctr/f_plot} = frame2im(frame);
     end
     
     
@@ -238,16 +238,16 @@ end
 
 
 
-% Creat gif image
-filename = 'QCL dynamics.gif'; % Specify the output file name
-        for idx = 1:iter_ctr/f_plot
-            [A,map] = rgb2ind(GIF{idx},256);
-            if idx == 1
-            imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.5);
-            else
-            imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.5);
-            end
-        end
+% % Creat gif image
+% filename = 'QCL dynamics.gif'; % Specify the output file name
+%         for idx = 1:iter_ctr/f_plot
+%             [A,map] = rgb2ind(GIF{idx},256);
+%             if idx == 1
+%             imwrite(A,map,filename,'gif','LoopCount',Inf,'DelayTime',0.5);
+%             else
+%             imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.5);
+%             end
+%         end
 
 % Fourier transformation 
 mydft(record_U,dt);

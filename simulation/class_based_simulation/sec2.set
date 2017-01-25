@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 2000 
+N_pts = 3000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -41,22 +41,21 @@ modA = 0
 modF = 0
 
 #initial bias value! in kV/cm
-bias = 11
+bias = 10
 
 #boundary voltage value! in V
 Vs = 11
 
 # Input impedence (ohm)
-Zin = 20
+Zin = 400
 
 #initial current value (A/mm)
-current = 3.6
+current = 5.5
 
 # section 2 width height and legnth in mm 
 width = 50e-3
 height = 10e-3 
-length = 1
-
+length = 1.5
 
 #pure dephasing  time for the inj -> ull transition[ps]
 Tdeph_13 =  0.4
