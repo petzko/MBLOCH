@@ -52,8 +52,8 @@ classdef TL_solver < handle
         function propagate_1(obj,J_TL1)
             
 % %         i1new = obj.i_TL(1)+J_TL1(1)*obj.dx;
-        obj.v_TL(1) = obj.Vs/obj.height;
-%         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs*1e+3/obj.Zin);
+%         obj.v_TL(1) = obj.Vs/obj.height;
+        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.current*obj.width);
 % %         obj.v_TL(1) = (obj.Vs - (i1new-i1old)*obj.width*(obj.Zin*1e-3))/obj.height;
         obj.v_TL(2:end) = obj.v_TL(2:end)+obj.Bcoeff*(obj.i_TL(2:end)-obj.i_TL(1:end-1)+obj.dx*J_TL1(2:end));
 

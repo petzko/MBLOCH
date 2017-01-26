@@ -41,16 +41,16 @@ modA = 0
 modF = 0
 
 #initial bias value! in kV/cm
-bias = 10
+bias = 11
 
 #boundary voltage value! in V
 Vs = 11
 
 # Input impedence (ohm)
-Zin = 400
+Zin = 200
 
 #initial current value (A/mm)
-current = 9
+current = 8
 
 # section 2 width height and legnth in mm 
 width = 50e-3
@@ -64,4 +64,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 10
+linear_loss = 9

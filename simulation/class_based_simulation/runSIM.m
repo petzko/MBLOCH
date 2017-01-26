@@ -36,10 +36,6 @@ hbar = Constants('hbar',{'time',tch})/Constants('q0');
 %central field frequency.
 E0 =  (E_fit{ULL}(bias/10)-E_fit{LLL}(bias/10))/hbar;
 
-%cavity loss l_0 in (cm^-1) --> l_0*100 in (m^-1) --> 1 mm^-1
-% params_s1.linear_loss = params_s1.linear_loss*100/(1/params_s1.lch);
-% params_s2.linear_loss = params_s2.linear_loss*100/(1/params_s2.lch);
-
 params_s1.E0 = E0; 
 params_s2.E0 = E0;
 
@@ -98,12 +94,6 @@ VV_TL1 = TL_model_s1.v_TL;
 VV_TL2 = TL_model_s2.v_TL;
 i1old = params_s2.current;
 
-% % % % % % v1old = TL_model_s1.v_TL(1); 
-% % % % % % v2old = TL_model_s2.v_TL(1);
-% % % % % % v1new = v1old;
-% % % % % % v2new = TL_model_s2.v_TL(1);
-% % % % % % i1new = TL_model_s1.i_TL(1);
-% % % % % % i2new = TL_model_s2.i_TL(1);
 
 %%%% specify some of the mainloop control parameters %%%%
 idx = 1; ctr = 1; iter_ctr = 1;
@@ -118,10 +108,10 @@ padsize = double(recordingiter-length(record_U));
 
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
+interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
 checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 1000;
+f_display = 100;
 
 
 while( t< tEnd)
@@ -143,17 +133,16 @@ while( t< tEnd)
     J_TL1 = dm_model_s1.get_current_density(params_s1);
     J_TL2 = dm_model_s2.get_current_density(params_s2);
     J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
-     
+
     dat = stepWave(dat,P,P_t,M,M_t,losses);
 
-% %     if iter_ctr>900
 %   Transmission line equations
-    TL_model_s1.propagate_1(J_TL1);
-%     i1old = TL_model_s1.i_TL(1)+J_TL1(1)*dat.dx/2;
-    if iter_ctr>2000 TL_model_s2.propagate_2(J_tot1,J_TL2); end
-% %     end
+    if iter_ctr > 1000
+        TL_model_s1.propagate_1(J_TL1);
+        TL_model_s2.propagate_2(J_tot1,J_TL2);
+    end
 
-    
+
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
@@ -188,7 +177,7 @@ while( t< tEnd)
 
 % % % %         i_out = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
         display(['i_out (A): ' num2str(J_tot1*params_s1.width)]);
-%     end  
+%     end
 % 
 %     
 %     %%plot some of the results if neeed ariseth :D

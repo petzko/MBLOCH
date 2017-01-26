@@ -47,10 +47,10 @@ bias = 11
 Vs = 11
 
 # Input impedence (ohm)
-Zin = 20
+Zin = 200
 
 #initial current value (A/mm) 
-current = 10
+current = 9
 
 # section 1 width height and legnth in mm 
 width = 50e-3
@@ -65,4 +65,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 10
+linear_loss = 9
