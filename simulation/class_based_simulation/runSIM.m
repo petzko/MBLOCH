@@ -121,10 +121,10 @@ P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 interpCtr = 500; %set how often to interpolate the energies, scattering rates, dipole elements etc.
 checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 10000;
+f_display = 1000;
 
 
-while( t< tEnd*5)
+while( t< tEnd)
     
     dm_model_s1.propagate(dat.U,dat.V,dt);
     dm_model_s2.propagate(dat.U,dat.V,dt);
@@ -213,7 +213,7 @@ while( t< tEnd*5)
         I_TL(1:params_s1.N_pts) = TL_model_s1.i_TL; I_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.i_TL;
         plot(x,I_TL*params_s1.width);
         title('I [A]');
-%         getframe;        
+        getframe;        
 %         frame = getframe(1);
 %         GIF{iter_ctr/f_plot} = frame2im(frame);
     end

@@ -22,7 +22,7 @@ disp = +0.125
 Lp = 54.8
 
 #doping density in [cm^-3]
-dN = 1.0E16
+dN = 1.5E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
 Ld = 16.2
@@ -50,7 +50,7 @@ Vs = 11
 Zin = 20
 
 #initial current value (A/mm) 
-current = 5.6
+current = 10
 
 # section 1 width height and legnth in mm 
 width = 50e-3
@@ -65,4 +65,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 12
+linear_loss = 10
