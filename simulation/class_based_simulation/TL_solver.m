@@ -40,12 +40,12 @@ classdef TL_solver < handle
         
         %Initial conditions
         obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(1)....   V(M)       
-        obj.i_TL = zeros(obj.N_pts,1);          % I(0)  I(1/2)  I(3/2).... I(M+1/2)
+        obj.i_TL = zeros(obj.N_pts,1);            % I(3/2).... I(M+1/2)
 
-        obj.i_TL(1) = obj.current;
-        for mm = 2: obj.N_pts-1
-        obj.i_TL(mm) = obj.i_TL(1)*(obj.N_pts-mm)/obj.N_pts;
+        for mm = 1: obj.N_pts-1
+        obj.i_TL(mm) = obj.current*(obj.N_pts-mm)/obj.N_pts;
         end
+        obj.i_TL(end)= -obj.i_TL(end-1);
 
         end
         
@@ -53,12 +53,13 @@ classdef TL_solver < handle
             
 % %         i1new = obj.i_TL(1)+J_TL1(1)*obj.dx;
 %         obj.v_TL(1) = obj.Vs/obj.height;
-        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.current*obj.width);
+        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs*1e+3/obj.Zin);
 % %         obj.v_TL(1) = (obj.Vs - (i1new-i1old)*obj.width*(obj.Zin*1e-3))/obj.height;
-        obj.v_TL(2:end) = obj.v_TL(2:end)+obj.Bcoeff*(obj.i_TL(2:end)-obj.i_TL(1:end-1)+obj.dx*J_TL1(2:end));
-
+        obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
+        obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
 %         obj.i_TL(1) = obj.current; obj.i_TL(end) = -obj.i_TL(end-1);
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
+        obj.i_TL(end) = -obj.i_TL(end-1);
 
 
         end
@@ -66,14 +67,15 @@ classdef TL_solver < handle
         function propagate_2(obj,J1_tot,J_TL2)
             
 
-%         obj.v_TL(1) = obj.v_TL(1)+2*obj.Bcoeff*(obj.i_TL(1)-I1_TL+obj.dx*J_TL2(1)/2);
-        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL2(1)/2+J1_tot*obj.width);
+        obj.v_TL(1) = obj.v_TL(1)+obj.Bcoeff*(obj.i_TL(1)-J1_tot+J_TL2(1)*obj.dx/2)*2;
+% %         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL2(1)/2+J1_tot*obj.width);
 % % %         obj.v_TL(1) = obj.v_TL(1)+obj.Bcoeff*(obj.i_TL(1)-(J1_tot-obj.v_TL(1)*obj.height*1e3/obj.Zin/obj.width)+obj.dx*J_TL2(1)/2);
 
-        obj.v_TL(2:end) = obj.v_TL(2:end)+obj.Bcoeff*(obj.i_TL(2:end)-obj.i_TL(1:end-1)+obj.dx*J_TL2(2:end));
+        obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL2(2:end-1));
+        obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL2(end)*obj.dx/2)*2;
 %         obj.i_TL(1) = I1_TL-J_TL2(1)*obj.dx/2;
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
-                
+        obj.i_TL(end) = -obj.i_TL(end-1);        
 
 
         end

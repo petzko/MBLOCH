@@ -146,20 +146,20 @@ while( t< tEnd)
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-     if mod(iter_ctr,interpCtr) == 0 %interpCtr
+%     if mod(iter_ctr,interpCtr) == 0 %interpCtr
             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
-            if MM1 < 1.2 && NN1 > 0.9
+            if MM1 < 1.22 && NN1 > 0.88
             VV_TL1 = TL_model_s1.v_TL;
             end
              
             MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
-            if MM2 < 1.2 && NN2 > 0.9
+            if MM2 < 1.22 && NN2 > 0.88
             VV_TL2 = TL_model_s2.v_TL;
             end
 
-        dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);
-        dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);
-    end
+        dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s1.v_TL
+        dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s2.v_TL
+%     end
 
     if(mod(iter_ctr,f_display) == 0)
         clc;
