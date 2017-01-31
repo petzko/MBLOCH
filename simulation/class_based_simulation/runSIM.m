@@ -82,9 +82,9 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc1.C = 1.3;    %unit: pF/mm
+rlgc1.C = 2;    %unit: pF/mm
 rlgc1.L = 1.6e2;  %unit: pH/mm
-rlgc2.C = 1.3;    %unit: pF/mm
+rlgc2.C = 2;    %unit: pF/mm
 rlgc2.L = 1.6e2;  %unit: pH/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc1);
@@ -111,7 +111,7 @@ P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
 checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 100;
+f_display = 10000;
 
 
 while( t< tEnd)
@@ -147,16 +147,24 @@ while( t< tEnd)
     dm_model_s2.update_state();
     
 %     if mod(iter_ctr,interpCtr) == 0 %interpCtr
-            MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
-            if MM1 < 1.22 && NN1 > 0.88
-            VV_TL1 = TL_model_s1.v_TL;
-            end
-             
-            MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
-            if MM2 < 1.22 && NN2 > 0.88
-            VV_TL2 = TL_model_s2.v_TL;
-            end
+%             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
+%             if MM1 < 1.22 && NN1 > 0.88
+%             VV_TL1 = TL_model_s1.v_TL;
+%             end
 
+             
+%             MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
+%             if MM2 < 1.22 && NN2 > 0.88
+%             VV_TL2 = TL_model_s2.v_TL;
+%             end
+        MM1 = TL_model_s1.v_TL > 1.22; NN1 = TL_model_s1.v_TL < 0.88;
+        VV_TL1 = TL_model_s1.v_TL;
+        VV_TL1(MM1)=1.22; VV_TL1(NN1)=0.88;
+            
+        MM2 = TL_model_s2.v_TL > 1.22; NN2 = TL_model_s2.v_TL < 0.88;
+        VV_TL2 = TL_model_s2.v_TL;
+        VV_TL2(MM2)=1.22; VV_TL2(NN2)=0.88;
+        
         dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s1.v_TL
         dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s2.v_TL
 %     end

@@ -41,13 +41,13 @@ modA = 0
 modF = 0
 
 #initial bias value! in kV/cm
-bias = 11
+bias = 10.7
 
 #boundary voltage value! in V
-Vs = 20
+Vs = 14.2
 
 # Input impedence (ohm)
-Zin = 24
+Zin = 10
 
 #initial current value (A/mm) 
 current = 7
