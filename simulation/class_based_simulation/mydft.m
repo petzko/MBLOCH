@@ -15,5 +15,5 @@ function [ X,f,t ] = mydft(x,dt)
      f = 1/dt*[0:NFFT/2-1]/NFFT;
   
      figure;
-     plot(f,abs(X));
+     plot(f,normc(abs(X)));
 end

@@ -84,16 +84,16 @@ dat = makeMaxwellVars(dat);
 
 rlgc1.C = 2;    %unit: pF/mm
 rlgc1.L = 1.6e2;  %unit: pH/mm
+% rlgc1.R =
 rlgc2.C = 2;    %unit: pF/mm
 rlgc2.L = 1.6e2;  %unit: pH/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc1);
 TL_model_s2 = TL_solver(params_s2,rlgc2);
 
-VV_TL1 = TL_model_s1.v_TL;
-VV_TL2 = TL_model_s2.v_TL;
-i1old = params_s2.current;
-
+J_TL1old = 3.0351*ones(params_s1.N_pts,1);
+J_TL2old = 3.0351*ones(params_s2.N_pts,1);
+J_tot1old = 3.7756;
 
 %%%% specify some of the mainloop control parameters %%%%
 idx = 1; ctr = 1; iter_ctr = 1;
@@ -109,9 +109,8 @@ padsize = double(recordingiter-length(record_U));
 t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 10000;
+f_display = 1000;
 
 
 while( t< tEnd)
@@ -129,10 +128,10 @@ while( t< tEnd)
     P(params_s2.IDX) = P2; P_t(params_s2.IDX) = P2_t;
     M(params_s2.IDX) = M2; M_t(params_s2.IDX) = M2_t;
     losses(params_s2.IDX) = losses2;
-    
+
     J_TL1 = dm_model_s1.get_current_density(params_s1);
     J_TL2 = dm_model_s2.get_current_density(params_s2);
-    J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
+    J_tot1 = trapz(x(2:params_s1.N_pts-1),J_TL1(2:params_s1.N_pts-1))+dx*(J_TL1(1)+J_TL1(end))/2;
 
     dat = stepWave(dat,P,P_t,M,M_t,losses);
 
@@ -140,34 +139,25 @@ while( t< tEnd)
     if iter_ctr > 1000
         TL_model_s1.propagate_1(J_TL1);
         TL_model_s2.propagate_2(J_tot1,J_TL2);
+%         J_tot1old = J_tot1;
     end
 
 
     dm_model_s1.update_state();
     dm_model_s2.update_state();
     
-%     if mod(iter_ctr,interpCtr) == 0 %interpCtr
-%             MM1 = max(TL_model_s1.v_TL); NN1 = min(TL_model_s1.v_TL);%9kV/cm--12kV/cm
-%             if MM1 < 1.22 && NN1 > 0.88
-%             VV_TL1 = TL_model_s1.v_TL;
-%             end
 
-             
-%             MM2 = max(TL_model_s2.v_TL); NN2 = min(TL_model_s2.v_TL);%9kV/cm--12kV/cm
-%             if MM2 < 1.22 && NN2 > 0.88
-%             VV_TL2 = TL_model_s2.v_TL;
-%             end
-        MM1 = TL_model_s1.v_TL > 1.22; NN1 = TL_model_s1.v_TL < 0.88;
         VV_TL1 = TL_model_s1.v_TL;
+        MM1 = TL_model_s1.v_TL > 1.22; NN1 = TL_model_s1.v_TL < 0.88;
         VV_TL1(MM1)=1.22; VV_TL1(NN1)=0.88;
-            
-        MM2 = TL_model_s2.v_TL > 1.22; NN2 = TL_model_s2.v_TL < 0.88;
+ 
         VV_TL2 = TL_model_s2.v_TL;
+        MM2 = TL_model_s2.v_TL > 1.22; NN2 = TL_model_s2.v_TL < 0.88;
         VV_TL2(MM2)=1.22; VV_TL2(NN2)=0.88;
         
         dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s1.v_TL
         dm_model_s2.interpolate(VV_TL2,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s2.v_TL
-%     end
+
 
     if(mod(iter_ctr,f_display) == 0)
         clc;
@@ -179,24 +169,14 @@ while( t< tEnd)
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]); 
         display(['average bias (kV/cm) sec 2: ' num2str(mean(TL_model_s2.v_TL)*10)]); 
         display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
-% % % %         display(['i_1TL(1) (A): ' num2str(i1new)]);
         display(['v_2TL(1) (V): ' num2str(TL_model_s2.v_TL(1)*10)]);
-% % % %         display(['i_2TL(1) (A): ' num2str(i2new)]);
-
-% % % %         i_out = trapz(x(1:params_s1.N_pts),J_TL1)*params_s1.width;
         display(['i_out (A): ' num2str(J_tot1*params_s1.width)]);
-%     end
-% 
-%     
-%     %%plot some of the results if neeed ariseth :D
-%     if(mod(iter_ctr,f_plot) == 0)
 
         subplot(4,1,1);
         plot(x,abs(dat.U).^2,x,abs(dat.V).^2);
         title(['t=',num2str(t),' ps','        |E_z|^2','        Iteration= ',num2str(iter_ctr)]);
         
         subplot(4,1,2); 
-%         J_TL(dm_model_s1.IDX) = J_TL1; J_TL(dm_model_s2.IDX) = J_TL2;
         J_TL(1:params_s1.N_pts) = J_TL1; J_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = J_TL2;        
         plot(x,J_TL);
         title('Current density J [A/mm^2]');
@@ -205,24 +185,18 @@ while( t< tEnd)
         V_TL(1:params_s1.N_pts) = TL_model_s1.v_TL; V_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.v_TL;
         plot(x,V_TL*params_s1.height*1e3);
         title('V [V]');
-
+        
         subplot(4,1,4);
         I_TL(1:params_s1.N_pts) = TL_model_s1.i_TL; I_TL(params_s1.N_pts+1:params_s1.N_pts+params_s2.N_pts) = TL_model_s2.i_TL;
         plot(x,I_TL*params_s1.width);
         title('I [A]');
+
         getframe;        
 %         frame = getframe(1);
 %         GIF{iter_ctr/f_plot} = frame2im(frame);
     end
     
-    
-    
-    %%%%% end of setting up the TL PARAMS %%%%%
-%     if(mod(iter_ctr+1,checkptIter) == 0 )
-%         checkptname = ['CHCKPT_' params.name '_N_TRANSMISSION_LINE_' num2str(params.N_pts) '_FP'];
-%         save(checkptname);
-%     end
-    
+
     
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
@@ -235,6 +209,18 @@ end
 
 
 
+% Fourier transformation
+
+times = [1:iter_ctr-1]*dt;
+Etot = record_U.*exp(-1i*E0*times);
+mydft(Etot,dt);
+
+simname = 'sim-test';
+        
+savename = [simname];
+save(savename);
+
+
 % % Creat gif image
 % filename = 'QCL dynamics.gif'; % Specify the output file name
 %         for idx = 1:iter_ctr/f_plot
@@ -245,12 +231,3 @@ end
 %             imwrite(A,map,filename,'gif','WriteMode','append','DelayTime',0.5);
 %             end
 %         end
-
-% Fourier transformation 
-mydft(record_U,dt);
-
-simname = 'sim-test';
-        
-savename = [simname];
-save(savename);
-
