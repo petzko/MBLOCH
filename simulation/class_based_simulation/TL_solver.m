@@ -79,6 +79,18 @@ classdef TL_solver < handle
 
 
         end
+        
+       function propagate_3(obj,J_TL1,v0,modA,modf,t)
+            
+
+        obj.v_TL(1) = v0*(1+modA*sin(2*pi*modf*t)) ;
+        obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
+        obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
+        obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
+        obj.i_TL(end) = 0;
+
+
+        end
 
         
           
