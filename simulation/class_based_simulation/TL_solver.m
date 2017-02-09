@@ -3,11 +3,11 @@ classdef TL_solver < handle
     %   Detailed explanation goes here
     
     properties
-        dx,dt,Zin,Vs,c;
+        dx,dt,Zin,Vs,c,modA,Vs2;
         rlgc,current,bias;
         width,height;
         v_TL,i_TL;
-        Acoeff, Bcoeff,Ccoeff,Dcoeff;
+        Acoeff, Bcoeff,Ccoeff,Dcoeff,Ecoeff,Fcoeff;
         N_pts;
         IDX;
         
@@ -27,6 +27,7 @@ classdef TL_solver < handle
         obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
         obj.current = params.current;    %unit:A/mm -->initial current
         obj.Zin = params.Zin;            %unit: ohm
+        obj.modA = 0.05;
         
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
@@ -37,6 +38,10 @@ classdef TL_solver < handle
         
         obj.Ccoeff = 1/(obj.rlgc.C*obj.dx/2/obj.dt+1/2/obj.Zin)/(obj.height*1e+3);
         obj.Dcoeff = (obj.rlgc.C*obj.dx/2/obj.dt-1/2/obj.Zin)*(obj.height*1e+3);
+        
+        %with consideration of resistance
+        obj.Ecoeff = (obj.rlgc.L/obj.dt-1/2*obj.rlgc.R)/(obj.rlgc.L/obj.dt+1/2*obj.rlgc.R); % *I(old)
+        obj.Fcoeff = -1/(obj.dx*(obj.rlgc.L/obj.dt+1/2*obj.rlgc.R))*(obj.height*1e+3/obj.width);% *(V(2)-V(1))
         
         %Initial conditions
         obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(1)....   V(M)       
@@ -80,13 +85,13 @@ classdef TL_solver < handle
 
         end
         
-       function propagate_3(obj,J_TL1,v0,modA,modf,t)
-            
-
-        obj.v_TL(1) = v0*(1+modA*sin(2*pi*modf*t)) ;
+       function propagate_3(obj,J_TL1,modf,t)
+        obj.Vs2 = obj.Vs*1e3*(1+obj.modA*sin(2*pi*modf*t));            
+        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
-        obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
+%         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
+        obj.i_TL(1:end-1) = obj.Ecoeff*obj.i_TL(1:end-1)+obj.Fcoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
         obj.i_TL(end) = 0;
 
 

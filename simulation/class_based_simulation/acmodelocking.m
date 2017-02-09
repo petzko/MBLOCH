@@ -2,7 +2,7 @@ clear;clc;close all;
 sec1file = 'sec1.set';
 sec2file = 'sec2.set';
 
-interpDataFile = 'fitted_data1.mat';
+interpDataFile = 'fitted_data_OPTICA.mat';
 %parse all input files and load the scatterin rates file !
 params_s1 = input_parser(sec1file);
 
@@ -24,7 +24,7 @@ Ltot = params_s1.length;
 
 T_R = 2*Ltot/c; f_R = 1/T_R;
 params_s1.INJ = INJ; params_s1.ULL = ULL; params_s1.LLL = LLL; params_s1.DEPOP = DEPOP;
-params_s1.IGNORELEVEL = 1; params_s1.NLVLS = NLVLS;
+params_s1.IGNORELEVEL = -1; params_s1.NLVLS = NLVLS;
 
 
 
@@ -71,12 +71,11 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc1.C = 2;    %unit: pF/mm
-rlgc1.L = 1.6e2;  %unit: pH/mm
-rlgc2.C = 2;    %unit: pF/mm
-rlgc2.L = 1.6e2;  %unit: pH/mm
+rlgc.C = 2;     %unit: pF/mm
+rlgc.L = 1.6e2; %unit: pH/mm
+rlgc.R = 8;     %unit: Ohm/mm
 
-TL_model_s1 = TL_solver(params_s1,rlgc1);
+TL_model_s1 = TL_solver(params_s1,rlgc);
 
 VV_TL1 = TL_model_s1.v_TL;
 
@@ -97,7 +96,7 @@ P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
 checkptIter = 1040000;% 1039800; %100000
 f_plot = 1000;
-f_display = 10;
+f_display = 100;
 
 r11 = zeros(N,1); r22 = zeros(N,1); r33 = zeros(N,1);
 
@@ -120,13 +119,15 @@ while( dat.t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
     %   Transmission line equations
-    TL_model_s1.propagate_3(J_TL1,bias/10,0.05*bias/10,f_R,dat.t)
+    if iter_ctr > 2000
+    TL_model_s1.propagate_3(J_TL1,f_R,(dat.t-dt*2000))
+    end
     
     dm_model_s1.update_state();
     
     MM1 = TL_model_s1.v_TL > 1.4; NN1 = TL_model_s1.v_TL < 0.7;
     VV_TL1 = TL_model_s1.v_TL;
-    VV_TL1(MM1)=1.22; VV_TL1(NN1)=0.88;
+    VV_TL1(MM1)=1.4; VV_TL1(NN1)=0.7;
     
    
     
