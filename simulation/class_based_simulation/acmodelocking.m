@@ -71,7 +71,7 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc.C = 2;     %unit: pF/mm
+rlgc.C = 1;     %unit: pF/mm
 rlgc.L = 1.6e2; %unit: pH/mm
 rlgc.R = 8;     %unit: Ohm/mm
 
@@ -94,9 +94,7 @@ padsize = double(recordingiter-length(record_U));
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
-checkptIter = 1040000;% 1039800; %100000
-f_plot = 1000;
-f_display = 100;
+f_display = 500;
 
 r11 = zeros(N,1); r22 = zeros(N,1); r33 = zeros(N,1);
 
@@ -155,13 +153,14 @@ while( dat.t< tEnd)
         
         plotyy(x,[r33,r22,r11],x,[abs(dat.U).^2,abs(dat.V).^2]);
         legend('\rho_{u}','\rho_{l}','\rho_{d}','|U|^2','|V|^2');
+        legend('Location','northeastoutside');
         
-        title(['t=',num2str(dat.t),' ps',' Iteration= ',num2str(iter_ctr)]);
+        title(['t=',num2str(dat.t),' ps     ','    Iteration= ',num2str(iter_ctr)]);
         
         subplot(4,1,2);
         J_TL(1:params_s1.N_pts) = J_TL1; 
         plot(x,J_TL);
-        title('Current density J [A/mm^2]');
+        title('Current density    J [A/mm^2]');
         
         subplot(4,1,3);
         V_TL(1:params_s1.N_pts) = TL_model_s1.v_TL;
@@ -181,7 +180,6 @@ while( dat.t< tEnd)
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
     record_U(iter_ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
-    
     dat.t = dat.t+dt;
     iter_ctr = iter_ctr + 1;
     

@@ -41,21 +41,21 @@ modA = 0
 modF = 0
 
 #initial bias value! in kV/cm
-bias = 11
+bias = 9
 
 #boundary voltage value! in V
-Vs = 13
+Vs = 10
 
 # Input impedence (ohm)
-Zin = 4
+Zin = 2.5
 
 #initial current value (A/mm) 
-current = 6.0980
+current = 8.2323
 
 # section 1 width height and legnth in mm 
 width = 50e-3
 height = 10e-3 
-length = 2.5
+length = 3
 
 
 #pure dephasing  time for the inj -> ull transition[ps]
