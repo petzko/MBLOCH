@@ -25,10 +25,9 @@ classdef TL_solver < handle
         
         obj.bias = params.bias/10;       %unit: kV/mm
         obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
-        obj.current = params.current;    %unit:A/mm -->initial current
+        obj.modA = params.modA;          %modulation amplitude factor 
         obj.Zin = params.Zin;            %unit: ohm
-        obj.modA = 0.05;
-        obj.k = 0.05;                     % scale factor, ratio of AC current and DC 
+        obj.k = 0.02;                     % scale factor, ratio of AC current and DC 
         
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
@@ -48,50 +47,17 @@ classdef TL_solver < handle
         obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(1)....   V(M)       
         obj.i_TL = zeros(obj.N_pts,1);            % I(3/2).... I(M+1/2)
 
-        for mm = 1: obj.N_pts-1
-        obj.i_TL(mm) = obj.current*(obj.N_pts-mm)/obj.N_pts;
-        end
-        obj.i_TL(end)= -obj.i_TL(end-1);
-
         end
         
-        function propagate_1(obj,J_TL1)
-            
-% %         i1new = obj.i_TL(1)+J_TL1(1)*obj.dx;
-%         obj.v_TL(1) = obj.Vs/obj.height;
-        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs*1e+3/obj.Zin);
-% %         obj.v_TL(1) = (obj.Vs - (i1new-i1old)*obj.width*(obj.Zin*1e-3))/obj.height;
-        obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
-        obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
-%         obj.i_TL(1) = obj.current; obj.i_TL(end) = -obj.i_TL(end-1);
-        obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
-        obj.i_TL(end) = -obj.i_TL(end-1);
 
-
-        end
-       
-        function propagate_2(obj,J1_tot,J_TL2)
-            
-
-        obj.v_TL(1) = obj.v_TL(1)+obj.Bcoeff*(obj.i_TL(1)-(J1_tot-obj.v_TL(1)*1e3*obj.height/obj.Zin/obj.width)+J_TL2(1)*obj.dx/2)*2;
-% %         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL2(1)/2+J1_tot*obj.width);
-% % %         obj.v_TL(1) = obj.v_TL(1)+obj.Bcoeff*(obj.i_TL(1)-(J1_tot-obj.v_TL(1)*obj.height*1e3/obj.Zin/obj.width)+obj.dx*J_TL2(1)/2);
-
-        obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL2(2:end-1));
-        obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL2(end)*obj.dx/2)*2;
-%         obj.i_TL(1) = I1_TL-J_TL2(1)*obj.dx/2;
-        obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
-        obj.i_TL(end) = -obj.i_TL(end-1);        
-
-
-        end
         
-       function propagate_3(obj,J_TL1,modf,t)
-        obj.Vs2 = obj.Vs*1e3*1+obj.bias*1e3*obj.height*obj.modA*sin(2*pi*modf*t);            
-        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
+       function propagate(obj,J_TL1,modf,t)
+        obj.Vs2 = obj.bias + obj.bias*obj.modA*sin(2*pi*modf*t);            
+%         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
+        obj.v_TL(1) = obj.Vs2;
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
-%         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Acoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
+
         obj.i_TL(1:end-1) = obj.Ecoeff*obj.i_TL(1:end-1)+obj.Fcoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
         obj.i_TL(end) = 0;
 
