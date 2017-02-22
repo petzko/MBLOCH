@@ -155,13 +155,14 @@ while( dat.t< tEnd)
 
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
-    record_U(iter_ctr)= dat.U(idx);  record_V(iter_ctr)= dat.V(idx);
+    record_U(iter_ctr)= dat.U(idx);
+    record_V(iter_ctr)= dat.V(idx);
     record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
-    record_r110 = dm_model_s1.r110(idx); 
-    record_r330 = dm_model_s1.r330(idx);
-    record_r220 = dm_model_s1.r220(idx);
-    record_J_TL =J_TL1(idx);
+    record_r110(iter_ctr) = dm_model_s1.r110(idx); 
+    record_r330(iter_ctr) = dm_model_s1.r330(idx);
+    record_r220(iter_ctr) = dm_model_s1.r220(idx);
+    record_J_TL(iter_ctr) = J_TL1(idx);
 %     record_rRES = cell(NLVLS-4,padsize);
 %     record_popsum = zeros(padsize,1);
 
