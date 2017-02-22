@@ -1,6 +1,5 @@
 clear;clc;close all;
 sec1file = 'sec1.set';
-sec2file = 'sec2.set';
 
 interpDataFile = 'fitted_data_OPTICA.mat';
 %parse all input files and load the scatterin rates file !
@@ -76,12 +75,11 @@ rlgc.L = 1.6e2; %unit: pH/mm
 rlgc.R = 2;     %unit: Ohm/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc);
-VV_TL1 = bias/10*ones(N,1);
 
 %%%% specify some of the mainloop control parameters %%%%
-idx = 1; ctr = 1; iter_ctr = 1;
+idx = 1000; ctr = 1; iter_ctr = 1;
 iter_per_rt = round(T_R/dat.dt);
-dat.simRT = 100; tEnd = dat.simRT*T_R; % end time in tps
+dat.simRT = 500; tEnd = dat.simRT*T_R; % end time in tps
 
 
 %simulation info storage arrays -> preallocate
@@ -89,15 +87,26 @@ recordingduration = tEnd; % how many ps should we record the pulse for
 iterperrecord = 1; recordingiter  = round(recordingduration/iterperrecord/dt);
 padsize = double(recordingiter-length(record_U));
 
+record_U= zeros(padsize,1);
+record_V = zeros(padsize,1);
+record_v_TL =zeros(padsize,1);
+record_i_TL = zeros(padsize,1); 
+
+record_r110 = zeros(padsize,1); 
+record_r330 = zeros(padsize,1); 
+record_r220 = zeros(padsize,1);
+record_rRES = cell(NLVLS-4,padsize);
+record_popsum = zeros(padsize,1);
+record_J_TL =zeros(padsize,1);
+
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-interpCtr = 1; %set how often to interpolate the energies, scattering rates, dipole elements etc.
 f_display = 500;
 
 r11 = zeros(N,1); r22 = zeros(N,1); r33 = zeros(N,1);
 
 
-while( dat.t< tEnd*5)
+while( dat.t< tEnd)
     
     dm_model_s1.propagate(dat.U,dat.V,dt);
     
@@ -105,9 +114,6 @@ while( dat.t< tEnd*5)
     P(params_s1.IDX) = P1; P_t(params_s1.IDX) = P1_t;
     M(params_s1.IDX) = M1; M_t(params_s1.IDX) = M1_t;
     losses(params_s1.IDX) = losses1;
-    
-    
- 
     
     J_TL1 = dm_model_s1.get_current_density(params_s1);
     J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
@@ -126,13 +132,9 @@ while( dat.t< tEnd*5)
     end
     
     dm_model_s1.update_state();
- 
-    if mod(iter_ctr,interpCtr)==0
-        MM1 = TL_model_s1.v_TL > 1.4; NN1 = TL_model_s1.v_TL < 0.7;
-        VV_TL1 = TL_model_s1.v_TL;
-        VV_TL1(MM1)=1.4; VV_TL1(NN1)=0.7;
-        dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s1.v_TL
-    end
+
+    dm_model_s1.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
+
     
     if(mod(iter_ctr,f_display) == 0) && iter_ctr >= 2000
         clc;
@@ -182,7 +184,14 @@ while( dat.t< tEnd*5)
     
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
-    record_U(iter_ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
+    record_U(iter_ctr)= dat.U(idx);  record_V(iter_ctr)= dat.V(idx);
+    record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
+    record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
+    record_r110 = dm_model_s1.r110(idx); 
+    record_r330 = dm_model_s1.r330(idx);
+    record_r220 = dm_model_s1.r220(idx);
+    record_J_TL =J_TL1(idx);
+    
     dat.t = dat.t+dt;
     iter_ctr = iter_ctr + 1;
     

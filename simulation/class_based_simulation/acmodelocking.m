@@ -76,10 +76,8 @@ VV_TL1 = TL_model_s1.v_TL;
 
 
 %%%% specify some of the mainloop control parameters %%%%
-idx = 1; ctr = 1; iter_ctr = 1;
-iter_per_rt = round(T_R/dat.dt);
+idx = 1000; iter_ctr = 1;
 dat.simRT = 500; tEnd = dat.simRT*T_R; % end time in tps
-
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -97,7 +95,6 @@ record_r220 = zeros(padsize,1);
 record_rRES = cell(NLVLS-4,padsize);
 record_popsum = zeros(padsize,1);
 record_J_TL =zeros(padsize,1);
-
 
 
 dat.t = 0;
@@ -141,7 +138,7 @@ while( dat.t< tEnd)
 %     VV_TL1 = TL_model_s1.v_TL;
 %     VV_TL1(MM1)=1.4; VV_TL1(NN1)=0.7;
 
-    dm_model_s1.interpolate(VV_TL1,W_fit,E_fit,AC_fit,zUL_fit);%TL_model_s1.v_TL
+    dm_model_s1.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
 
 
     if(mod(iter_ctr,f_display) == 0)
@@ -158,7 +155,7 @@ while( dat.t< tEnd)
 
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
-    record_U(iter_ctr)= dat.U(idx);  record_V(ctr)= dat.V(idx);
+    record_U(iter_ctr)= dat.U(idx);  record_V(iter_ctr)= dat.V(idx);
     record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
     record_r110 = dm_model_s1.r110(idx); 
