@@ -76,8 +76,8 @@ VV_TL1 = TL_model_s1.v_TL;
 
 
 %%%% specify some of the mainloop control parameters %%%%
-idx = 1000; iter_ctr = 1;
-dat.simRT = 500; tEnd = dat.simRT*T_R; % end time in tps
+idx = 200; iter_ctr = 1;
+dat.simRT = 200; tEnd = dat.simRT*T_R; % end time in tps
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -120,7 +120,7 @@ while( dat.t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
 
     %   Transmission line equations
-    if iter_ctr > 2000
+    if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
            for mm = 1: N-1
            TL_model_s1.i_TL(mm) = J_tot1*(N-mm)/N;

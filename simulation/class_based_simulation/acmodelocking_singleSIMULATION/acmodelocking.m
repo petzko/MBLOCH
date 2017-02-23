@@ -77,7 +77,7 @@ rlgc.R = 2;     %unit: Ohm/mm
 TL_model_s1 = TL_solver(params_s1,rlgc);
 
 %%%% specify some of the mainloop control parameters %%%%
-idx = 1000; ctr = 1; iter_ctr = 1;
+idx = 200; ctr = 1; iter_ctr = 1;
 iter_per_rt = round(T_R/dat.dt);
 dat.simRT = 200; tEnd = dat.simRT*T_R; % end time in tps
 
