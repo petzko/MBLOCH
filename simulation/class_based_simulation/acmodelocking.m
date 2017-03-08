@@ -49,12 +49,7 @@ params_s1.Ncarriers_cm = params_s1.dN*params_s1.Ld/params_s1.Lp; %carrier densit
 params_s1.IDX = 1:params_s1.N_pts;
 params_s1.x = x(params_s1.IDX);
 
-record_U= 1; record_V = 1;
-record_r110 = 1; record_r330 = 1; record_r220 = 1;
-record_rRES = cell(NLVLS-4,1);
-record_popsum = 1; record_v_TL =1;
-record_i_TL = 1; record_J_TL =1;
-
+record_U= 1; 
 
 TL_bias = bias/10*ones(N,1);
 
@@ -72,11 +67,10 @@ rlgc.R = 2;     %unit: Ohm/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc);
 
-VV_TL1 = TL_model_s1.v_TL;
 
 
 %%%% specify some of the mainloop control parameters %%%%
-idx = 200; iter_ctr = 1;
+idx = 500; iter_ctr = 1;
 dat.simRT = 200; tEnd = dat.simRT*T_R; % end time in tps
 
 %simulation info storage arrays -> preallocate

@@ -3,7 +3,7 @@ classdef TL_solver < handle
     %   Detailed explanation goes here
     
     properties
-        dx,dt,Zin,Vs,c,modA,Vs2;
+        dx,dt,Zin,Vs,c,modA,modF,Vs2;
         rlgc,current,bias,k;
         width,height;
         v_TL,i_TL;
@@ -26,6 +26,7 @@ classdef TL_solver < handle
         obj.bias = params.bias/10;       %unit: kV/mm
         obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
         obj.modA = params.modA;          %modulation amplitude factor 
+        obj.modF = params.modF;          %modulation frequency factor as a fraction of the RT freq
         obj.Zin = params.Zin;            %unit: ohm
         obj.k = 0.02;                     % scale factor, ratio of AC current and DC 
         
@@ -52,7 +53,7 @@ classdef TL_solver < handle
 
         
        function propagate(obj,J_TL1,modf,t)
-        obj.Vs2 = obj.bias + obj.bias*obj.modA*sin(2*pi*modf*t);            
+        obj.Vs2 = obj.bias*(1+obj.modA*sin(2*pi*modf*(1+obj.modF)*t));            
 %         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
         obj.v_TL(1) = obj.Vs2;
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
