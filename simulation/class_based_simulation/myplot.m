@@ -11,9 +11,9 @@ name6 = matfile('name6.mat');
 
 dt = name1.dt; % unit: ps
 T_R = name1.T_R; % round trip time, unit: ps
+f_R = 1/T_R;
 t1 = round(150*T_R/dt);% set plot time range (how many round trips)
 t2 = round(155*T_R/dt);
-
 
 % import electric feld vector
 record_U1 = name1.record_U;
@@ -39,23 +39,23 @@ E1 = abs(record_U1(t1:t2));
 subplot(6,1,1)
 plot(x,E1)
 ylim([0,0.7])
-title('Spectra in time domain (5 round trips with t_{rt} = 72.0498 ps, f_{RF} = f_{rt})')
+title('Spectra in time domain (5 round trips with t_{rt} = 72.0498 ps, modA = 0.05)')
 ylabel('|E_z|')
-legend('modA = 0')
+legend('f_{RF}= 13.79 GHz')
 
 E2 = abs(record_U2(t1:t2));
 subplot(6,1,2)
 plot(x,E2)
 ylim([0,0.7])
 ylabel('|E_z|')
-legend('modA = 0.02')
+legend('f_{RF}= 13.76 GHz')
 
 E3 = abs(record_U3(t1:t2));
 subplot(6,1,3)
 plot(x,E3)
 ylim([0,0.7])
 ylabel('|E_z|')
-legend('modA = 0.04')
+legend('f_{RF}= 13.62 GHz')
 
 E4 = abs(record_U4(t1:t2));
 subplot(6,1,4)
@@ -63,7 +63,7 @@ plot(x,E4)
 ylim([0,0.7])
 xlabel('round trips')
 ylabel('|E_z|')
-legend('modA = 0.06')
+legend('f_{RF}= 13.48 GHz')
 
 E5 = abs(record_U5(t1:t2));
 subplot(6,1,5)
@@ -71,7 +71,7 @@ plot(x,E5)
 ylim([0,0.7])
 xlabel('round trips')
 ylabel('|E_z|')
-legend('modA = 0.08')
+legend('f_{RF}= 13.34 GHz')
 
 E6 = abs(record_U6(t1:t2));
 subplot(6,1,6)
@@ -79,7 +79,7 @@ plot(x,E6)
 ylim([0,0.7])
 xlabel('round trips')
 ylabel('|E_z|')
-legend('modA = 0.10')
+legend('f_{RF}= 13.21 GHz')
 
 
 %******** plot spectra --> in frequency domain ****************
@@ -96,48 +96,60 @@ f1 = f1/1E12;  % Frequency unit: GHz
 figure
 subplot(6,1,1)
 plot(f1,normc(abs(F1)))
-xlim([-1,1])
-title('Spectra in frequency domain (f_{RF} = f_{rt} ) = 13.9 Ghz')
+xlim([-0.2,0.1])
+ylim([0,0.3])
+title('Spectra in frequency domain (modA = 0.05 f_{rt} ) = 13.9 Ghz')
 ylabel('normalized intensity')
-legend('modA = 0')
+% legend('modA = 0')
+legend('f_{RF}= 13.79 GHz')
 
 
 subplot(6,1,2)
 plot(f1,normc(abs(F2)))
-xlim([-1,1])
+xlim([-0.2,0.1])
+ylim([0,0.3])
 xlabel('frequency /THz')
 ylabel('normalized intensity')
-legend('modA = 0.02')
+% legend('modA = 0.02')
+legend('f_{RF}= 13.76 GHz')
 
 
 subplot(6,1,3)
 plot(f1,normc(abs(F3)))
-xlim([-1,1])
+xlim([-0.2,0.1])
+ylim([0,0.3])
 xlabel('frequency /THz')
 ylabel('normalized intensity')
-legend('modA = 0.04')
+% legend('modA = 0.04')
+legend('f_{RF}= 13.62 GHz')
 
 
 subplot(6,1,4)
 plot(f1,normc(abs(F4)))
-xlim([-1,1])
+xlim([-0.2,0.1])
+ylim([0,0.3])
 xlabel('frequency /THz')
 ylabel('normalized intensity')
-legend('modA = 0.06')
+% legend('modA = 0.06')
+legend('f_{RF}= 13.48 GHz')
 
 subplot(6,1,5)
 plot(f1,normc(abs(F5)))
-xlim([-1,1])
+xlim([-0.2,0.1])
+ylim([0,0.3])
 xlabel('frequency /THz')
 ylabel('normalized intensity')
-legend('modA = 0.08')
+% legend('modA = 0.08')
+legend('f_{RF}= 13.34 GHz')
 
 subplot(6,1,6)
 plot(f1,normc(abs(F6)))
-xlim([-1,1])
+xlim([-0.2,0.1])
+ylim([0,0.3])
 xlabel('frequency /THz')
 ylabel('normalized intensity')
-legend('modA = 0.10')
+% legend('modA = 0.10')
+legend('f_{RF}= 13.21 GHz')
 
 
 %******** plot THz field beatnot and voltage over frequncy ****************
@@ -161,8 +173,19 @@ P6 = abs(record_U6(400000:end)).^2;
 % [ V4,~ ] = mydft2(record_v_TL4(600000:end)-bias*ones(length(record_v_TL4(600000:end))),dt); V4 = V4(1:length(V4)/2);
 tend = length(record_U1);
 tx = dt*linspace(400000,tend,tend-400000+1);
-ty = sin(2*pi/T_R*tx);
-[ V1,~ ] = mydft2(ty,dt);   V1 = V1(1:length(V1)/2);
+ty1 = sin(2*pi/T_R*(1-0.008)*tx);
+ty2 = sin(2*pi/T_R*(1-0.01)*tx);
+ty3 = sin(2*pi/T_R*(1-0.02)*tx);
+ty4 = sin(2*pi/T_R*(1-0.03)*tx);
+ty5 = sin(2*pi/T_R*(1-0.04)*tx);
+ty6 = sin(2*pi/T_R*(1-0.05)*tx);
+
+[ V1,~ ] = mydft2(ty1,dt);   V1 = V1(1:length(V1)/2);
+[ V2,~ ] = mydft2(ty2,dt);   V2 = V2(1:length(V2)/2);
+[ V3,~ ] = mydft2(ty3,dt);   V3 = V3(1:length(V3)/2);
+[ V4,~ ] = mydft2(ty4,dt);   V4 = V4(1:length(V4)/2);
+[ V5,~ ] = mydft2(ty5,dt);   V5 = V5(1:length(V5)/2);
+[ V6,~ ] = mydft2(ty6,dt);   V6 = V6(1:length(V6)/2);
 
 f2 = f2'/1e9; f2=f2(1:length(f2)/2);
 
@@ -172,13 +195,14 @@ subplot(6,1,1)
 % semilogy(f2,normc(abs(B1)))
 yyaxis left
 plot(f2,normc(abs(B1)))
-title('THz field beatnote at mod freq 13.9 Ghz')
+title('THz field beatnote with mod amplitude 0.05')
 xlim([10,20])
 yyaxis right
 plot(f2,abs(V1))
+xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
-legend('modA = 0')
-
+% legend('modA = 0')
+legend('f_{RF}= 13.79 GHz')
 
 subplot(6,1,2)
 % semilogy(f2,normc(abs(B2)))
@@ -187,8 +211,10 @@ plot(f2,normc(abs(B2)))
 xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
 yyaxis right
-plot(f2,abs(V1))
-legend('modA = 0.02')
+plot(f2,abs(V2))
+xlim([10,20])
+% legend('modA = 0.02')
+legend('f_{RF}= 13.76 GHz')
 
 
 subplot(6,1,3)
@@ -198,8 +224,10 @@ plot(f2,normc(abs(B3)))
 xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
 yyaxis right
-plot(f2,abs(V1))
-legend('modA = 0.04')
+plot(f2,abs(V3))
+xlim([10,20])
+% legend('modA = 0.04')
+legend('f_{RF}= 13.62 GHz')
 
 
 subplot(6,1,4)
@@ -209,9 +237,10 @@ plot(f2,normc(abs(B4)))
 xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
 yyaxis right
-plot(f2,abs(V1))
-xlabel('frequency /GHz')
-legend('modA = 0.06')
+plot(f2,abs(V4))
+xlim([10,20])
+% legend('modA = 0.06')
+legend('f_{RF}= 13.48 GHz')
 
 
 subplot(6,1,5)
@@ -221,9 +250,10 @@ plot(f2,normc(abs(B5)))
 xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
 yyaxis right
-plot(f2,abs(V1))
-xlabel('frequency /GHz')
-legend('modA = 0.08')
+plot(f2,abs(V5))
+xlim([10,20])
+% legend('modA = 0.08')
+legend('f_{RF}= 13.34 GHz')
 
 
 subplot(6,1,6)
@@ -233,10 +263,10 @@ plot(f2,normc(abs(B6)))
 xlim([10,20])
 % ylabel('Beatnote signal','RF signal')
 yyaxis right
-plot(f2,abs(V1))
-xlabel('frequency /GHz')
-legend('modA = 0.10')
-
+plot(f2,abs(V6))
+xlim([10,20])
+% legend('modA = 0.10')
+legend('f_{RF}= 13.21 GHz')
 
 
 

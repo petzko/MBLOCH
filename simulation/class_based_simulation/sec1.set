@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 2000 
+N_pts = 5000 
 
 #diffusion constant in [cm^2/sec]
 D = 46

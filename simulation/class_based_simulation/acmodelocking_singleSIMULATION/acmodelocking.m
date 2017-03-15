@@ -72,7 +72,7 @@ dat = makeMaxwellVars(dat);
 
 rlgc.C = 1;     %unit: pF/mm
 rlgc.L = 1.6e2; %unit: pH/mm
-rlgc.R = 2;     %unit: Ohm/mm
+rlgc.R = 0;     %unit: Ohm/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc);
 
@@ -91,7 +91,7 @@ record_U= zeros(padsize,1);
 record_V = zeros(padsize,1);
 record_v_TL =zeros(padsize,1);
 record_i_TL = zeros(padsize,1); 
-
+record_time = zeros(padsize,1); 
 record_r110 = zeros(padsize,1); 
 record_r330 = zeros(padsize,1); 
 record_r220 = zeros(padsize,1);
@@ -188,6 +188,7 @@ while( dat.t< tEnd)
     record_V(iter_ctr)= dat.V(idx);
     record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
+    record_time(iter_ctr)= dat.t;
     record_r110(iter_ctr) = dm_model_s1.r110(idx); 
     record_r330(iter_ctr) = dm_model_s1.r330(idx);
     record_r220(iter_ctr) = dm_model_s1.r220(idx);
@@ -198,7 +199,7 @@ while( dat.t< tEnd)
     
 end
 
-mydft(record_U,dt);
+% mydft2(record_U(400000:end),dt);
 
 simname = 'sim-test';
 
