@@ -52,8 +52,8 @@ classdef TL_solver < handle
         
 
         
-       function propagate(obj,J_TL1,modf,t)
-        obj.Vs2 = obj.bias*(1+obj.modA*sin(2*pi*modf*(1+obj.modF)*t));            
+       function propagate(obj,J_TL1,t)
+        obj.Vs2 = obj.bias*(1+obj.modA*sin(2*pi*obj.modF*t));            
 %         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
         obj.v_TL(1) = obj.Vs2;
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));

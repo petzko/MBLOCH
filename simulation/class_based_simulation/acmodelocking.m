@@ -1,4 +1,4 @@
-function acmodelocking(simfilename,interpDataFile, savename)
+function acmodelocking(simfilename,interpDataFile, savename,ploton)
 
 %parse all input files and load the scatterin rates file !
 params_s1 = input_parser(simfilename);
@@ -49,7 +49,7 @@ params_s1.Ncarriers_cm = params_s1.dN*params_s1.Ld/params_s1.Lp; %carrier densit
 params_s1.IDX = 1:params_s1.N_pts;
 params_s1.x = x(params_s1.IDX);
 
-record_U= 1; 
+record_U= 1;
 
 TL_bias = bias/10*ones(N,1);
 
@@ -63,57 +63,53 @@ dat = makeMaxwellVars(dat);
 
 rlgc.C = 1;     %unit: pF/mm
 rlgc.L = 1.6e2; %unit: pH/mm
-rlgc.R = 2;     %unit: Ohm/mm
+rlgc.R = 0;     %unit: Ohm/mm
 
 TL_model_s1 = TL_solver(params_s1,rlgc);
 
 
-
-%%%% specify some of the mainloop control parameters %%%%
-idx = 500; iter_ctr = 1;
-dat.simRT = 200; tEnd = dat.simRT*T_R; % end time in tps
+%simulation info storage arrays -> preallocate
+idx = round(N/2); iter_ctr = 1;
+dat.simRT = 500; tEnd = dat.simRT*T_R; % end time in tps
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
 iterperrecord = 1; recordingiter  = round(recordingduration/iterperrecord/dt);
 padsize = double(recordingiter-length(record_U));
 
+%last 100 roundtrips
 record_U= zeros(padsize,1);
 record_V = zeros(padsize,1);
 record_v_TL =zeros(padsize,1);
 record_i_TL = zeros(padsize,1);
 record_time = zeros(padsize,1);
-
-record_r110 = zeros(padsize,1); 
-record_r330 = zeros(padsize,1); 
-record_r220 = zeros(padsize,1);
-record_rRES = cell(NLVLS-4,padsize);
-record_popsum = zeros(padsize,1);
 record_J_TL =zeros(padsize,1);
+record_r110 = zeros(padsize,1);
+record_r330 = zeros(padsize,1);
+record_r220 = zeros(padsize,1);
 
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 500;
+f_display = 5000;
 
 
 
 while( dat.t< tEnd)
-
+    
     dm_model_s1.propagate(dat.U,dat.V,dt);
-
+    
     [P1,P1_t,M1,M1_t,losses1] = dm_model_s1.get_polarization_and_losses();
     P(params_s1.IDX) = P1; P_t(params_s1.IDX) = P1_t;
     M(params_s1.IDX) = M1; M_t(params_s1.IDX) = M1_t;
     losses(params_s1.IDX) = losses1;
-
-
+    
+    
     J_TL1 = dm_model_s1.get_current_density(params_s1);
     J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
-
-
+    
     dat = stepWave(dat,P,P_t,M,M_t,losses);
-
+    
     %   Transmission line equations
     if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
@@ -121,21 +117,12 @@ while( dat.t< tEnd)
            TL_model_s1.i_TL(mm) = J_tot1*(N-mm)/N;
            end 
         end
-       
-        TL_model_s1.propagate(J_TL1,f_R,(dat.t-dt*2000))
+        TL_model_s1.propagate(J_TL1,dat.t-dt*2000)
     end
-
-
+ 
     dm_model_s1.update_state();
-
-
-%     MM1 = TL_model_s1.v_TL > 1.4; NN1 = TL_model_s1.v_TL < 0.7;
-%     VV_TL1 = TL_model_s1.v_TL;
-%     VV_TL1(MM1)=1.4; VV_TL1(NN1)=0.7;
-
     dm_model_s1.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
-
-
+ 
     if(mod(iter_ctr,f_display) == 0)
         clc;
         [trace10,trace12] = dm_model_s1.get_avg_trace();
@@ -145,9 +132,24 @@ while( dat.t< tEnd)
         display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
         display(['i_in_1 (A): ' num2str(TL_model_s1.i_TL(1)*params_s1.width)]);
         display(['i_out_1 (A): ' num2str(J_tot1*params_s1.width)]);
+         
+        if ploton
+            subplot(2,1,1);
+            plot(x,abs(dat.U).^2+abs(dat.V).^2);
+            xlabel('x (mm)'); ylabel('intensity (ps^{-2}');
+            subplot(2,1,2);
+            plotyy(x,TL_model_s1.v_TL*10,x,[TL_model_s1.i_TL,J_TL1]);
+            xlabel('x (mm)'); legend('v (kV/cm)','i (A)','J (A/mm^2)');
+            getframe;
+            
+        end
     end
-
-
+    
+    
+    dat.t = dat.t+dt;
+    iter_ctr = iter_ctr + 1;
+    
+    
     %%%% obtain the field, field intensity and the total population at position "idx" ...
     %store fields info
     record_U(iter_ctr)= dat.U(idx);
@@ -155,17 +157,14 @@ while( dat.t< tEnd)
     record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
     record_time(iter_ctr)= dat.t;
-    record_r110(iter_ctr) = dm_model_s1.r110(idx); 
+    record_J_TL(iter_ctr) = J_TL1(idx);
+    record_r110(iter_ctr) = dm_model_s1.r110(idx);
     record_r330(iter_ctr) = dm_model_s1.r330(idx);
     record_r220(iter_ctr) = dm_model_s1.r220(idx);
-    record_J_TL(iter_ctr) = J_TL1(idx);
-%     record_rRES = cell(NLVLS-4,padsize);
-%     record_popsum = zeros(padsize,1);
-
-    dat.t = dat.t+dt;
-    iter_ctr = iter_ctr + 1;
-
+    
 end
+
+
 
 save(savename);
 end

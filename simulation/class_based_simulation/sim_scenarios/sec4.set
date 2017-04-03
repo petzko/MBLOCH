@@ -1,0 +1,68 @@
+# % or ! are comments 
+
+# simulattion name 
+name = (QCL183S-TL-sim-section-1)
+# shall I include spatial hole burning or not
+shb = +1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N_pts = 3000 
+
+#diffusion constant in [cm^2/sec]
+D = 46
+
+#dispersion constant in [ps^2/mm]! 
+disp = +0.125
+
+#period length [nm]
+Lp = 54.8
+
+#doping density in [cm^-3]
+dN = 1.5E16
+
+#doping region thickness [nm] (set equal to Lp if average doping density is known)
+Ld = 16.2
+
+#mode overlap factor [dimensionless]
+Overlap = 0.8
+
+#refractive index
+nTHz = 3.6
+nRF = 3.8
+
+#modulation frequency 
+modF = 0.0139
+
+#modulation amplitude factor 
+modA = 0.05
+
+#initial bias value! in kV/cm
+bias = 8.6
+
+#boundary voltage value! in V
+Vs = 8.6
+
+# Input impedence (ohm)
+Zin = 0.1
+
+#initial current value (A/mm) 
+current = 7.2870
+
+# section 1 width height and legnth in mm 
+width = 60e-3
+height = 10e-3 
+length = 3
+
+
+#pure dephasing  time for the inj -> ull transition[ps]
+Tdeph_13 =  0.4
+#pure dephasing  times for the inj -> lll and ull->lll transition[ps]
+Tdeph_12 =  1
+Tdeph_32 =  1
+
+#cavity loss in 1/cm; 
+linear_loss = 13

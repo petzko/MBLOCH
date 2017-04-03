@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 5000 
+N_pts = 3000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -34,8 +34,8 @@ Overlap = 0.8
 nTHz = 3.6
 nRF = 3.8
 
-#modulation frequency factor as a fraction of the RT freq. 
-modF = 0.0025
+#modulation frequency 
+modF = 0.0149
 
 #modulation amplitude factor 
 modA = 0.05
