@@ -48,7 +48,7 @@
 \newcommand{\includegraphicsS}[1]{\includegraphics[width=0.40\textwidth]{#1}}
 \newcommand{\includegraphicsXS}[1]{\includegraphics[width=0.35\textwidth]{#1}}
 \newcommand{\includegraphicsBIO}[1]{\includegraphics[width=1.1in,height=1.1in,clip,keepaspectratio]{#1}}
-\title{Analysis of operating regimes of terahertz quantum cascade laser frequency combs}
+\title{Coupled transmission line/Maxwell-Bloch equations approach for electro-optical simulations of terahertz quantum cascade lasers}
 \author{\IEEEauthorblockN{
 		Petar Tzenov\IEEEauthorrefmark{1},
 		Longway Zhong\IEEEauthorrefmark{1},
@@ -73,12 +73,28 @@ Active mode locking (AML) via modulation of the injection current or bias is a s
 \end{abstract}
 
 \section{Theoretical model}
+\begin{enumerate}
+	\item Illustrate the general coupling scheme -> Schrodinger Poisson Solver-> ensemble Monte Carlo -> Maxwell-Bloch and Transmission-Line equations  
+	\item simulation scheme as a block-diagram. 
+	\item Illustrate the laser under study -> Optica laser -allows direct comparison with experiment. \cite{petz2016}  
+\end{enumerate}
 \subsection{Optical modelling}
 \subsection{Electrical modelling}
-\section{Injection locking of THz QCLs}
-\section{Ultra short pulse generation and mode locking in THz QCLs}
+\begin{figure}[H]
+	\centering
+	\includegraphicsS{IMGS/CIRCUIT}
+	\caption{insert caption here.}	
+\end{figure}
+
+Say something about the image
+
+\section{Simulation results and comparison with experiment}
+\subsection{Injection locking of THz QCLs}
+\subsection{Ultra short pulse generation and mode locking in THz QCLs}
+\begin{appendices}
 \section{Numerical methods}
-\subsection{Boundary conditions}
+\section{Boundary conditions}
+\end{appendices}
 
 \section*{Funding}
 This work was supported by the German Research Foundation (DFG) within the Heisenberg program (JI 115/4-1) and under DFG Grant No. JI 115/9-1.
@@ -86,5 +102,5 @@ This work was supported by the German Research Foundation (DFG) within the Heise
 \bibliographystyle{IEEEtran}
 \bibliography{literature/AML_bib_resources.bib}
 
-	
+
 \end{document} 
