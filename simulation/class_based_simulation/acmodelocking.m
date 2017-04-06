@@ -70,7 +70,7 @@ TL_model_s1 = TL_solver(params_s1,rlgc);
 
 %simulation info storage arrays -> preallocate
 idx = round(N/2); iter_ctr = 1;
-dat.simRT = 500; tEnd = dat.simRT*T_R; % end time in tps
+dat.simRT = 400; tEnd = dat.simRT*T_R; % end time in tps
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
