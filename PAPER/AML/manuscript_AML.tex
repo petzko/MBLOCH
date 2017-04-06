@@ -1,0 +1,90 @@
+\documentclass[journal]{IEEEtran}
+
+\renewcommand{\baselinestretch}{1.0} % Change to 1.65 for double spacing
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+
+\usepackage{color}
+\usepackage[latin9]{inputenc}
+\usepackage{mathrsfs,amsmath}
+\usepackage{graphicx}%
+\usepackage{float}
+\usepackage{amsfonts}%
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{bm}
+\usepackage{cite}
+%necessary for outline section of the article 
+%\usepackage{outline}
+
+\newcommand{\mb}[1]{\bm{#1}}
+\usepackage[T1]{fontenc}
+\def\Nabla{\bm{\nabla}}
+\def\bm{\mathbf}
+\def\curl{\Nabla\times}
+\def\div{\Nabla\cdot}
+\def\lap{\Delta}
+\def\vlap{\Delta}
+\def\x{\hat{e}_{x}}
+\def\y{\hat{e}_{y}}
+\def\z{\hat{e}_{z}}
+\def\p{\partial}
+\def\h{\hat}
+\def\tw{\tilde{\omega}}
+\def\gm{\gamma}
+\def\om{\omega}
+\def\OM{\Omega}
+\def\GM{\Gamma}
+\def\dw{\delta\omega}
+\def\dth{\Delta\theta}
+\def\dk{\delta k}
+\def\Hdth{\frac{\dth}{2}} %half Delta Theta
+\DeclareMathOperator{\Tr}{Tr}
+
+\newcommand{\includegraphicsL}[1]{\includegraphics[width=0.85\textwidth]{#1}}
+\newcommand{\includegraphicsS}[1]{\includegraphics[width=0.40\textwidth]{#1}}
+\newcommand{\includegraphicsXS}[1]{\includegraphics[width=0.35\textwidth]{#1}}
+\newcommand{\includegraphicsBIO}[1]{\includegraphics[width=1.1in,height=1.1in,clip,keepaspectratio]{#1}}
+\title{Analysis of operating regimes of terahertz quantum cascade laser frequency combs}
+\author{\IEEEauthorblockN{
+		Petar Tzenov\IEEEauthorrefmark{1},
+		Longwei Zhong\IEEEauthorrefmark{1},
+		David Burghoff\IEEEauthorrefmark{2},
+		Qing Hu\IEEEauthorrefmark{2}, 
+		Christian Jirauschek\IEEEauthorrefmark{1}}
+	
+	\IEEEauthorblockA{\IEEEauthorrefmark{1}Institute for Nanoelectronics, Technical University of Munich, D-80333 Munich, Germany}
+	
+	\IEEEauthorblockA{\IEEEauthorrefmark{2}Department of Electrical Engineering and Computer Science, Research Laboratory of Electronics, Massachusetts Institute of Technology, Cambridge, Massachusetts 02139, USA}
+	\thanks{Corresponding author: P. Tzenov (email: petar.tzenov@tum.de).}}
+
+
+
+\IEEEtitleabstractindextext
+
+\begin{document} 
+	\maketitle
+		
+\begin{abstract}
+Active mode locking (AML) via modulation of the injection current or bias is a standard technique employed for the generation of ultrashort pulses in electrically pumped lasers. Quantum cascade lasers (QCLs), as sources of radiation in the mid- and far-infrared portions of the electromagnetic spectrum, have turned out to be exceedingly difficult to actively mode lock, due to the inherently short gain recovery time of these kind of devices. In the mid-infrared, both theoretical and experimental results have shown that this obstacle can be overcome by modulating only a short, electrically isolated section of the QCL cavity, which could lead to generation of ultrashort picosecond pulses. For terahertz (THz) QCLs, most recently successful active mode locking of an LO-phonon THz-QCL was reported, and pulses as short as 11 ps were detected. Furthermore, in the same work, the importance of correct coupling between the propagating gigahertz (GHz) and terahertz fields was explicitly outlined and the role of the wave-guiding structure in the modulation process emphasized. Here, we present a theoretical model based on the Maxwell-Bloch and the transmission line equations, suitable for investigation of such systems. (OLD ABSTRACT TODO REWRITE!)
+\end{abstract}
+
+\section{Theoretical model}
+\subsection{Optical modelling}
+\subsection{Electrical modelling}
+\section{Injection locking of THz QCLs}
+\section{Ultra short pulse generation and mode locking in THz QCLs}
+\section{Numerical methods}
+\subsection{Boundary conditions}
+
+\section*{Funding}
+This work was supported by the German Research Foundation (DFG) within the Heisenberg program (JI 115/4-1) and under DFG Grant No. JI 115/9-1.
+
+\bibliographystyle{IEEEtran}
+\bibliography{literature/AML_bib_resources.bib}
+
+	
+\end{document} 
