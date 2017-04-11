@@ -20,3 +20,18 @@
 *.dat
 
 *.asv
+
+
+# latex resiudal files
+
+*.gz
+
+*.blg
+
+*.aux
+
+*.bbl
+
+*.log
+
+*.out 

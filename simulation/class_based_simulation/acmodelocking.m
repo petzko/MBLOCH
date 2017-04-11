@@ -186,8 +186,8 @@ while( dat.t< tEnd)
     %store fields info
     record_U(iter_ctr)= dat.U(idx);
     record_V(iter_ctr)= dat.V(idx);
-    record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx);
-    record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
+    record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx)*params_s1.height*1e3;%unit: V
+    record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx)*params_s1.width;     %unit: A
     record_time(iter_ctr)= dat.t;
     record_J_TL(iter_ctr) = J_TL1(idx);
     record_r110(iter_ctr) = dm_model_.r110(idx);
