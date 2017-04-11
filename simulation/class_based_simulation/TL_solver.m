@@ -28,13 +28,13 @@ classdef TL_solver < handle
         obj.modA = params.modA;          %modulation amplitude factor 
         obj.modF = params.modF;          %modulation frequency factor as a fraction of the RT freq
         obj.Zin = params.Zin;            %unit: ohm
-        obj.k = 0.02;                     % scale factor, ratio of AC current and DC 
+        obj.k = 0.04;                    % scale factor, ratio of AC current and DC 
         
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
         obj.height = params.height;             %unit: mm
 
-        obj.Acoeff = -(obj.height*1e+3)/obj.width/obj.c/obj.rlgc.L;   % for calculation of i_TL
+        obj.Acoeff = obj.k*obj.Zin*obj.rlgc.C*obj.dx+1;   % New boundary condition with regard to wire impedance
         obj.Bcoeff = -obj.width/(obj.height*1e+3)/obj.c/obj.rlgc.C;   % for calculation of v_TL
         
         obj.Ccoeff = 1/(obj.rlgc.C*obj.dx/2/obj.dt+1/2/obj.Zin)/(obj.height*1e+3);
@@ -54,8 +54,9 @@ classdef TL_solver < handle
         
        function propagate(obj,J_TL1,t)
         obj.Vs2 = obj.bias*(1+obj.modA*sin(2*pi*obj.modF*t));            
-%         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
-        obj.v_TL(1) = obj.Vs2
+%        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
+
+        obj.v_TL(1) = (obj.Acoeff-2)/obj.Acoeff*obj.v_TL(1)+2/obj.Acoeff*(obj.Vs2-obj.k*obj.Zin*obj.width*(obj.dx/2*J_TL1(1)+obj.i_TL(1))*1e-3/obj.height);
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
 

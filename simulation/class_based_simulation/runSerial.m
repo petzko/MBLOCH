@@ -1,6 +1,6 @@
 clear
 
-simfilename = {'sim_scenarios/sec1.set'};
+simfilename = {'sim_scenarios/sec2.set'};
 savefilename = {'name1'};
 interpDataFile = 'fitted_data_OPTICA.mat';
 

@@ -38,16 +38,16 @@ nRF = 3.8
 modF = 0.0141
 
 #modulation amplitude factor 
-modA = 0.03
+modA = 0.15
 
 #initial bias value! in kV/cm
-bias = 9.6
+bias = 8.6
 
 #boundary voltage value! in V
 Vs = 8.6
 
 # Input impedence (ohm)
-Zin = 0.1
+Zin = 50
 
 #initial current value (A/mm) 
 current = 7.2870

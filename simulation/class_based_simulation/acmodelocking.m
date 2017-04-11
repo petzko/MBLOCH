@@ -105,7 +105,6 @@ recordingduration = tEnd; % how many ps should we record the pulse for
 iterperrecord = 1; recordingiter  = round(recordingduration/iterperrecord/dt);
 padsize = double(recordingiter-length(record_U));
 
-%last 100 roundtrips
 record_U= zeros(padsize,1);
 record_V = zeros(padsize,1);
 record_v_TL =zeros(padsize,1);
