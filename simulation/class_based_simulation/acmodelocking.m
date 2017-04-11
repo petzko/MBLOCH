@@ -1,26 +1,48 @@
-function acmodelocking(simfilename,interpDataFile, savename,ploton)
+function acmodelocking(simfilename,interpDataFile, savename,ploton, varargin)
 
 %parse all input files and load the scatterin rates file !
-params_s1 = input_parser(simfilename);
+sim_params_in = false;
+if length(varargin) > 0 
+
+    for idx =1:2:length(varargin)
+        argname = varargin{idx};
+        argval = varargin{idx+1};
+
+        if strcmp(argname,'simsettings') 
+            sim_params = argval;
+            sim_params_in = true;
+        elseif strcmp(argname,'simrt')
+            simRT = argval;
+            simRT_in = true;
+        else
+            display([ 'Unknown input argument ' argname  'with value:'])
+            argval;
+        end
+    end
+    
+end
+if ~sim_params_in
+    sim_params = input_parser(simfilename);
+end
 load(interpDataFile);
 
 
-bias = params_s1.bias ;
+bias = sim_params.bias ;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INITIALIZE DEVICE PARAMETERS %%%%%%%%%%%%%%%%%%%%%%%%%%
 %phase velocity inside the medium ( in mm per picosecond ... )RT time and
 %frequency
-tch = params_s1.tch;
-lch = params_s1.lch;
-c = Constants('c',{'time',tch},{'length',lch})/params_s1.nTHz;
+tch = sim_params.tch;
+lch = sim_params.lch;
+c = Constants('c',{'time',tch},{'length',lch})/sim_params.nTHz;
 
-params_s1.c = c;
-Ltot = params_s1.length;
+sim_params.c = c;
+Ltot = sim_params.length;
 
 T_R = 2*Ltot/c; f_R = 1/T_R;
-params_s1.INJ = INJ; params_s1.ULL = ULL; params_s1.LLL = LLL; params_s1.DEPOP = DEPOP;
-params_s1.IGNORELEVEL = -1; params_s1.NLVLS = NLVLS;
+sim_params.INJ = INJ; sim_params.ULL = ULL; sim_params.LLL = LLL; sim_params.DEPOP = DEPOP;
+sim_params.IGNORELEVEL = -1; sim_params.NLVLS = NLVLS;
 
 
 
@@ -28,33 +50,33 @@ hbar = Constants('hbar',{'time',tch})/Constants('q0');
 %central field frequency.
 E0 =  (E_fit{ULL}(bias/10)-E_fit{LLL}(bias/10))/hbar;
 
-params_s1.E0 = E0;
+sim_params.E0 = E0;
 
-N = params_s1.N_pts;
+N = sim_params.N_pts;
 %grid size in x direction
 x = linspace(0,Ltot,N)';
 dx = x(2) - x(1);
 dt = dx/c;
 
 
-params_s1.dx = dx;
-params_s1.dt = dt;
+sim_params.dx = dx;
+sim_params.dt = dt;
 
-params_s1.zUL = zUL_fit(bias/10);
+sim_params.zUL = zUL_fit(bias/10);
 
-params_s1.zNORM = params_s1.zUL;
+sim_params.zNORM = sim_params.zUL;
 
-params_s1.Ncarriers_cm = params_s1.dN*params_s1.Ld/params_s1.Lp; %carrier density
+sim_params.Ncarriers_cm = sim_params.dN*sim_params.Ld/sim_params.Lp; %carrier density
 
-params_s1.IDX = 1:params_s1.N_pts;
-params_s1.x = x(params_s1.IDX);
+sim_params.IDX = 1:sim_params.N_pts;
+sim_params.x = x(sim_params.IDX);
 
 record_U= 1;
 
 TL_bias = bias/10*ones(N,1);
 
-dm_model_s1 = DM_MODEL_PSEUDO_3_LVL_RWA_FP(params_s1);
-dm_model_s1.interpolate(TL_bias(params_s1.IDX),W_fit,E_fit,AC_fit,zUL_fit);
+dm_model_ = DM_MODEL_PSEUDO_3_LVL_RWA_FP(sim_params);
+dm_model_.interpolate(TL_bias(sim_params.IDX),W_fit,E_fit,AC_fit,zUL_fit);
 
 
 dat.N = N; dat.c = c; dat.dx = dx;
@@ -65,12 +87,18 @@ rlgc.C = 1;     %unit: pF/mm
 rlgc.L = 1.6e2; %unit: pH/mm
 rlgc.R = 0;     %unit: Ohm/mm
 
-TL_model_s1 = TL_solver(params_s1,rlgc);
+TL_model_s1 = TL_solver(sim_params,rlgc);
 
 
 %simulation info storage arrays -> preallocate
 idx = round(N/2); iter_ctr = 1;
-dat.simRT = 400; tEnd = dat.simRT*T_R; % end time in tps
+if ~simRT_in 
+    dat.simRT = 400; 
+else
+    dat.simRT = simRT; 
+end
+
+tEnd = dat.simRT*T_R; % end time in tps
 
 %simulation info storage arrays -> preallocate
 recordingduration = tEnd; % how many ps should we record the pulse for
@@ -93,20 +121,20 @@ dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
 f_display = 5000;
 
-
+suffix ='_'
 
 while( dat.t< tEnd)
     
-    dm_model_s1.propagate(dat.U,dat.V,dt);
+    dm_model_.propagate(dat.U,dat.V,dt);
     
-    [P1,P1_t,M1,M1_t,losses1] = dm_model_s1.get_polarization_and_losses();
-    P(params_s1.IDX) = P1; P_t(params_s1.IDX) = P1_t;
-    M(params_s1.IDX) = M1; M_t(params_s1.IDX) = M1_t;
-    losses(params_s1.IDX) = losses1;
+    [P1,P1_t,M1,M1_t,losses1] = dm_model_.get_polarization_and_losses();
+    P(sim_params.IDX) = P1; P_t(sim_params.IDX) = P1_t;
+    M(sim_params.IDX) = M1; M_t(sim_params.IDX) = M1_t;
+    losses(sim_params.IDX) = losses1;
     
     
-    J_TL1 = dm_model_s1.get_current_density(params_s1);
-    J_tot1 = trapz(x(1:params_s1.N_pts),J_TL1);
+    J_TL1 = dm_model_.get_current_density(sim_params);
+    J_tot1 = trapz(x(1:sim_params.N_pts),J_TL1);
     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
@@ -120,18 +148,22 @@ while( dat.t< tEnd)
         TL_model_s1.propagate(J_TL1,dat.t-dt*2000)
     end
  
-    dm_model_s1.update_state();
-    dm_model_s1.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
+    dm_model_.update_state();
+    dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
     if(mod(iter_ctr,f_display) == 0)
         clc;
-        [trace10,trace12] = dm_model_s1.get_avg_trace();
-        display(['trace section 1: ' num2str(trace10) , '; ' num2str(trace12)]);
-        display(['Iteration: ' num2str(iter_ctr)]);
+        trace10 = dm_model_.get_avg_trace();
+        if isnan(trace10)
+            suffix = '_NAN'
+            break
+        end
+        display(['trace section 1: ' num2str(trace10) ]);
+        display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);
         display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
-        display(['i_in_1 (A): ' num2str(TL_model_s1.i_TL(1)*params_s1.width)]);
-        display(['i_out_1 (A): ' num2str(J_tot1*params_s1.width)]);
+        display(['i_in_1 (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
+        display(['i_out_1 (A): ' num2str(J_tot1*sim_params.width)]);
          
         if ploton
             subplot(2,1,1);
@@ -158,13 +190,13 @@ while( dat.t< tEnd)
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx);
     record_time(iter_ctr)= dat.t;
     record_J_TL(iter_ctr) = J_TL1(idx);
-    record_r110(iter_ctr) = dm_model_s1.r110(idx);
-    record_r330(iter_ctr) = dm_model_s1.r330(idx);
-    record_r220(iter_ctr) = dm_model_s1.r220(idx);
+    record_r110(iter_ctr) = dm_model_.r110(idx);
+    record_r330(iter_ctr) = dm_model_.r330(idx);
+    record_r220(iter_ctr) = dm_model_.r220(idx);
     
 end
 
 
 
-save(savename);
+save([savename suffix]);
 end
