@@ -44,7 +44,7 @@
 \def\Hdth{\frac{\dth}{2}} %half Delta Theta
 \DeclareMathOperator{\Tr}{Tr}
 
-\newcommand{\includegraphicsL}[1]{\includegraphics[width=0.85\textwidth]{#1}}
+\newcommand{\includegraphicsL}[1]{\includegraphics[width=0.80\textwidth]{#1}}
 \newcommand{\includegraphicsS}[1]{\includegraphics[width=0.40\textwidth]{#1}}
 \newcommand{\includegraphicsXS}[1]{\includegraphics[width=0.35\textwidth]{#1}}
 \newcommand{\includegraphicsBIO}[1]{\includegraphics[width=1.1in,height=1.1in,clip,keepaspectratio]{#1}}
@@ -72,28 +72,68 @@
 Active mode locking (AML) via modulation of the injection current or bias is a standard technique employed for the generation of ultrashort pulses in electrically pumped lasers. Quantum cascade lasers (QCLs), as sources of radiation in the mid- and far-infrared portions of the electromagnetic spectrum, have turned out to be exceedingly difficult to actively mode lock, due to the inherently short gain recovery time of these kind of devices. In the mid-infrared, both theoretical and experimental results have shown that this obstacle can be overcome by modulating only a short, electrically isolated section of the QCL cavity, which could lead to generation of ultrashort picosecond pulses. For terahertz (THz) QCLs, most recently successful active mode locking of an LO-phonon THz-QCL was reported, and pulses as short as 11 ps were detected. Furthermore, in the same work, the importance of correct coupling between the propagating gigahertz (GHz) and terahertz fields was explicitly outlined and the role of the wave-guiding structure in the modulation process emphasized. Here, we present a theoretical model based on the Maxwell-Bloch and the transmission line equations, suitable for investigation of such systems. (OLD ABSTRACT TODO REWRITE!)
 \end{abstract}
 
+
+
 \section{Theoretical model}
-\begin{enumerate}
-	\item Illustrate the general coupling scheme -> Schrodinger Poisson Solver-> ensemble Monte Carlo -> Maxwell-Bloch and Transmission-Line equations  
-	\item simulation scheme as a block-diagram. 
-	\item Illustrate the laser under study -> Optica laser -allows direct comparison with experiment. \cite{petz2016}  
-\end{enumerate}
+The ever increasing complexity of chip-scale devices necessitates correspondingly sophisticated theoretical modelling. In the last decade, we have seen a steady progress in the design of quantum cascade lasers, resulting in devices with high electrical stability [cite linewidth papers], emitting spectra with various desirable characteristics such as high-power single mode emission [cite], short pulse generation [cite] and frequency comb emission [cite].
+
+On the contrary it seems that theoretical or simulation models have struggled to keep up with the pace of progress in the field. This could be partly explained due to the complicated dynamics of QCLs, stemming from the intricate interplay various coherent and incohrent processes [cite], nonlinear light-matter interactions and complicated electro-optical phenomena []. Simulation approaches with various degrees of complexity have been proposed XXX
+
 \subsection{Optical modelling}
+
+1)  Show the laser under investigation and describe its eigenstates ->  show the important eigenstates (tight binding basis) and describe the boundary conditions (injection current 
+and extraction current -> no leakage current -> Belyanin equations with voltage dependent terms).
+
 \subsection{Electrical modelling}
+This is the electrical geometry -> TL equations write them here
 \begin{figure}[H]
 	\centering
 	\includegraphicsS{IMGS/CIRCUIT}
 	\caption{insert caption here.}	
 \end{figure}
 
-Say something about the image
+ 
+
+\subsection{Coupled model}
+\begin{figure*}[tb]
+	\label{fig:coupledmodel}
+\begin{center}
+	\includegraphicsL{IMGS/coupledmodel}
+	\caption{insert caption here.}	
+\end{center}
+\end{figure*}
+We propose a combined solution to the above enumerated issues in the form of a coupled ensemble Monte Carlo/Transmission Line equations/Maxwell-Bloch simulation approach. The whole algorithm is described in Fig. [].
+
+We start with our Schrödinger-Poisson and EMC simulation codes and calculate the bias dependence of the various scattering mechanisms, eigenenergies, tunneling coupling strengths (anticrossing parameters) as well as the dipole moments. Even though this procedure by itself is quite time-consuming, it needs to be performed only once and the results stored for further processing. Also, one can achieve significant speedup of the computations with the aid of modern parallelization approaches, utilizing multi-core simulation servers or larger compute clusters. 
+
+The bias grid was chosen to span sufficiently broad interval, i.e. between 5.0 kV/cm and 14.0 kV/cm, with a step of 0.2 kV/cm. The bias dependence of the most critical parameters, and namely the LO phonon scattering rate between the upper and the lower laser level, the eigenenergies, the dipole moment of the optical transition as well as the tunneling coupling coefficient are illustrated in Fig. [].
+\begin{figure}[H]
+  	\centering
+  	\includegraphicsS{IMGS/params_v}
+  	\caption{insert caption here.}	
+\end{figure}
+   
+\begin{figure}[H]
+	\centering
+	\includegraphicsS{IMGS/WFs}
+	\caption{insert caption here.}	
+\end{figure}
+\begin{enumerate}
+	\item Illustrate the general coupling scheme -> Schrödinger Poisson Solver-> ensemble Monte Carlo -> Maxwell-Bloch and Transmission-Line equations  
+	\item simulation scheme as a block-diagram. 
+	\item Illustrate the laser under study -> Optica laser -allows direct comparison with experiment. \cite{petz2016}  
+\end{enumerate}
+
 
 \section{Simulation results and comparison with experiment}
-\subsection{Injection locking of THz QCLs}
-\subsection{Ultra short pulse generation and mode locking in THz QCLs}
+\subsection{IVL characteristics}
+\subsection{Injection locking}
+\subsection{Active mode locking and ultrashort pulse generation}
+
 \begin{appendices}
 \section{Numerical methods}
 \section{Boundary conditions}
+\section{Simulation parameters}
 \end{appendices}
 
 \section*{Funding}
