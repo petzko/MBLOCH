@@ -34,15 +34,15 @@ Overlap = 0.8
 nTHz = 3.6
 nRF = 3.8
 
-#modulation frequency 
+#modulation frequency THz
 modF = 0
 
-#modulation amplitude factor 
-modA = 0.15
+#modulation amplitude unit: V
+modA = 1
 
 
 #initial bias value! in kV/cm
-bias = 8.6
+bias = 9
 
 #boundary voltage value! in V
 Vs = 8.6

@@ -37,11 +37,12 @@ nRF = 3.8
 #modulation frequency THz
 modF = 0.013
 
-#modulation amplitude factor 
-modA = 0.15
+#modulation amplitude unit: V
+modA = 1
+
 
 #initial bias value! in kV/cm
-bias = 8.6
+bias = 9
 
 #boundary voltage value! in V
 Vs = 8.6

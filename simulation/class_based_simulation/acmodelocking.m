@@ -2,6 +2,7 @@ function acmodelocking(simfilename,interpDataFile, savename,ploton, varargin)
 
 %parse all input files and load the scatterin rates file !
 sim_params_in = false;
+simRT_in = false;
 if length(varargin) > 0 
 
     for idx =1:2:length(varargin)
@@ -118,9 +119,9 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 5000;
+f_display = 500;
 
-suffix ='_'
+suffix ='_';
 
 while( dat.t< tEnd)
     
@@ -144,17 +145,17 @@ while( dat.t< tEnd)
            TL_model_s1.i_TL(mm) = J_tot1*(N-mm)/N;
            end 
         end
-        TL_model_s1.propagate(J_TL1,dat.t-dt*2000)
+        TL_model_s1.propagate(J_TL1,dat.t-dt*1999)
     end
  
     dm_model_.update_state();
     dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
-    if(mod(iter_ctr,f_display) == 0)
+    if(iter_ctr >= 2000 && mod(iter_ctr,f_display) == 0)
         clc;
         trace10 = dm_model_.get_avg_trace();
         if isnan(trace10)
-            suffix = '_NAN'
+            suffix = '_NAN';
             break
         end
         display(['trace section 1: ' num2str(trace10) ]);
@@ -185,8 +186,8 @@ while( dat.t< tEnd)
     %store fields info
     record_U(iter_ctr)= dat.U(idx);
     record_V(iter_ctr)= dat.V(idx);
-    record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx)*params_s1.height*1e3;%unit: V
-    record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx)*params_s1.width;     %unit: A
+    record_v_TL(iter_ctr)= TL_model_s1.v_TL(idx)*sim_params.height*1e3;%unit: V
+    record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx)*sim_params.width;     %unit: A
     record_time(iter_ctr)= dat.t;
     record_J_TL(iter_ctr) = J_TL1(idx);
     record_r110(iter_ctr) = dm_model_.r110(idx);

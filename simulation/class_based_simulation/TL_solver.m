@@ -3,7 +3,7 @@ classdef TL_solver < handle
     %   Detailed explanation goes here
     
     properties
-        dx,dt,Zin,Vs,c,modA,modF,Vs2;
+        dx,dt,Zin,Vs,c,modA,modF,Vs2,Res_TL;
         rlgc,current,bias,k;
         width,height;
         v_TL,i_TL;
@@ -22,17 +22,19 @@ classdef TL_solver < handle
         obj.c = params.c;                %unit: mm/picosecond
         obj.IDX = params.IDX;
         obj.N_pts = params.N_pts;
-        
-        obj.bias = params.bias/10;       %unit: kV/mm
-        obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
-        obj.modA = params.modA;          %modulation amplitude factor 
-        obj.modF = params.modF;          %modulation frequency factor as a fraction of the RT freq
-        obj.Zin = params.Zin;            %unit: ohm
-        obj.k = 0.04;                    % scale factor, ratio of AC current and DC 
-        
+               
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
         obj.height = params.height;             %unit: mm
+        
+        obj.bias = params.bias/(obj.height*1e+3); %unit: kV/mm
+        obj.Vs = params.Vs*1e-3;         %unit: kV -->initial voltage
+        obj.modA = params.modA/(obj.height*1e+3); %modulation amplitude unit: kV/mm
+        obj.modF = params.modF;          %modulation frequency
+        obj.Zin = params.Zin;            %unit: ohm
+        obj.Res_TL = 45*sqrt(obj.modF)*params.length; % QCL resistance unit: Ohm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
+        obj.k = obj.Res_TL/(obj.Zin+obj.Res_TL);  % scale factor, ratio of AC current and DC 
+%         obj.k = 0.04;
 
         obj.Acoeff = obj.k*obj.Zin*obj.rlgc.C*obj.dx+1;   % New boundary condition with regard to wire impedance
         obj.Bcoeff = -obj.width/(obj.height*1e+3)/obj.c/obj.rlgc.C;   % for calculation of v_TL
@@ -53,10 +55,11 @@ classdef TL_solver < handle
 
         
        function propagate(obj,J_TL1,t)
-        obj.Vs2 = obj.bias*(1+obj.modA*sin(2*pi*obj.modF*t));            
-%        obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
-
-        obj.v_TL(1) = (obj.Acoeff-2)/obj.Acoeff*obj.v_TL(1)+2/obj.Acoeff*(obj.Vs2-obj.k*obj.Zin*obj.width*(obj.dx/2*J_TL1(1)+obj.i_TL(1))*1e-3/obj.height);
+        obj.Vs2 = obj.bias+obj.modA*obj.k*sin(2*pi*obj.modF*t);            
+%         obj.v_TL(1) = obj.Ccoeff*(obj.Dcoeff*obj.v_TL(1)-obj.i_TL(1)*obj.width-obj.width*obj.dx*J_TL1(1)/2+obj.Vs2/obj.Zin);
+%         obj.v_TL(1) = (obj.Acoeff-2)/obj.Acoeff*obj.v_TL(1)+2/obj.Acoeff*(obj.Vs2-obj.k*obj.Zin*obj.width*(obj.dx/2*J_TL1(1)+obj.i_TL(1))*1e-3/obj.height);
+%        obj.Vs2 = obj.bias*(1+obj.modA*obj.k*sin(2*pi*obj.modF*t));
+        obj.v_TL(1) = obj.Vs2;
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*J_TL1(2:end-1));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+J_TL1(end)*obj.dx/2)*2;
 
