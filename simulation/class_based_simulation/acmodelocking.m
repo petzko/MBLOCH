@@ -113,6 +113,7 @@ record_v_TL =zeros(padsize,1);
 record_i_TL = zeros(padsize,1);
 record_time = zeros(padsize,1);
 record_J_TL =zeros(padsize,1);
+record_i_out = zeros(padsize,1);
 record_r110 = zeros(padsize,1);
 record_r330 = zeros(padsize,1);
 record_r220 = zeros(padsize,1);
@@ -135,7 +136,7 @@ while( dat.t< tEnd)
     
     
     J_TL1 = dm_model_.get_current_density(sim_params);
-    J_tot1 = trapz(x(1:sim_params.N_pts),J_TL1);
+    
     
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
@@ -150,7 +151,7 @@ while( dat.t< tEnd)
     dm_model_.update_state();
     
     dm_model_.interpolate(TL_bias,W_fit,E_fit,AC_fit,zUL_fit);
-    J_TL0 = dm_model_.get_current_density(sim_params);  
+    J_TL0 = dm_model_.recalc_current_density(sim_params);  
     dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
     if(iter_ctr >= 2000 && mod(iter_ctr,f_display) == 0)
@@ -160,20 +161,21 @@ while( dat.t< tEnd)
             suffix = '_NAN'
             break
         end
+        J_ac_tot1 = trapz(x(1:sim_params.N_pts),J_TL1-J_TL0);
         display(['trace section 1: ' num2str(trace10) ]);
         display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);
         display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
-        display(['i_ac (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
-        display(['i_out (A): ' num2str(J_tot1*sim_params.width)]);
+        display(['i_ac_in (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
+        display(['i_ac_out (A): ' num2str((J_ac_tot1)*sim_params.width)]);
          
         if ploton
             subplot(2,1,1);
             plot(x,abs(dat.U).^2+abs(dat.V).^2);
             xlabel('x (mm)'); ylabel('intensity (ps^{-2}');
             subplot(2,1,2);
-            plotyy(x,TL_model_s1.v_TL*10,x,[TL_model_s1.i_TL,J_TL1]);
-            xlabel('x (mm)'); legend('v (kV/cm)','i (A)','J (A/mm^2)');
+            plotyy(x,TL_model_s1.v_TL*10,x,[TL_model_s1.i_TL,J_TL1-J_TL0]);
+            xlabel('x (mm)'); legend('v (kV/cm)','i (A)','J_AC (A/mm^2)');
             getframe;
             
         end
@@ -192,6 +194,7 @@ while( dat.t< tEnd)
     record_i_TL(iter_ctr)= TL_model_s1.i_TL(idx)*sim_params.width;     %unit: A
     record_time(iter_ctr)= dat.t;
     record_J_TL(iter_ctr) = J_TL1(idx);
+    record_i_out(iter_ctr) = trapz(x,J_TL1)*sim_params.width;     %unit: A
     record_r110(iter_ctr) = dm_model_.r110(idx);
     record_r330(iter_ctr) = dm_model_.r330(idx);
     record_r220(iter_ctr) = dm_model_.r220(idx);

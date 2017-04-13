@@ -184,6 +184,32 @@ classdef DM_MODEL_PSEUDO_3_LVL_RWA_FP < handle
             
         end
         
+        
+        function [current] = recalc_current_density(obj,params)
+            
+            Temp = 50; % Kelvin
+            beta_ps =(Constants('kb')*Temp); %J
+            beta_ps = (beta_ps/Constants('q0')/obj.hbar)^(-1); %ps/rad
+            TEMPDEP = exp(-beta_ps.*abs(obj.E13));
+            gamma2 = 2*obj.DEPH;
+            
+            PRECONST = obj.O13.^2.*gamma2./(obj.E13.^2+gamma2.^2); % todo implement
+            J0 = PRECONST.*(heaviside(obj.E13).*(obj.r110-TEMPDEP.*obj.r330)+ ...
+                heaviside(-obj.E13).*(obj.r110.*TEMPDEP - obj.r330));
+           
+            current = J0;
+            if(obj.shb > 0)
+                 
+                J2 = PRECONST.*(heaviside(obj.E13).*(obj.r11p-TEMPDEP.*obj.r33p)+ ...
+                    heaviside(-obj.E13).*(obj.r11p.*TEMPDEP - obj.r33p));
+                J2 = J2.*exp(2*1i*params.x*obj.E0/params.c);
+                current = current + J2 + conj(J2);
+            end
+            
+            %current density will be calculated with SHB included!
+            current =  (Constants('q0')*(obj.Lp*1E-9)*obj.Ncarriers*1E12)/1E6*current; %in A/mm^2
+            
+        end
         function [] = propagate(obj,U,V,dt)
             
             U = obj.NORM_FACTOR_DM.*U(obj.IDX);
