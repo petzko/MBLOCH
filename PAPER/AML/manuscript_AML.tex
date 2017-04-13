@@ -80,13 +80,36 @@ The ever increasing complexity of chip-scale devices necessitates correspondingl
 On the contrary it seems that theoretical or simulation models have struggled to keep up with the pace of progress in the field. This could be partly explained due to the complicated dynamics of QCLs, stemming from the intricate interplay various coherent and incohrent processes [cite], nonlinear light-matter interactions and complicated electro-optical phenomena []. Simulation approaches with various degrees of complexity have been proposed XXX
 
 \subsection{Optical modelling}
-
-1)  Show the laser under investigation and describe its eigenstates ->  show the important eigenstates (tight binding basis) and describe the boundary conditions (injection current 
-and extraction current -> no leakage current -> Belyanin equations with voltage dependent terms).
+To model the active regions we adapt the density matrix model from Ref. [cite Belyanin], to include total of four subband levels, and more importantly to allow all relevant system parameters, such as the eigenenergies, dipole moments, scattering rates etc. to be bias dependent. The time evolution is thus governed by a four level Maxwell-Bloch equations, coupled ot a wave propagation equation for the $z$-component electric field $E_z(x,t)$, which is also the assumed growth direction of the QCL. 
+\begin{subequations}
+	\label{eq:dmequations}
+ \begin{align}
+	\frac{d\rho_{44}}{dt} &= J(x,t)   +i\frac{ez_{43}}{\hbar}E_z(\rho_{43}-\rho_{34}) + \sum_{j\neq 4} \frac{\rho_{jj}}{\tau_{j\rightarrow 4}}  - \frac{\rho_{44}}{\tau_{2}}, \\
+	\frac{d\rho_{33}}{dt} &= -i\frac{ez_{43}}{\hbar}E_z(\rho_{43}-\rho_{34}) + \sum_{j\neq 3} \frac{\rho_{jj}}{\tau_{j\rightarrow 3}} - \frac{\rho_{33}}{\tau_{3}}, \\
+	\frac{d\rho_{22}}{dt} &= \sum_{j\neq 2} \frac{\rho_{jj}}{\tau_{j\rightarrow 2}} - \frac{\rho_{22}}{\tau_{2}}, \\
+	\frac{d\rho_{11}}{dt} &=  -J(x,t) + \sum_{j\neq 1} \frac{\rho_{jj}}{\tau_{j\rightarrow 1}} - \frac{\rho_{11}}{\tau_{1}}, \\
+	\frac{d\rho_{43}}{dt} &= - i\omega_{43}\rho_{43} + i\frac{ez_{43}}{\hbar}E_z(\rho_{44}-\rho_{33})-\Gamma_{\parallel 43}\rho_{43}.
+ \end{align}
+\end{subequations}
+In Eqs. (\ref{eq:dmequations}) $\rho_{ij}$ denotes the $ij-$th density matrix element,  $z_{43}$ the optical transition's dipole moment, $e$ the elementary charge, $\hbar$ is the reduced Plank's constant. Furthermore, since our model assumes position and time dependent bias $V(x,t)$, this in turn results in spatio-temporal  dependence of the transition frequency $\omega_{43}(x,t)$, the scattering rates $1/\tau_{ij}(x,t)$, the dephasing rate $\Gamma_{\parallel 43}(x,t)$ as well as current density $J(x,t)$. Finally the parameters $1/\tau_{j}(x,t)$ denote the lifetimes of the corresponding levels and $J(x,t)$ is the second order tunneling current from the injector state to the upper laser level and is given by the formula [cite]
+\begin{align}
+\label{eq:current}
+J &= en^s\frac{\Omega_{AC}^22\Gamma_{\parallel 1'4}}{\epsilon^2+4\Gamma_{\parallel 1'4}^2}\Big\{\Theta(\epsilon)(\rho_{11}-\rho_{44}e^{-|\hbar\epsilon|/k_BT}) \nonumber \\
+&+\Theta(-\epsilon)(\rho_{11}e^{-|\hbar\epsilon|/k_BT}-\rho_{44})\Big\}.
+\end{align}
+In Eq. (\ref{eq:current}) $n^s$ denotes the sheet carrier density, $\Theta(\cdot)$ is the Heaviside function and the term $e^{-|\hbar\epsilon|/k_BT}$ denotes an effective "weight" factor modelling the assumption of thermalized $k$-space distribution of the injector and upper laser level electrons with the same thermal energy $k_BT$ in each subband.   
+\begin{figure}[H]
+  	\label{fig:WFs}
+  	\centering
+  	\includegraphicsS{IMGS/WFs}
+  	\caption{insert caption here.}	
+\end{figure}
+Further 
 
 \subsection{Electrical modelling}
 This is the electrical geometry -> TL equations write them here
 \begin{figure}[H]
+	\label{fig:circuit}
 	\centering
 	\includegraphicsS{IMGS/CIRCUIT}
 	\caption{insert caption here.}	
@@ -97,27 +120,22 @@ This is the electrical geometry -> TL equations write them here
 \subsection{Coupled model}
 \begin{figure*}[tb]
 	\label{fig:coupledmodel}
-\begin{center}
+	\centering
 	\includegraphicsL{IMGS/coupledmodel}
 	\caption{insert caption here.}	
-\end{center}
 \end{figure*}
 We propose a combined solution to the above enumerated issues in the form of a coupled ensemble Monte Carlo/Transmission Line equations/Maxwell-Bloch simulation approach. The whole algorithm is described in Fig. [].
 
-We start with our Schrödinger-Poisson and EMC simulation codes and calculate the bias dependence of the various scattering mechanisms, eigenenergies, tunneling coupling strengths (anticrossing parameters) as well as the dipole moments. Even though this procedure by itself is quite time-consuming, it needs to be performed only once and the results stored for further processing. Also, one can achieve significant speedup of the computations with the aid of modern parallelization approaches, utilizing multi-core simulation servers or larger compute clusters. 
+We start with our Schrödinger-Poisson and EMC simulation codes and calculate the bias dependence of the various scattering mechanisms, eigenenergies, tunneling coupling strengths (anticrossing parameters) as well as the dipole moments. Even though this procedure by itself is quite time-consuming, it needs to be performed only once and the results are stored for further processing. Also, one can achieve significant speedup of the computations with the aid of modern parallelization approaches, utilizing multi-core simulation servers or larger compute clusters. 
 
-The bias grid was chosen to span sufficiently broad interval, i.e. between 5.0 kV/cm and 14.0 kV/cm, with a step of 0.2 kV/cm. The bias dependence of the most critical parameters, and namely the LO phonon scattering rate between the upper and the lower laser level, the eigenenergies, the dipole moment of the optical transition as well as the tunneling coupling coefficient are illustrated in Fig. [].
+The bias grid was chosen to span sufficiently broad interval, i.e. between 8.0 kV/cm and 14.0 kV/cm, with a step of 0.2 kV/cm. The bias dependence of the most critical parameters, and namely the various scattering rates, the eigenenergies of the bound states, the dipole moment of the optical transition as well as the tunneling coupling coefficient are illustrated in Fig. \ref{fig:params_v}.
 \begin{figure}[H]
+	\label{fig:params_v}
   	\centering
   	\includegraphicsS{IMGS/params_v}
   	\caption{insert caption here.}	
 \end{figure}
-   
-\begin{figure}[H]
-	\centering
-	\includegraphicsS{IMGS/WFs}
-	\caption{insert caption here.}	
-\end{figure}
+
 \begin{enumerate}
 	\item Illustrate the general coupling scheme -> Schrödinger Poisson Solver-> ensemble Monte Carlo -> Maxwell-Bloch and Transmission-Line equations  
 	\item simulation scheme as a block-diagram. 
