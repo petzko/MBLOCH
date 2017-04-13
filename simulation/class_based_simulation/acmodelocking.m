@@ -54,6 +54,7 @@ E0 =  (E_fit{ULL}(bias/10)-E_fit{LLL}(bias/10))/hbar;
 sim_params.E0 = E0;
 
 N = sim_params.N_pts;
+modF = sim_params.modF; % modulation frequency
 %grid size in x direction
 x = linspace(0,Ltot,N)';
 dx = x(2) - x(1);
@@ -84,11 +85,11 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc.C = 1;     %unit: pF/mm
-rlgc.L = 1.6e2; %unit: pH/mm
-rlgc.R = 0;     %unit: Ohm/mm
+rlgc.C = 1;              %unit: pF/mm
+rlgc.L = 1.6e2;          %unit: pH/mm
+rlgc.R = 45*sqrt(modF);  %unit: Ohm/mm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
-TL_model_s1 = TL_solver(sim_params,rlgc);
+TL_model_s1 = TL_solver2(sim_params,rlgc);
 
 
 %simulation info storage arrays -> preallocate
@@ -119,7 +120,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 5000;
+f_display = 500;
 
 suffix ='_';
 
@@ -141,13 +142,11 @@ while( dat.t< tEnd)
     %   Transmission line equations
     if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
-           for mm = 1: N-1
-           TL_model_s1.i_TL(mm) = J_tot1*(N-mm)/N;
-           end 
+           J_TL0 = J_TL1;
         end
-        TL_model_s1.propagate(J_TL1,dat.t-dt*1999)
+        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
     end
- 
+    J_TL0 = J_TL1;
     dm_model_.update_state();
     dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
@@ -155,15 +154,15 @@ while( dat.t< tEnd)
         clc;
         trace10 = dm_model_.get_avg_trace();
         if isnan(trace10)
-            suffix = '_NAN';
+            suffix = '_NAN'
             break
         end
         display(['trace section 1: ' num2str(trace10) ]);
         display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);
         display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
-        display(['i_in_1 (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
-        display(['i_out_1 (A): ' num2str(J_tot1*sim_params.width)]);
+        display(['i_ac (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
+        display(['i_out (A): ' num2str(J_tot1*sim_params.width)]);
          
         if ploton
             subplot(2,1,1);
