@@ -146,8 +146,11 @@ while( dat.t< tEnd)
         end
         TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
     end
-    J_TL0 = J_TL1;
+    
     dm_model_.update_state();
+    
+    dm_model_.interpolate(TL_bias,W_fit,E_fit,AC_fit,zUL_fit);
+    J_TL0 = dm_model_.get_current_density(sim_params);  
     dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
     if(iter_ctr >= 2000 && mod(iter_ctr,f_display) == 0)
