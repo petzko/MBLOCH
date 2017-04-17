@@ -38,11 +38,11 @@ nRF = 3.8
 modF = 0.0133
 
 #modulation amplitude unit: V
-modA = 6
+modA = 1
 
 
 #initial bias value! in kV/cm
-bias = 9.6
+bias = 9
 
 #boundary voltage value! in V
 Vs = 8.6
