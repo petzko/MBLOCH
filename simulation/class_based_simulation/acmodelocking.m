@@ -87,7 +87,6 @@ dat = makeMaxwellVars(dat);
 
 rlgc.C = 2;              %unit: pF/mm
 rlgc.L = 1.6e2;          %unit: pH/mm
-rlgc.R = 45*sqrt(modF);  %unit: Ohm/mm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
 TL_model_s1 = TL_solver2(sim_params,rlgc);
 

@@ -31,6 +31,7 @@ classdef TL_solver2 < handle
         obj.modA = params.modA/(obj.height*1e+3); %modulation amplitude unit: kV/mm
         obj.modF = params.modF;          %modulation frequency
         obj.Zin = params.Zin;            %unit: ohm
+        obj.rlgc.R = 45*sqrt(obj.modF);  %unit: Ohm/mm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
         obj.Bcoeff = -obj.width/(obj.height*1e+3)/obj.c/obj.rlgc.C;   % for calculation of v_TL
         
