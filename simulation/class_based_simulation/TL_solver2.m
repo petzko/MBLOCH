@@ -53,7 +53,7 @@ classdef TL_solver2 < handle
        function propagate2(obj,J_TL1,J_TL0,t)
         obj.V_RF = obj.modA*sin(2*pi*obj.modF*t)/(obj.height*1e+3);            
 %         obj.v_TL(1) = obj.bias+obj.Ccoeff*(obj.Dcoeff*(obj.v_TL(1)-obj.bias)-obj.i_TL(1)*obj.width-obj.width*obj.dx*(J_TL1(1)-J_TL0(1))/2+obj.V_RF/obj.Zin);
-        obj.v_TL(1) = (obj.bias+obj.V_RF-(1/2-obj.Zin*obj.rlgc.C*obj.dx/obj.dt)*obj.v_TL(1)-(obj.i_TL(1)-obj.i_TLold)*obj.width*obj.Zin/(obj.height*1e3))/(1/2+obj.Zin*obj.rlgc.C*obj.dx/obj.dt);
+        obj.v_TL(1) = (obj.bias+obj.V_RF-(1/2-obj.Zin*obj.rlgc.C*obj.dx/obj.dt/2)*obj.v_TL(1)-(obj.i_TL(1)-obj.i_TLold)*obj.width*obj.Zin/(obj.height*1e3))/(1/2+obj.Zin*obj.rlgc.C*obj.dx/obj.dt/2);
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*((J_TL1(2:end-1)+J_TL0(2:end-1))/2));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+(J_TL1(end)+J_TL0(end))*obj.dx/4)*2;
 
