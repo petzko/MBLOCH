@@ -59,7 +59,7 @@ classdef TL_solver2 < handle
 
         obj.i_TLold = obj.i_TL(1); 
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Fcoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
-        obj.i_TL(end) = -obj.i_TL(end-1);
+%         obj.i_TL(end) = -obj.i_TL(end-1);
 
 
         end
