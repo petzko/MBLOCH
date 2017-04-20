@@ -1,4 +1,4 @@
-clear
+close all;clear;
 
 simfilename = {'sim_scenarios/sec2.set'};
 savefilename = {'name1'};

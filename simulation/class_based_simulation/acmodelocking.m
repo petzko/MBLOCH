@@ -85,9 +85,8 @@ dat.N = N; dat.c = c; dat.dx = dx;
 dat.dt = dt;
 dat = makeMaxwellVars(dat);
 
-rlgc.C = 1;              %unit: pF/mm
+rlgc.C = 2;              %unit: pF/mm
 rlgc.L = 1.6e2;          %unit: pH/mm
-rlgc.R = 45*sqrt(modF);  %unit: Ohm/mm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
 TL_model_s1 = TL_solver2(sim_params,rlgc);
 
@@ -121,7 +120,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 500;
+f_display = 1000;
 
 suffix ='_';
 
@@ -134,7 +133,6 @@ while( dat.t< tEnd)
     M(sim_params.IDX) = M1; M_t(sim_params.IDX) = M1_t;
     losses(sim_params.IDX) = losses1;
     
-    
     J_TL1 = dm_model_.get_current_density(sim_params);
     
     
@@ -143,15 +141,22 @@ while( dat.t< tEnd)
     %   Transmission line equations
     if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
+           J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
+           for mm = 1: N-1
+              TL_model_s1.i_TL(mm) = J_tot*(N-mm)/N;
+           end
+           TL_model_s1.i_TL(end) = -TL_model_s1.i_TL(end-1);
            J_TL0 = J_TL1;
+           TL_model_s1.i_TLold = TL_model_s1.i_TL(1);
         end
         TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
     end
     
+	J_TL0 = J_TL1;    
     dm_model_.update_state();
     
-    dm_model_.interpolate(TL_bias,W_fit,E_fit,AC_fit,zUL_fit);
-    J_TL0 = dm_model_.recalc_current_density(sim_params);  
+%     dm_model_.interpolate(TL_bias,W_fit,E_fit,AC_fit,zUL_fit);
+%     J_TL0 = dm_model_.recalc_current_density(sim_params);  
     dm_model_.interpolate(TL_model_s1.v_TL,W_fit,E_fit,AC_fit,zUL_fit);
  
     if(iter_ctr >= 2000 && mod(iter_ctr,f_display) == 0)
@@ -161,21 +166,21 @@ while( dat.t< tEnd)
             suffix = '_NAN'
             break
         end
-        J_ac_tot1 = trapz(x(1:sim_params.N_pts),J_TL1-J_TL0);
+        J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
         display(['trace section 1: ' num2str(trace10) ]);
         display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);
-        display(['v_1TL(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
-        display(['i_ac_in (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
-        display(['i_ac_out (A): ' num2str((J_ac_tot1)*sim_params.width)]);
-         
+        display(['V(1) (V): ' num2str(TL_model_s1.v_TL(1)*10)]);
+        display(['i_in (A): ' num2str(TL_model_s1.i_TL(1)*sim_params.width)]);
+        display(['i_out(A): ' num2str((J_tot)*sim_params.width)]);
+        
         if ploton
             subplot(2,1,1);
             plot(x,abs(dat.U).^2+abs(dat.V).^2);
             xlabel('x (mm)'); ylabel('intensity (ps^{-2}');
             subplot(2,1,2);
-            plotyy(x,TL_model_s1.v_TL*10,x,[TL_model_s1.i_TL,J_TL1-J_TL0]);
-            xlabel('x (mm)'); legend('v (kV/cm)','i (A)','J_AC (A/mm^2)');
+            plotyy(x,TL_model_s1.v_TL*10,x,[TL_model_s1.i_TL*sim_params.width*10,J_TL1]);
+            xlabel('x (mm)'); legend('v (kV/cm)','i (dA)','J (A/mm^2)');
             getframe;
             
         end
