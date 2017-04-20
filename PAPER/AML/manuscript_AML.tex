@@ -71,69 +71,92 @@
 \begin{abstract}
 Active mode locking (AML) via modulation of the injection current or bias is a standard technique employed for the generation of ultrashort pulses in electrically pumped lasers. Quantum cascade lasers (QCLs), as sources of radiation in the mid- and far-infrared portions of the electromagnetic spectrum, have turned out to be exceedingly difficult to actively mode lock, due to the inherently short gain recovery time of these kind of devices. In the mid-infrared, both theoretical and experimental results have shown that this obstacle can be overcome by modulating only a short, electrically isolated section of the QCL cavity, which could lead to generation of ultrashort picosecond pulses. For terahertz (THz) QCLs, most recently successful active mode locking of an LO-phonon THz-QCL was reported, and pulses as short as 11 ps were detected. Furthermore, in the same work, the importance of correct coupling between the propagating gigahertz (GHz) and terahertz fields was explicitly outlined and the role of the wave-guiding structure in the modulation process emphasized. Here, we present a theoretical model based on the Maxwell-Bloch and the transmission line equations, suitable for investigation of such systems. (OLD ABSTRACT TODO REWRITE!)
 \end{abstract}
+\section{Introduction}
+\label{sec:introduction}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 \section{Theoretical model}
-The ever increasing complexity of chip-scale devices necessitates correspondingly sophisticated theoretical modelling. In the last decade, we have seen a steady progress in the design of quantum cascade lasers, resulting in devices with high electrical stability [cite linewidth papers], emitting spectra with various desirable characteristics such as high-power single mode emission [cite], short pulse generation [cite] and frequency comb emission [cite].
+\label{sec:theoreticalmodel}
 
-On the contrary it seems that theoretical or simulation models have struggled to keep up with the pace of progress in the field. This could be partly explained due to the complicated dynamics of QCLs, stemming from the intricate interplay various coherent and incohrent processes [cite], nonlinear light-matter interactions and complicated electro-optical phenomena []. Simulation approaches with various degrees of complexity have been proposed XXX
+The ever increasing complexity of chip-scale devices necessitates correspondingly sophisticated theoretical modelling. In the last two decades, we have seen a steady progress in the design of quantum cascade lasers, resulting in devices with high electrical stability [cite linewidth papers], emitting spectra with various desirable characteristics such as high-power single mode emission [cite], short pulse and frequency comb generation [cite].
 
-\subsection{Optical modelling}
-To model the active regions we adapt the density matrix model from Ref. [cite Belyanin], to include total of four subband levels, and more importantly to allow all relevant system parameters, such as the eigenenergies, dipole moments, scattering rates etc. to be bias dependent. The time evolution is thus governed by a four level Maxwell-Bloch equations, coupled ot a wave propagation equation for the $z$-component electric field $E_z(x,t)$, which is also the assumed growth direction of the QCL. 
+On the contrary it seems that theoretical or simulation models have struggled to keep up with the pace of experimental progress in the field. This could be partially due to the complicated dynamics of QCLs, stemming from the intricate interplay of various coherent and incoherent processes [cite], nonlinear light-matter interactions and complicated electro-optical phenomena []. Due to the versatile nature of the above enumerated effects, it is evident that the development of a universal model that captures all of the physics would be very challenging. Therefore we propose a synthetic solution, combining the strengths of various approaches, in order to deliver relatively fast, yet reliable simulation results. We combine stochastic electron transport simulations, based on our well established ensemble Monte-Carlo code, with a semi-classical Maxwell-Bloch model for light-matter interactions in the system, and finally with a classical transmission-line approach for the investigation of the voltage/current wave propagation along the metallic plates of the waveguide. As a result we are able to self-consistently simulate not only the active region, but also waveguide effects onto the laser dynamics. Optical and electrical modelling approaches are separately introduced in the following two sections, respectively, whereas the full coupling scheme is explained in Sec.~\ref{subsec:coupledmodel}.
+
+\subsection{Optical model}
+\label{subsec:opticalmodel}
+
+To simulate QCL active regions, we adapt the density matrix model from Ref. [cite Belyanin], to include total of four subband levels, and more importantly to allow all relevant system parameters, such as the eigenenergies, dipole moments and all scattering rates to be bias dependent. 
+
+As a prototypical QCL design, we take the sub-band structure configuration illustrated in Fig.~[], consisting of 4 relevant levels per period, i.e. levels from 1 to 4, where level 4 denotes the upper laser state, level 3 the lower laser level, level 2 is an extraction level which eases the electron extraction from 3, and finally level 1 denotes the depopulation level of the period, which also coincides with the injector state (1') of the next module. Typical QCL designs consist of more than 30 repetitions of this schematic, however we can employ periodic boundary conditions [cite] and restrict our attention to a single period only. 
+
+The time evolution of the density matrix is given by the von Neumann equation, which we couple to a wave equation for $E_z(x,t)$, denoting the $z$-component electric field (and also the assumed laser growth direction).  
 \begin{subequations}
 	\label{eq:dmequations}
  \begin{align}
-	\frac{d\rho_{44}}{dt} &= J(x,t)   +i\frac{ez_{43}}{\hbar}E_z(\rho_{43}-\rho_{34}) + \sum_{j\neq 4} \frac{\rho_{jj}}{\tau_{j\rightarrow 4}}  - \frac{\rho_{44}}{\tau_{2}}, \\
+	\frac{d\rho_{44}}{dt} &= J +i\frac{ez_{43}}{\hbar}E_z(\rho_{43}-\rho_{34}) + \sum_{j\neq 4} \frac{\rho_{jj}}{\tau_{j\rightarrow 4}}  - \frac{\rho_{44}}{\tau_{4}}, \\
 	\frac{d\rho_{33}}{dt} &= -i\frac{ez_{43}}{\hbar}E_z(\rho_{43}-\rho_{34}) + \sum_{j\neq 3} \frac{\rho_{jj}}{\tau_{j\rightarrow 3}} - \frac{\rho_{33}}{\tau_{3}}, \\
 	\frac{d\rho_{22}}{dt} &= \sum_{j\neq 2} \frac{\rho_{jj}}{\tau_{j\rightarrow 2}} - \frac{\rho_{22}}{\tau_{2}}, \\
-	\frac{d\rho_{11}}{dt} &=  -J(x,t) + \sum_{j\neq 1} \frac{\rho_{jj}}{\tau_{j\rightarrow 1}} - \frac{\rho_{11}}{\tau_{1}}, \\
+	\frac{d\rho_{11}}{dt} &=  -J + \sum_{j\neq 1} \frac{\rho_{jj}}{\tau_{j\rightarrow 1}} - \frac{\rho_{11}}{\tau_{1}}, \\
 	\frac{d\rho_{43}}{dt} &= - i\omega_{43}\rho_{43} + i\frac{ez_{43}}{\hbar}E_z(\rho_{44}-\rho_{33})-\Gamma_{\parallel 43}\rho_{43}.
  \end{align}
 \end{subequations}
-In Eqs. (\ref{eq:dmequations}) $\rho_{ij}$ denotes the $ij-$th density matrix element,  $z_{43}$ the optical transition's dipole moment, $e$ the elementary charge, $\hbar$ is the reduced Plank's constant. Furthermore, since our model assumes position and time dependent bias $V(x,t)$, this in turn results in spatio-temporal  dependence of the transition frequency $\omega_{43}(x,t)$, the scattering rates $1/\tau_{ij}(x,t)$, the dephasing rate $\Gamma_{\parallel 43}(x,t)$ as well as current density $J(x,t)$. Finally the parameters $1/\tau_{j}(x,t)$ denote the lifetimes of the corresponding levels and $J(x,t)$ is the second order tunneling current from the injector state to the upper laser level and is given by the formula [cite]
+In Eqs. (\ref{eq:dmequations}) $\rho_{ij}$ denotes the $ij-$th density matrix element,  $z_{43}$ the optical transition's dipole moment, $e$ the elementary charge, $\hbar$ is the reduced Plank's constant. Also the parameter $1/\tau_{i\rightarrow j}$ is the net scattering rate from level $i$ to level $j$, calculated by our ensemble Monte Carlo code and incorporating, amongst others, longitudinal optical (LO) phonon, interface roughness and electron electron scattering mechanisms [cite]. Lastly $1/\tau_{i} = \sum_j 1/\tau_{i\rightarrow j}$ is the inverse lifetime of level $i$ and $\Gamma_{\parallel 43} = (\tau_4+\tau_3)/(2\tau_4\tau_3)+1/\tau^*$ is the dephasing rate of the optical transition, including lifetime broadening and a phenomenological pure dephasing $1/\tau^*$ rate due to intrasubband scattering processes [cite ANDO model]. The only scattering mechanism treated quantum mechanically is the optical transition between the upper and lower laser states. One can also fully coherently include resonant tunneling between the injector 1' and the upper laser state 4, which leads to a modified system of equations with larger number of independent variables and is thus more computationally demanding [cite]. Furthermore such an approach does not allow for the inclusion (without $k-$space discretization) of second order tunneling current into the simulations, which has been shown to be the origin of negative the differential conductivity and dispersive gain  in quantum cascade lasers []. This is why in this publication we adhere to the more intuitive model from [cite Belyanin], which can be easily adapted to include various models for the current density via the term $J$ in the above equations. Keeping in foresight that we would like to couple the density matrix equations to an electrical model for the waveguide, we find the later model as the more suitable alternative.
+
+In the tight-binding basis [cite], we can assume that the only electron transport channel across the QCL periods is via the resonant tunneling current between the injector and the upper laser state. When second order scattering effects are considered, under a few relaxing approximations, this tunneling current is given by [cite Terrazzi]
 \begin{align}
 \label{eq:current}
 J &= en^s\frac{\Omega_{AC}^22\Gamma_{\parallel 1'4}}{\epsilon^2+4\Gamma_{\parallel 1'4}^2}\Big\{\Theta(\epsilon)(\rho_{11}-\rho_{44}e^{-|\hbar\epsilon|/k_BT}) \nonumber \\
 &+\Theta(-\epsilon)(\rho_{11}e^{-|\hbar\epsilon|/k_BT}-\rho_{44})\Big\}.
 \end{align}
 In Eq. (\ref{eq:current}) $n^s$ denotes the sheet carrier density, $\Theta(\cdot)$ is the Heaviside function and the term $e^{-|\hbar\epsilon|/k_BT}$ denotes an effective "weight" factor modelling the assumption of thermalized $k$-space distribution of the injector and upper laser level electrons with the same thermal energy $k_BT$ in each subband.   
-\begin{figure}[H]
-  	\label{fig:WFs}
-  	\centering
-  	\includegraphicsS{IMGS/WFs}
-  	\caption{insert caption here.}	
-\end{figure}
-Further 
 
-\subsection{Electrical modelling}
+In order to include the electric field dynamics into the overall picture, we write down the inhomogeneous wave equation 
+\begin{align}
+\label{eq:waveqn}
+\left [\frac{c^2}{n_{THz}^2} \frac{\p^2}{\p x^2} -\frac{\p^2}{\p t^2} \right ] E_z =\frac{1}{\epsilon_0 n_{THz}^2}\frac{\p^2}{\p t^2}P,
+\end{align}
+where  $n_{THz}$ denotes the background refractive index of the bulk active region, $c$ is the velocity of light in vacuum and $\epsilon_0$ is the permittivity of free space. The symbol $P$ denotes the (nonlinear) polarization of the two level system and is given by 
+\begin{equation}
+P(x,t) =  -\frac{n^s}{L_p}\Gamma ez_{43} (\rho_{43}+\rho_{34}),  
+\end{equation}
+with $\Gamma$ is the field confinement factor and $L_p$ is the period length. 
+
+For the final set of equations, we also employ the rotating wave and slowly varying envelope approximations [cite], which allows us to reduce  the wave equation (\ref{eq:waveqn}) to a pair of propagation equations, an also eliminate fast oscillating terms from the density matrix equations (\ref{eq:dmequations}). The corresponding final formulas are slightly modified versions of those in [cite me, cite belyanin], and therefore we omit them here for brevity. We would like to point out also that in all subsequent calculations, we have also taken into consideration the effect of the inversion grating on to the current density, in an analogous manner to [cite belyanin]. 
+
+\subsection{Electrical model}
+\label{subsec:electricalmodeling}
 This is the electrical geometry -> TL equations write them here
 \begin{figure}[H]
-	\label{fig:circuit}
 	\centering
 	\includegraphicsS{IMGS/CIRCUIT}
-	\caption{insert caption here.}	
+	\caption{insert caption here.}	\label{fig:circuit}	
 \end{figure}
 
- 
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
 
-\subsection{Coupled model}
-\begin{figure*}[tb]
-	\label{fig:coupledmodel}
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+
+
+\begin{figure*}[h!]
 	\centering
 	\includegraphicsL{IMGS/coupledmodel}
 	\caption{insert caption here.}	
+	\label{fig:coupledmodel}
 \end{figure*}
-We propose a combined solution to the above enumerated issues in the form of a coupled ensemble Monte Carlo/Transmission Line equations/Maxwell-Bloch simulation approach. The whole algorithm is described in Fig. [].
 
-We start with our Schrödinger-Poisson and EMC simulation codes and calculate the bias dependence of the various scattering mechanisms, eigenenergies, tunneling coupling strengths (anticrossing parameters) as well as the dipole moments. Even though this procedure by itself is quite time-consuming, it needs to be performed only once and the results are stored for further processing. Also, one can achieve significant speedup of the computations with the aid of modern parallelization approaches, utilizing multi-core simulation servers or larger compute clusters. 
+\subsection{Coupled model}
+\label{subsec:coupledmodel}
 
-The bias grid was chosen to span sufficiently broad interval, i.e. between 8.0 kV/cm and 14.0 kV/cm, with a step of 0.2 kV/cm. The bias dependence of the most critical parameters, and namely the various scattering rates, the eigenenergies of the bound states, the dipole moment of the optical transition as well as the tunneling coupling coefficient are illustrated in Fig. \ref{fig:params_v}.
+We propose a new model for high fidelity electro-optical simulations of quantum cascade lasers. The whole algorithm is based on a coupled ensemble Monte Carlo/Transmission Line equations/Maxwell-Bloch simulation approach and is illustrated via a block diagram in Fig.~\ref{fig:coupledmodel}.
+
+We briefly discuss the simulations strategy in the following. Starting with our Schrödinger-Poisson and EMC simulation codes we calculate the bias dependence of practically all system parameters of interest, i.e. the various scattering mechanisms, eigenenergies, tunneling coupling strengths (anticrossing parameters) as well as the dipole moments. Even though this procedure by itself is quite time-consuming, it needs to be performed only once and the results are stored for further processing. Also, one can achieve significant speedup of the computations with the aid of modern parallelization approaches, utilizing multi-core simulation servers or larger compute clusters. The resulting bias dependence of the most critical system parameters is given in Fig.~\ref{fig:params_v}.
 \begin{figure}[H]
-	\label{fig:params_v}
   	\centering
   	\includegraphicsS{IMGS/params_v}
-  	\caption{insert caption here.}	
+  	\caption{insert caption here.}	\label{fig:params_v}
 \end{figure}
 
 \begin{enumerate}
@@ -144,14 +167,30 @@ The bias grid was chosen to span sufficiently broad interval, i.e. between 8.0 k
 
 
 \section{Simulation results and comparison with experiment}
+\label{sec:simulationresults}
+
 \subsection{IVL characteristics}
+\label{subsec:ivl}
+
+\begin{figure}[H]
+	\centering
+	\includegraphicsS{IMGS/IVLCURVE}
+	\caption{insert caption here.}		\label{fig:WFs}
+\end{figure}
+
 \subsection{Injection locking}
+\label{subsec:injectionlocking}
+
 \subsection{Active mode locking and ultrashort pulse generation}
+\label{subsec:activemodelocking}
 
 \begin{appendices}
 \section{Numerical methods}
+\label{sec:numericalmethods}
+
 \section{Boundary conditions}
-\section{Simulation parameters}
+\label{sec:boundaryconditions}
+
 \end{appendices}
 
 \section*{Funding}
