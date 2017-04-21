@@ -120,7 +120,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 1000;
+f_display = 100;
 
 suffix ='_';
 
@@ -145,7 +145,6 @@ while( dat.t< tEnd)
            for mm = 1: N-1
               TL_model_s1.i_TL(mm) = J_tot*(N-mm)/N;
            end
-           TL_model_s1.i_TL(end) = -TL_model_s1.i_TL(end-1);
            J_TL0 = J_TL1;
            TL_model_s1.i_TLold = TL_model_s1.i_TL(1);
         end

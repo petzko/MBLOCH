@@ -3,11 +3,11 @@ classdef TL_solver2 < handle
     %Detailed explanation goes here
     
     properties
-        dx,dt,Zin,c,modA,modF,V_RF;
+        dx,dt,Zin,c,modA,modF,V_RFnew,V_RFold,v_TLold,Mirror_v;
         rlgc,bias;
         width,height;
-        v_TL,i_TL,i_TLold;
-        Bcoeff,Ccoeff,Dcoeff,Ecoeff,Fcoeff;
+        v_TL,i_TL,i_TLold,;
+        Bcoeff,,Ecoeff,Fcoeff,coeff0fBC;
         N_pts;
         IDX;
         
@@ -34,32 +34,35 @@ classdef TL_solver2 < handle
         obj.rlgc.R = 45*sqrt(obj.modF);  %unit: Ohm/mm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
         obj.Bcoeff = -obj.width/(obj.height*1e+3)/obj.c/obj.rlgc.C;   % for calculation of v_TL
-        
-        obj.Ccoeff = 1/(obj.rlgc.C*obj.dx/2/obj.dt+1/2/obj.Zin)/(obj.height*1e+3);
-        obj.Dcoeff = (obj.rlgc.C*obj.dx/2/obj.dt-1/2/obj.Zin)*(obj.height*1e+3);
+        obj.coeff0fBC = obj.Zin*obj.rlgc.C*obj.dx/obj.dt;
         
         %with consideration of resistance
         obj.Ecoeff = (obj.rlgc.L/obj.dt-1/2*obj.rlgc.R)/(obj.rlgc.L/obj.dt+1/2*obj.rlgc.R); % *I of previous step
         obj.Fcoeff = -1/(obj.dx*(obj.rlgc.L/obj.dt+1/2*obj.rlgc.R))*(obj.height*1e+3/obj.width);% *(V(2)-V(1))
         
         %Initial conditions
-        obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(1)....   V(M)       
-        obj.i_TL = zeros(obj.N_pts,1);            % i(3/2).... i(M+1/2)
-        obj.i_TLold = 0; % previous current at node 0
+        obj.v_TL = obj.bias*ones(obj.N_pts,1);    % V(0)....   V(M)       
+        obj.i_TL = zeros(obj.N_pts,1);            % i(1/2).... i(M+1/2)
+        obj.v_TLold = obj.bias; % previous voltage at node 0 before initial (t<0)
         end
         
 
         
        function propagate2(obj,J_TL1,J_TL0,t)
-        obj.V_RF = obj.modA*sin(2*pi*obj.modF*t)/(obj.height*1e+3);            
-%         obj.v_TL(1) = obj.bias+obj.Ccoeff*(obj.Dcoeff*(obj.v_TL(1)-obj.bias)-obj.i_TL(1)*obj.width-obj.width*obj.dx*(J_TL1(1)-J_TL0(1))/2+obj.V_RF/obj.Zin);
-        obj.v_TL(1) = (obj.bias+obj.V_RF-(1/2-obj.Zin*obj.rlgc.C*obj.dx/obj.dt/2)*obj.v_TL(1)-(obj.i_TL(1)-obj.i_TLold)*obj.width*obj.Zin/(obj.height*1e3))/(1/2+obj.Zin*obj.rlgc.C*obj.dx/obj.dt/2);
+        obj.V_RFnew = obj.modA*sin(2*pi*obj.modF*(t-obj.dt/2))/(obj.height*1e+3);
+        obj.V_RFold = obj.modA*sin(2*pi*obj.modF*(t-obj.dt*1.5))/(obj.height*1e+3);
+        
+        obj.Mirror_v = obj.v_TL(1); % store the boundary voltage of previous step
+        
+        obj.v_TL(1)=(-obj.coeff0fBC*obj.v_TL(1)+(1+obj.coeff0fBC)/2*obj.v_TLold+obj.V_RFnew-obj.V_RFold...
+                      + (obj.i_TL(1)-obj.i_TLold)*obj.width*obj.Zin/(obj.height*1e3))/(1/2-obj.coeff0fBC/2);
+           
         obj.v_TL(2:end-1) = obj.v_TL(2:end-1)+obj.Bcoeff*(obj.i_TL(2:end-1)-obj.i_TL(1:end-2)+obj.dx*((J_TL1(2:end-1)+J_TL0(2:end-1))/2));
         obj.v_TL(end) = obj.v_TL(end)+obj.Bcoeff*(obj.i_TL(end)-obj.i_TL(end-1)+(J_TL1(end)+J_TL0(end))*obj.dx/4)*2;
 
-        obj.i_TLold = obj.i_TL(1); 
+        obj.i_TLold = obj.i_TL(1); obj.v_TLold = obj.Mirror_v;
+        
         obj.i_TL(1:end-1) = obj.i_TL(1:end-1)+obj.Fcoeff*(obj.v_TL(2:end)-obj.v_TL(1:end-1));
-%         obj.i_TL(end) = -obj.i_TL(end-1);
 
 
         end
