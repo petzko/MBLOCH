@@ -146,9 +146,10 @@ while( dat.t< tEnd)
               TL_model_s1.i_TL(mm) = J_tot*(N-mm)/N;
            end
            J_TL0 = J_TL1;
-           TL_model_s1.i_TLold = TL_model_s1.i_TL(1);
+           TL_model_s1.i_TLold = TL_model_s1.i_TL;
+           TL_model_s1.i_TLold2 = TL_model_s1.i_TL;
         end
-        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
+        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1998)
     end
     
 	J_TL0 = J_TL1;    
