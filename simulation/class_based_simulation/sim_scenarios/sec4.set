@@ -19,13 +19,13 @@ D = 46
 disp = +0.125
 
 #period length [nm]
-Lp = 54.8
+Lp = 50
 
 #doping density in [cm^-3]
-dN = 1.5E16
+dN = 5E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
-Ld = 16.2
+Ld = 5
 
 #mode overlap factor [dimensionless]
 Overlap = 0.8
@@ -38,7 +38,7 @@ nRF = 3.8
 modF = 0.0139
 
 #modulation amplitude unit: V
-modA = 1
+modA = 10
 
 
 #initial bias value! in kV/cm

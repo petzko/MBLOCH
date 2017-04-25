@@ -22,7 +22,7 @@ disp = +0.125
 Lp = 54.8
 
 #doping density in [cm^-3]
-dN = 1.5E16
+dN = 5E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
 Ld = 16.2
@@ -38,11 +38,11 @@ nRF = 3.8
 modF = 0.0133
 
 #modulation amplitude unit: V
-modA = 2
+modA = 4
 
 
 #initial bias value! in kV/cm
-bias = 8.6
+bias = 8.8
 
 #boundary voltage value! in V
 Vs = 8.6

@@ -3,7 +3,7 @@ clc;clear;close all;
 %*************************************************************************%
 %****************** Set up for this script *******************************%
 % Give folder name of sim files here !!!
-simFolder = 'modA_0.03';
+simFolder = 'sim_results';
 RT1 = 391; RT2 = 395;    % Plot pulses in time domain
 RT3 = 200;               % FFT the last 200 round trips
 select_mod = 2;          % Select legend for modA(1) or modF(2)
@@ -21,24 +21,26 @@ simFiles = dir ([simFolder,'/*.mat']);
 N = length(simFiles); % amount of *.mat files
 modA = zeros(N,1);
 modF = zeros(N,1);
-formatSpec1 = 'modA = %d%%';
+bias = zeros(N,1);
+formatSpec1 = 'modA = %dV';
 formatSpec2 = 'f_{RF} = %.1f GHz';
+
 
 for k = 1:N
     
     sim{k} = matfile(simFiles(k).name);
-    params_s1{k} = sim{k}.params_s1;
-    modA(k) = params_s1{k}.modA;    % modulation amplitude
-    modF(k) = params_s1{k}.modF;    % modulation frequency unit: THz
-    strA{k} = sprintf(formatSpec1,int8(modA(k)*100));
+    sim_params{k} = sim{k}.sim_params;
+    modA(k) = sim_params{k}.modA;    % modulation amplitude
+    modF(k) = sim_params{k}.modF;    % modulation frequency unit: THz
+    bias(k) = sim_params{k}.bias;    % bias unit: kV/cm
+    strA{k} = sprintf(formatSpec1,int8(modA(k)));
     strF{k} = sprintf(formatSpec2,modF(k)*1000);
 end
 
 dt = sim{1}.dt;                    % time step unit: ps
 T_R = sim{1}.T_R;                  % round trip time unit: ps
 record_time = sim{1}.record_time;  % time axis
-bias = sim{1}.bias;                % bias kV/cm
-length_QCL = params_s1{1}.length;  % QCL length unit: mm
+length_QCL = sim_params{1}.length;  % QCL length unit: mm
 Res_TL = 45*sqrt(modF)*length_QCL; % QCL resistance unit: Ohm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
 
 f_R = 1/T_R;                       % round trip frequency unit: THz
@@ -64,8 +66,8 @@ for k = 1:N
 
     record_U(:,k) = sim{k}.record_U;
     record_V(:,k) = sim{k}.record_V;
-    record_v_TL(:,k) = sim{k}.record_v_TL*10;
-    record_i_TL(:,k) = sim{k}.record_i_TL*60e-3;
+    record_v_TL(:,k) = sim{k}.record_v_TL;
+    record_i_TL(:,k) = sim{k}.record_i_TL;
     record_J_TL(:,k) = sim{k}.record_J_TL;
 end
 
@@ -130,7 +132,6 @@ for k = 1:N
     if k == 1
        P_i = zeros(length(FFT),N);
        P_v = P_i;
-       P_power = P_i;
        indices = find(abs(f3-1.3e10)<6e9);
     end
     P_i(:,k) = abs(FFT(1:length(FFT)));
@@ -138,12 +139,10 @@ for k = 1:N
     % ac votage fraction
     [FFT, ~] = mydft2(record_v_TL(end/2:end,k),dt);
     P_v(:,k) = abs(FFT(1:length(FFT)));
-    
-    P_power(:,k) = P_i(:,k).*P_v(:,k);
-    ac_U(k) = max(P_v(indices,k));
-    
+    ac_U(k) = max(P_v(indices,k))/max(P_v(:,k));
+
 end
-ac_P = 10*log10(10*bias*ac_U.*ac_I*record_i_TL(end,1)*1e3);
+ac_P = 10*log10(bias.*ac_U.*ac_I*record_i_TL(end,1)*1e3);
 ac_P2 = 10*log10(Res_TL.*(ac_I*record_i_TL(end,1)).^2*1e3);
 display('RF power (dBm)');
 display(ac_P);
@@ -177,92 +176,78 @@ display(FWHM);
 %*************************************************************************%
 %************************ Plot figures ***********************************%
 %*************************************************************************%
-% Figure 0: Power distribution over frequency in dBm
-%%
-figure
-fidx = f3 >= -5e10 & f3 <= 5e10; 
-fplot=f3(fidx); 
-for k = 1:N
-    subplot(N,1,k)
-    Y = 10*log10(P_power(fidx,k)*1e3);
-    plot(fplot, Y);
-    xlabel('freq Hz'); 
-    ylabel(['P_{RF} (dBm) at k=',num2str(k)]);
-end
-
-
 
 % Figure 1: Pulses in time domain with 5 round trips
-% figure(1)
-% for k = 1:N
-%     subplot(N,1,k)
-%     plot(x',Ez_5RT(:,k))
-%     ylim([0,1.2])
-%     xlim([RT1,RT2])
-%     if k == 1
-%         if select_mod == 2
-%             title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, modA = %d%%)',int8(modA(1)*100));
-%         else title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, f_{RF} = %.1f)',modF(1)*1000);        
-%         end
-%         title(title_name)
-%     end
-%     ylabel('normalized |E_z|')
-%     if k == N
-%         xlabel('Round trip')
-%     end
-% 
-%     text(RT2-0.8,0.8,str(k),'Color','red','FontSize',10)
-% 
-% end
-% 
-% % Figure 2: Frequency spectra
-% figure(2)
-% for k = 1:N
-%     subplot(N,1,k)
-%     plot(f1,Ez3(:,k))
-%     xlim([3.5,4.1])
-%     ylim([0,1.2])
-%     if k == 1
-%         if select_mod == 2
-%             title_name = sprintf('Frequency spectra (modA = %d%%)',int8(modA(1)*100));
-%         else title_name = sprintf('Frequency spectra (f_{RF} = %.1f)',modF(1)*1000);        
-%         end
-%         title(title_name)
-%     end
-%     ylabel('Intencity a.u.')
-%     if k == N
-%         xlabel('Frequency /THz')
-%     end
-%     text(4,0.8,str(k),'Color','red','FontSize',10)
-% 
-% end
+figure(1)
+for k = 1:N
+    subplot(N,1,k)
+    plot(x',Ez_5RT(:,k))
+    ylim([0,1.2])
+    xlim([RT1,RT2])
+    if k == 1
+        if select_mod == 2
+            title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, modA = %d V, bias = %.1f kV/cm)',int8(modA(1)), bias(1));
+        else title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, f_{RF} = %.1f)',modF(1)*1000);        
+        end
+        title(title_name)
+    end
+    ylabel('normalized |E_z|')
+    if k == N
+        xlabel('Round trip')
+    end
+
+    text(RT2-0.8,0.8,str(k),'Color','red','FontSize',10)
+
+end
+
+% Figure 2: Frequency spectra
+figure(2)
+for k = 1:N
+    subplot(N,1,k)
+    plot(f1,Ez3(:,k))
+    xlim([3.5,4.1])
+    ylim([0,1.2])
+    if k == 1
+        if select_mod == 2
+            title_name = sprintf('Frequency spectra (modA = %d V, bias = %.1f kV/cm)',int8(modA(1)),bias(1));
+        else title_name = sprintf('Frequency spectra (f_{RF} = %.1f)',modF(1)*1000);        
+        end
+        title(title_name)
+    end
+    ylabel('Intencity a.u.')
+    if k == N
+        xlabel('Frequency /THz')
+    end
+    text(4,0.8,str(k),'Color','red','FontSize',10)
+
+end
 
 % Figure 3: Beatnote
-% figure(3)
-% for k = 1:N
-%     subplot(N,1,k)
-%     yyaxis left
-%     semilogy(f2,Ez4(:,k))
-%     xlim([2,18])
-%     ylim([1e-8,1.2])
-%     if k == 1
-%         if select_mod == 2
-%             title_name = sprintf('Beatnote (modA = %d%%)',int8(modA(1)*100));
-%         else title_name = sprintf('Beatnote (f_{RF} = %.1f)',modF(1)*1000);
-%         end
-%         title(title_name)
-%     end
-%     ylabel('Intencity /dB')
-%     if k == N
-%         xlabel('Frequency /GHz')
-%     end
-%     text(15.5,0.001,str(k),'Color','red','FontSize',10)
-%     
-%     
-%     yyaxis right
-%     semilogy(f2,v1(:,k))
-%     xlim([2,18])
-%     ylim([1e-8,1.2])
-%     legend('E_z','v\_TL','Location','northwest')
-%     
-% end
+figure(3)
+for k = 1:N
+    subplot(N,1,k)
+    yyaxis left
+    semilogy(f2,Ez4(:,k))
+    xlim([2,18])
+    ylim([1e-8,1.2])
+    if k == 1
+        if select_mod == 2
+            title_name = sprintf('Beatnote (modA = %d V, bias = %.1f kV/cm)',int8(modA(1)),bias(1));
+        else title_name = sprintf('Beatnote (f_{RF} = %.1f)',modF(1)*1000);
+        end
+        title(title_name)
+    end
+    ylabel('Intencity /dB')
+    if k == N
+        xlabel('Frequency /GHz')
+    end
+    text(15.5,0.001,str(k),'Color','red','FontSize',10)
+    
+    
+    yyaxis right
+    semilogy(f2,v1(:,k))
+    xlim([2,18])
+    ylim([1e-8,1.2])
+    legend('E_z','v\_TL','Location','northwest')
+    
+end

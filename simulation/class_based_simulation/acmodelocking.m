@@ -120,7 +120,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 100;
+f_display = 500;
 
 suffix ='_';
 
