@@ -3,10 +3,10 @@ clc;clear;close all;
 %*************************************************************************%
 %****************** Set up for this script *******************************%
 % Give folder name of sim files here !!!
-simFolder = 'sim_results';
+simFolder = '4.25';
 RT1 = 391; RT2 = 395;    % Plot pulses in time domain
 RT3 = 200;               % FFT the last 200 round trips
-select_mod = 2;          % Select legend for modA(1) or modF(2)
+select_mod = 1;          % Select legend for modA(1) or modF(2)
 %*************************************************************************%
 %*************************************************************************%
 
@@ -22,7 +22,7 @@ N = length(simFiles); % amount of *.mat files
 modA = zeros(N,1);
 modF = zeros(N,1);
 bias = zeros(N,1);
-formatSpec1 = 'modA = %dV';
+formatSpec1 = 'modA = %.1f V';
 formatSpec2 = 'f_{RF} = %.1f GHz';
 
 
@@ -33,7 +33,7 @@ for k = 1:N
     modA(k) = sim_params{k}.modA;    % modulation amplitude
     modF(k) = sim_params{k}.modF;    % modulation frequency unit: THz
     bias(k) = sim_params{k}.bias;    % bias unit: kV/cm
-    strA{k} = sprintf(formatSpec1,int8(modA(k)));
+    strA{k} = sprintf(formatSpec1,modA(k));
     strF{k} = sprintf(formatSpec2,modF(k)*1000);
 end
 
@@ -41,7 +41,16 @@ dt = sim{1}.dt;                    % time step unit: ps
 T_R = sim{1}.T_R;                  % round trip time unit: ps
 record_time = sim{1}.record_time;  % time axis
 length_QCL = sim_params{1}.length;  % QCL length unit: mm
-Res_TL = 45*sqrt(modF)*length_QCL; % QCL resistance unit: Ohm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
+% R, L, G, C
+rlgc = sim{1}.rlgc;      
+rlgc.C = rlgc.C*1e-12;      % Distributed capacitance unit: F/mm
+rlgc.L = rlgc.L*1e-12;      % Distributed inductance  unit: H/mm
+rlgc.G = 3e-2;              % Distributed conductance unit: S/mm
+rlgc.R = 45*sqrt(modF)*length_QCL; % QCL resistance unit: Ohm --from paper W. Maineult: Microwave modulation of terahertz quantum cascade lasers: a transmission-line approach
+Res_TL = zeros(N,1);
+for k = 1:N
+    Res_TL(k) = real(sqrt((rlgc.R(k)+1i*2*pi*modF(k)*1e12*rlgc.L)/(rlgc.G+1i*2*pi*modF(k)*1e12*rlgc.C)));
+end
 
 f_R = 1/T_R;                       % round trip frequency unit: THz
 rows = length(record_time);
@@ -186,8 +195,8 @@ for k = 1:N
     xlim([RT1,RT2])
     if k == 1
         if select_mod == 2
-            title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, modA = %d V, bias = %.1f kV/cm)',int8(modA(1)), bias(1));
-        else title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, f_{RF} = %.1f)',modF(1)*1000);        
+            title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, modA = %.1f V, bias = %.1f kV/cm)',modA(1), bias(1));
+        else title_name = sprintf('Pulses in 5 round trips (t_{rt} = 72.0498 ps, f_{RF} = %.1f GHz)',modF(1)*1000);        
         end
         title(title_name)
     end
@@ -209,8 +218,8 @@ for k = 1:N
     ylim([0,1.2])
     if k == 1
         if select_mod == 2
-            title_name = sprintf('Frequency spectra (modA = %d V, bias = %.1f kV/cm)',int8(modA(1)),bias(1));
-        else title_name = sprintf('Frequency spectra (f_{RF} = %.1f)',modF(1)*1000);        
+            title_name = sprintf('Frequency spectra (modA = %.1f V, bias = %.1f kV/cm)',modA(1),bias(1));
+        else title_name = sprintf('Frequency spectra (f_{RF} = %.1f GHz)',modF(1)*1000);        
         end
         title(title_name)
     end
@@ -229,11 +238,11 @@ for k = 1:N
     yyaxis left
     semilogy(f2,Ez4(:,k))
     xlim([2,18])
-    ylim([1e-8,1.2])
+    ylim([1e-8,10])
     if k == 1
         if select_mod == 2
-            title_name = sprintf('Beatnote (modA = %d V, bias = %.1f kV/cm)',int8(modA(1)),bias(1));
-        else title_name = sprintf('Beatnote (f_{RF} = %.1f)',modF(1)*1000);
+            title_name = sprintf('Beatnote (modA = %.1f V, bias = %.1f kV/cm)',modA(1),bias(1));
+        else title_name = sprintf('Beatnote (f_{RF} = %.1f GHz)',modF(1)*1000);
         end
         title(title_name)
     end
@@ -247,7 +256,7 @@ for k = 1:N
     yyaxis right
     semilogy(f2,v1(:,k))
     xlim([2,18])
-    ylim([1e-8,1.2])
+    ylim([1e-8,10])
     legend('E_z','v\_TL','Location','northwest')
     
 end
