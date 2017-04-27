@@ -1,0 +1,25 @@
+\BOOKMARK [0][-]{chapter*.1}{Abstract}{}% 1
+\BOOKMARK [0][-]{chapter*.2}{Acknowledgements}{}% 2
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 3
+\BOOKMARK [1][-]{section.1.1}{Background and Motivation}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.2}{Related work}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.3}{Objective}{chapter.1}% 6
+\BOOKMARK [0][-]{chapter.2}{Optical Modeling}{}% 7
+\BOOKMARK [1][-]{section.2.1}{Carrier Transport}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.2}{Light Propagation}{chapter.2}% 9
+\BOOKMARK [0][-]{chapter.3}{Electrical Modeling}{}% 10
+\BOOKMARK [1][-]{section.3.1}{Transmission Line Method}{chapter.3}% 11
+\BOOKMARK [2][-]{subsection.3.1.1}{Boundary Conditions}{section.3.1}% 12
+\BOOKMARK [2][-]{subsection.3.1.2}{Initial Conditions}{section.3.1}% 13
+\BOOKMARK [1][-]{section.3.2}{Estimation of Distributed Components}{chapter.3}% 14
+\BOOKMARK [2][-]{subsection.3.2.1}{Distributed Capacitance}{section.3.2}% 15
+\BOOKMARK [2][-]{subsection.3.2.2}{Distributed Inductance}{section.3.2}% 16
+\BOOKMARK [1][-]{section.3.3}{Modulation Power}{chapter.3}% 17
+\BOOKMARK [0][-]{chapter.4}{Simulation Results and Comparison with Experiment}{}% 18
+\BOOKMARK [1][-]{section.4.1}{Simulation Setup}{chapter.4}% 19
+\BOOKMARK [1][-]{section.4.2}{Simulation Results}{chapter.4}% 20
+\BOOKMARK [2][-]{subsection.4.2.1}{With different modulation power}{section.4.2}% 21
+\BOOKMARK [2][-]{subsection.4.2.2}{With different modulation frequency}{section.4.2}% 22
+\BOOKMARK [1][-]{section.4.3}{Comparison with Experiment}{chapter.4}% 23
+\BOOKMARK [0][-]{chapter.5}{Conclusion}{}% 24
+\BOOKMARK [0][-]{chapter*.20}{Bibliography}{}% 25
