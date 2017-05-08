@@ -189,7 +189,7 @@
 \addcontentsline{toc}{chapter}{Abstract}
 Quantum cascade lasers (QCLs) are compact, electrically pumped semiconductor devices, which are considered to be promising light source for mid-infrared and terahertz radiation. Benefit from this special mechanism they can utilize the electric power more efficiently than other diode lasers and achieve a high output power. Despite its practical significance, generating ultra short pulses from QCLs by mode-locking has achieved only limited success in the past decade. In this work, we study the influence of external source on the mode-locking of QCLs. A dynamic model based on Maxwell-Bloch equations as well as transmission line was build to simulate QCLs in time domain. The simulation results were then analyzed and compared with existing experiment results from references to check reliability of the established model.
 
-The purpose of this research is to build a new model based on existed simulation methods to achieve a dynamic modeling of QCLs in time domain, which would help to get a better understanding of its theoretical mechanism and redound to still unresolved issues of the field.
+The purpose of this research is to build a new model based on existed simulation methods to achieve a dynamic modeling of QCLs in time domain, which would help to get a better understanding of its theoretical mechanism and redound to search for optimal parameters of mode-locking in experiments. 
 
 \chapter*{Acknowledgements} 
 \addcontentsline{toc}{chapter}{Acknowledgements}
@@ -214,32 +214,24 @@ Thanks to Petar
 \tableofcontents
 
 \chapter{Introduction}\pagenumbering{arabic}
-The operating principle of QCLs was first proposed by R.F. Kazarinov and R.A. Suris in 1971 \cite{kazarinov1971possibility}. However, due to the complexity of fabrication process until 1994 QCLs was firstly demonstrated at Bell Laboratories by Jerome Faist and his colleagues\cite{faist1994quantum}. They have gained considerable attention afterwards. Unlike common semiconductor lasers, which utilize electron-hole recombination to realize electromagnetic radiation, QCLs are unipolar and their emission is based on intersub- band transitions in coupled quantum well superlattices\cite{williams2007terahertz}. Due to lack of suitable radiation sources and detectors this region remains one of the least developed spectral regions. The occurance of QCLs provides a option as a prominent source to help investigate these regions, because their emission wave length as well gain spectrum can be engineered through various design \cite{gmachl2002ultra}. 
+The operating principle of QCLs was first proposed by R.F. Kazarinov and R.A. Suris in 1971 \cite{kazarinov1971possibility}. However, due to the complexity of fabrication process until 1994 QCLs was firstly demonstrated at Bell Laboratories by Jerome Faist and his colleagues \cite{faist1994quantum}. They have gained considerable attention afterwards. Unlike common semiconductor lasers, which utilize electron-hole recombination to realize electromagnetic radiation, QCLs are unipolar and their emission is based on intersub- band transitions in coupled quantum well superlattices \cite{williams2007terahertz}. Due to lack of suitable radiation sources and detectors this region remains one of the least developed spectral regions. The occurance of QCLs provides a option as a prominent source to help investigate these regions, because their emission wave length as well gain spectrum can be engineered through various design \cite{gmachl2002ultra}. To date, only n-type QCLs are successfully realized lasing.  One of the most commonly used material combination for active region is GaAs (well) and $Al_{x}Ga_{1-x}As$ (barrier), where x is the relative amount ration of aluminum to gallium. The intersubband transmission occurs in conduction band, as Fig. shows. Add--> one module of repeated QCL heterostructures!
 
-To date, only n-type QCLs are successfully realized lasing, the intersubband transmission occurs in conduction band. 
-
-Introduction of materials used for QCL
+As a novel type of laser as well as efficient source to generate THz radiation, THz QCLs showed great potential and have attracted already a lot attentions for developing their possible applications. Compared to X-ray, THz radiation has lower energy ($E=h\nu$), but still can penetrate many materials (e.g. clothes, paper) except for metals. Therefore, it could be used as imaging and sensing for security detection in airport \cite{federici2005thz}, which wouldn't affect the health of our bodies. Another interesting area is astronomy, such as heterodyne receivers \cite{williams2007terahertz}, which requires THz QCLs. Because the radiation from universe is mainly with THz, the research of THz technologies would help to detect and observe those unnoticed radiation from galaxies. 
 
 \section{Background and motivation}
-There are already several successful experimental attempts by active mode locking so far, but a complete theory system is still not available due to limited knowledge of quite complex mechanism inside cavity, both electrical as well as optical. It has been proven to be difficult to directly employ existing techniques from the ultra fast optics community to mode-lock QCLs due to unfavorable physical effects and lack of consolidation theory about its mechanism. Despite various obstacles some clear mode-locking of QCLs has been realized already in the mid-infrared as well as terahertz. All of the attempts are based on active mode-locking, which was recognized as the only viable route to QCL mode locking \cite{revin2016active}. The main idea is to actively mode-lock the QCLs through a modulated injection current with a frequency corresponding to the round-trip frequency $f_{rt}$, which lies in the microwave region extending from around 3 kHz to 300 GHz.
+For the past decade since the fist demonstration of QCLs, some groups devoted themselves to improve the operation temperature, up to room temperature has been achieved \cite{bai2011room} through special wells design of QCL structure. Some consisted on generating short pulse with QCLs \cite{wang2009mode}. Active mode-locking was recognized as the only viable route to QCL mode-locking \cite{revin2016active}. The main idea is to lock modes through a modulated injection current with a frequency corresponding to the roundtrip frequency. THz QCLs can be injection locked by modulating a short section of the cavity to open a net gain window with an external RF source. They are biased close to their threshold, while high above threshold pulses are broadened due to multi-mode instabilities (Spatial Hole Burning and Risken-Nummedal-Graham-Haken instability \cite{vukovic2016low}). It was found that mode-locking in THz QCLs is easier than that in mid-infrared \cite{wang2009mode}. Compared with mid-infrared QCLs, the laser transition energy lies below the optical phonon energy, so the upper state of THz QCLs based on bound-to-continuum has generally longer non-radiative relaxation time ($\sim$ 5-10 ps), which makes it easier to realize mode-locking \cite{barbieri2011coherent}. The first successful attempt of mode-locking in THz QCLs was reported in 2010 \cite{gellie2010injection}. By direct amplitude modulation, the mode-locking of a 2.3THz QCL was achieved at 35GHz, which shows locking ranges up to $\sim$225MHz  \cite{gellie2010injection}. Recently, active mode locking of QCLs in an external ring cavity was reported \cite{revin2016active}, which can operate at room temperature. Moreover, benefits from this method, the mode-locking was observed not only at close to the threshold, but also far above it. 
 
-The first successful attempt in mid-IR QCLs was achieved in 2009 \cite{wang2009mode} by modulating a short section of the cavity to open a net gain window. Different with common QCL design (Bound to continuum, Chirped superlattice, Resonant-phonon, Hybrid/interlaced), the QCL that was used is based on a "diagonal transition", which was a specially designed and owns significant longer gain recovery time. It was found that mode-locked pulses can be formed by modulating current injection close to the laser threshold, while high above threshold pulses are broadened due to multi-mode instabilities (Spatial Hole Burning and RNGH-instability).
-
-Recently active mode locking of QCLs in an external ring cavity was reported \cite{revin2016active}, which can operate at room temperature. Moreover, benefits from this method, the mode-locking was observed not only at close to the threshold, but also far above it. 
-
-Similar to mode-locking in mid-IR, THz QCLs can also be injection locked by active mode-locking with an external RF source. Besides, it was found that mode-locking in THz QCLs is easier than that in mid-IR. Compared with mid-IR QCLs, the laser transition energy lies below the optical phonon energy, so the upper state of THz QCLs based on bound-to-continuum has generally longer non-radiative relaxation time ($\sim$ 5-10 ps), which makes it easier to mode-lock \cite{barbieri2011coherent}. The first successful attempt of mode-locking in THz QCLs was reported in 2010 \cite{gellie2010injection}. The same with in mid-IR QCLs, they also used RF modulation to achieve mode-locking with a modulation frequency corresponding to the round trip frequency of the laser. By direct amplitude modulation, the mode-locking of a 2.3THz QCL was achieved at 35GHz with input RF-power <-15dBm.
-
-In the last two decades many studies have been carried out on further development as well as possible applications of QCLs. Some groups devoted themselves to improve the operation temperature, up to room temperature has been achieved\cite{bai2011room} through special wells design of QCL structure. Some consisted on generating short pulse by using QCLs\cite{wang2009mode}. Besides, In the past few years researchers have showed high interest in the application of QCLs. There are already many 
-....
-
+Although there are already those successful experimental attempts by active mode-locking, but a complete theory system is still not available. Due to limited knowledge of unfavorable physical effects and lack of consolidation theory about its mechanism, it has been proven to be difficult to directly employ existing techniques from the ultra fast optics community to realize mode-locking of QCLs.
 
 \section{Related work}
-Accompanied with investigation of QCLs in experiments, theoretical modeling techniques are developed step by step.
+Accompanied with experimental research, modeling techniques for QCLs are also steady investigated to help get a deep understanding of internal mechanisms and explore unknown effects. Thanks for persistent efforts of researchers, there are already several models as well as solvers which could be used for describing and analyzing various of processes in QCLs, such as density matrix approach, Maxwell-Bloch equations, non-equilibrium Green’s function theory along with some other modified methods aimed to take more linearities and effects into account. These models have been used, for example, to investigate modulation properties of optical injection-locked QCLs \cite{wang2013rate}, to calculaton for four-level scheme THz QCLs \cite{yasuda2009nonequilibrium}.
+
+However, these exsisting simulation techniques are only able to find solution of steady states rather than dynamic modeling in time domain. A lumped-element approach was proposed in 2007 by Barbieri et al. to investigate amplitude modulation limit \cite{barbieri200713}. After that this concept has been further developed with distributed-parameter transmission-line simulations to quantify injected RF-power to QCLs \cite{maineult2010microwave}. With the aid of a vectorial network analyzer they measured the S-parameters of meta-metal waveguides THz QCLs which were driven under threshold and then extracted distributed parameter from S-parameters. This is the first attempt that by measuring the transmission and reflection coefficients and using transmission-line approach to analyze RF-modulation capabilities of THz QCLs.
 
 \section{Objective}
 The objectives of this thesis are as follows:
 
-1). To build a new dynamic model 
+1). To build a new dynamic model based on Transmission line
 
 2). To verify "pulling effect" in mode-locking through simulation
 
@@ -248,11 +240,18 @@ The objectives of this thesis are as follows:
 4). To gain a deep understanding of mode-locking behaviors to obtain a better design in the future.
 
 \chapter{Theory}
-\section{Maxwell-Bloch equation}
+QCL is composed of a great amount of repeated stacks of heterojunctions, its extreme thin layers (in the order of a few nanometers) of different materials result in the formation of quantum wells and barriers. By solving steady Schroedinger-Poisson equation system, eigenenergies and wave functions of eigenenergies can be determined, which help to engineer and optimize QCLs (e.g. radiation frequency, injection efficiency).  Transfer matrix method \cite{jonsson1990solving} and finite-difference method \cite{tan1990self} are widely used to compute the numerical solution of the system efficiently. 
+\section{Maxwell-Bloch equations}
+To describe carrier dynamics as well as light propagation in a laser, Maxwell-Bloch equations can be used as a empirical approach. 
+****-->Introduction of FL183S
+Maxwell's equations-->explaination of the equation
+
+Bloch equations-->3 levels for example
+
 \section{Transmission line}
 Transmission line model was created by Oliver Heaviside \cite{heaviside2008electromagnetic} and usually consists of two separated conductors and medium in between (Fig. \ref{fig:TLcircuit}). The conventional TLM is based on Telegrapher's equations (\ref{eq:TLequation1})(\ref{eq:TLequation2}), which describe the evolution of voltage and current both spacial and temporal on an electrical transmission line. These two differential equations contains four distributed components (R', L', G', C') which vary from different transmission lines: R' is distributed resistance of conductors, which is represented by a series resistor in ohms per unit length ($\Omega /m$); L' is distributed inductance resulting from the magnetic field around the line due to self-inductance, which is represented by a series inductor in henries per unit length ($H/m$); G' is distributed conductance of the dielectric material separating the two conductors, which is expressed in siemens per unit length ($S/m$) and represented by a shunt resistor with resistance of 1/G'; C' is distributed capacitance of transmission line, which is represented by a shunt conductor in farads per unit length ($F/m$).
 
-Transmission line can be further classified in lossy/non-lossy transmission line and uniform/nonuniform transmission line with regarding to characteristics of its conductors and medium. When no resistance (idea conductor) and conductance (idea dielectric medium) exist, it can be regarded as ideal transmission line which contains only L' and G'. In uniform transmission line all those distributed components are uniformly distributed along line. Therefore, under the assumptions above the simulated QCL can be defined as a 1D nonlinear lossy transmission line.\\
+Transmission line can be further classified in lossy/non-lossy transmission line and uniform/nonuniform transmission line with regarding to characteristics of its conductors and medium. When no resistance (idea conductor) and conductance (idea dielectric medium) exist, it can be regarded as ideal transmission line which contains only L' and G'. In uniform transmission line all those distributed components are uniformly distributed along line. Therefore, under the assumptions above the simulated QCL can be defined as a 1D nonlinear lossy transmission line.
 
 % TL equivalent circuit figure
 \begin{figure}[htbp]
@@ -270,16 +269,22 @@ Telegrapher's equations:
 \end{eqnarray}
 
 \section{Mode-locking}
-Mode-locking is a technique in optics, which locks multi-mode in resonant laser cavity by enforcing coherence between modes to produce extra short pulse\cite{haus2000mode}. Methods of mode-locking can be simply classified in active mode-locking (AML) and passive mode-locking(PML) depending on whether it is modulated by itself (e.g. absorber) or requires external modulation source (e.g. RF source).
+Light generated by lasers owns high coherent compared with from other light sources. Nevertheless, it has still large bandwidth of optical gain, the modes inside cavity osculate independently and don't have fix phase, which leads to wide pulse. By uncertainty principle, if pulse duration is quite short, its bandwidth muss be larger. For example, a hyperbolic-secant-squared pulse shape is often assumed for lasers generating ultrashort pulse, the minimum possible pulse duration $\Delta t$ can be calculated with
+\begin{equation}
+\Delta t=\frac{0.315}{N\Delta \nu}.
+\end{equation}
+Where 0.315  is pulse shape dependent time bandwidth product, which for Gaussian shape pulse is 0.441. N and $\Delta \nu$ is amount of modes and bandwidth of pulse, respectively. This formula above could be be used for roughly evaluating the shortest possible pulse width. However, in real case, many other factors have to be taken into consideration, such as dispersion of the cavity, pulse shape and so on.
 
-fundamentals of mode-locking knowledge.....
+Mode-locking is a technique in optics, which locks multi-mode in resonant laser cavity by enforcing coherence between modes to produce extra short pulse\cite{haus2000mode}. Methods of mode-locking can be simply classified as active mode-locking (AML) and passive mode-locking(PML) depending on whether it is induced by itself (e.g. absorber) or requires external source (e.g. RF source).
+
+fundamentals of mode-locking knowledge: FP, locking range, modes.....
+Ideally it is exactly at $ f_{tr}$, but even if modulated at frequency of a little variation with $ f_{tr}$, the laser could still be mode-locked, the maximal possible frequency interval is called locking range.
 \chapter{Model}
+The dynamic model consists of two parts. One of them is optical modeling, which is used for describing the carrier transport  as well as light propagation inside cavity (microcosmic). The other is based on transmission line to obtain voltage and current distribution along cavity (microcosmic). Although each of them has separate solver, both will be simulated simultaneously and can affect with each other.
 \section{Optical modeling}
 Similar with the existing modeling methods, in this model light propagation is described with Maxwell' equation while carrier transportation is determined by Bloch equation. Without regard to lateral non-uniform distribution at boundaries \cite{huang2014non, dhar2015nanoscopic} QCL can be simplified to one-dimensional (1D) structure in the direction of propagation (x axis), which means the electrical components were uniformly distributed throughout the cross-sectional area. 
 
 \subsection{Carrier transport}
-****-->rewrite, give more details about density matrix model
-
 To simulate QCL active regions, we adapt the density matrix model from Ref. [cite Belyanin], to include total of four subband levels, and more importantly to allow all relevant system parameters, such as the eigenenergies, dipole moments and all scattering rates to be bias dependent. 
 
 As a prototypical QCL design, we take the sub-band structure configuration illustrated in Fig. \ref{fig:4Levels}, consisting of 4 relevant levels per period, i.e. levels from 1 to 4, where level 4 denotes the upper laser state, level 3 the lower laser level, level 2 is an extraction level which eases the electron extraction from 3, and finally level 1 denotes the depopulation level of the period, which also coincides with the injector state (1') of the next module. Typical QCL designs consist of more than 30 repetitions of this schematic, however we can employ periodic boundary conditions [cite] and restrict our attention to a single period only. 
@@ -341,13 +346,13 @@ In the electrical modeling, a modified Transmission Line Method (TLM) was introd
 \end{figure}
 
 \subsection{Transmission line approach}
-In this model, the vertical current component resulting from conductance of active region (n-doped semiconductor) under bias is calculated by current density J'(x,t) rather than by distributed conductance G'. Current density J(x,t) is nonuniform and bias dependent, it will be obtained by carrier transmission in optical part. 
+In this model, the vertical current component resulting from conductance of active region (n-doped semiconductor) under bias is calculated by current density J'(x,t) rather than by distributed conductance G'. Current density J(x,t) is nonuniform and bias dependent, it will be obtained by carrier transmission in optical part. Furthermore, although $v(x,t)$ and $i(x,t)$ in Eq. (\ref{eq:TLequation1}) and (\ref{eq:TLequation2}) are special for high frequency signal, they will be still valid if the transmission line was supplied additionally with a dc source. Therefore, the Telegrapher equations will be modified as following:
 
 \begin{eqnarray}
-\frac { \partial v(x,t) }{ \partial x }  &=& -L'\frac { \partial i(x,t) }{ \partial t }-R'i(x,t) \label{eq:TLequation3}\\
-\frac { \partial i(x,t) }{ \partial x }  &=& - C'\frac { \partial v(x,t) }{ \partial t }-wJ'(x,t) \label{eq:TLequation4}
+\frac { \partial v(x,t) }{ \partial x }  &=& -L'\frac { \partial i(x,t) }{ \partial t }-R'i(x,t) \label{eq:TLequation5}\\
+\frac { \partial i(x,t) }{ \partial x }  &=& - C'\frac { \partial v(x,t) }{ \partial t }-wJ'(x,t). \label{eq:TLequation6}
 \end{eqnarray}
-
+where, v(x,t) and i(x,t) are voltage and current signal at a node
 \subsubsection{Boundary conditions}
 Boundary conditions account for the completeness of differential equations at the boundary. In order to refine the boudaries and avoid hard variation of electrical components, a cascading of $\pi$ networks\cite{orlandi1996fdtd} is introduced for the distributed transmission line by splitting the shunt capacitance and conductance in half with two parallel capacitors and conductors at boundary, which is illustrate in Fig. \ref{fig:BoundaryCondition}. 
 
@@ -356,7 +361,7 @@ In active mode-locking, QCL is supplied with source $ {V}_{S} $ which consists o
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.55]{images/pi_representation}
-\caption{Schematic of cascade $\pi$ network representation and Thévenin equivalent circuit.}
+\caption{Schematic of cascade $\pi$ network representation and Thévenin equivalent circuit. Error: $I_{N-\frac{1}{2}}$}
 \label{fig:BoundaryCondition}
 \end{center}
 \end{figure}
@@ -414,12 +419,12 @@ where, $I_{S}$ is the initial current injection, which can be obtained by integr
 \subsection{Distributed components}
 The involvement of transmission line requires distributed component parameters. Except for distributed conductance G', which will be calculated in optical part, distributed resistance R', distributed inductance L' as well as distributed capacitance C' still need to be determined. They can be either calcuted as convertial passive components (plane resistor, parallel plane capacitor and inductor), or extracted from S-Parameter, which can be directly measured with network analyser. The former methode is simple and also don't require any extra test, but could lead to large error due to neglection of fringe effect\cite{pillai1970fringing} as well as high frequency influence. The latter is based on experiment, so shows higher accuracy compared with former, but requires extra experiment as well as equipment, which is not always feasible for simulation research. 
 
-Distributed resistance is frequency dependent and can be obtained by measurement of S-parameter \cite{maineult2010microwave}, which shows constant value when under certain frequency $ R'=4.5\times10^{-5}\sqrt{f_{RF}}$ /mm.
-
+\subsubsection{Distributed resistance}
+Distributed resistance is frequency dependent and can be obtained by measurement of S-parameter \cite{maineult2010microwave}, which shows constant value when under certain frequency $ R'=4.5\times10^{-5}\sqrt{f_{RF}}$  $\Omega/mm$.
 \begin{equation}
 R=\frac{1}{2(w+t)}\sqrt{\frac{\pi \mu f_{RF} }{\sigma}}
 \end{equation}
-where, $t$ is the thickness of top conductor, $\mu$ and $\sigma$ is the magnetic permeability coefficient and conductivity, respectively.
+where, $t$ is the thickness of top conductor, $\mu$ and $\sigma$ is the magnetic permeability coefficient and conductivity, respectively. The equation above is obtained by considering the skin effect
 
 -->search corresponding parameters for gold at 77 K.....
 
@@ -436,16 +441,16 @@ Numerically, one only have to consider a small, bounded 2D region with assumptio
 \end{center}
 \end{figure}
 
-The electric field can be solved by Gauss’s law in 2D. Solving for a strip in a box (Figure 2) the strip potential was set to 1V, the boundary to 0V and solve for the potential at a number of points inside the box. Here an electromagnetic field-solver QuickField was used which is a stand-alone software for solving partial differential equation (PDE). Figure 3 shows the calculated electric field around the strip.
-
+The electric field can be solved by Gauss’s law in 2D. Solving for a strip in a box (Figure 2) the strip potential was set to 1V, the boundary to 0V and solve for the potential at a number of points inside the box. Here an electromagnetic field-solver QuickField was used which is a stand-alone software for solving partial differential equation (PDE). 
 \begin{align}
 \frac { { \partial  }^{ 2 }\phi  }{ \partial { y }^{ 2 } } =\frac { { \phi  }_{ i-1,j }-2{ \phi  }_{ i,j }+{ \phi  }_{ i+1,j } }{ { (\Delta y) }^{ 2 } }\\
 \frac { { \partial  }^{ 2 }\phi  }{ \partial { z }^{ 2 } } =\frac { { \phi  }_{ i,j-1 }-2{ \phi  }_{ i,j }+{ \phi  }_{ i,j+1 } }{ { (\Delta z) }^{ 2 } }
 \end{align}
-
-Set $\Delta y=\Delta z=\Delta$, then spacial electrical potential at each grid except top metal layer inside box can be resolved $ { \phi  }_{ i,j }=\frac { { \phi  }_{ i-1,j }+{ \phi  }_{ i+1,j }+{ \phi  }_{ i,j-1 }+{ \phi  }_{ i,j+1 } }{ 4\Delta ^{ 2 } } $
-
-
+Set $\Delta y=\Delta z=\Delta$, then the electrical potential at each grid except top metal layer inside box can be resolved with
+\begin{equation}
+{ \phi  }_{ i,j }=\frac { { \phi  }_{ i-1,j }+{ \phi  }_{ i+1,j }+{ \phi  }_{ i,j-1 }+{ \phi  }_{ i,j+1 } }{ 4\Delta ^{ 2 } }.
+\end{equation}
+Subsequently, the electrical field can be easily obtained by $E=-\nabla \phi$. With the aid of Matlab electric field on cross-section were calculated as Fig. \ref{fig:TL_C} shows.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.3]{images/TL_C.pdf}
@@ -453,12 +458,13 @@ Set $\Delta y=\Delta z=\Delta$, then spacial electrical potential at each grid e
 \label{fig:TL_C}
 \end{center}
 \end{figure}
+According to Gauss's law in 2D, the surface charge quantity (colon per unit length) can be calculated by integrating the surrounding electric field over arbitrary closed path $l$ with equation
+\begin{equation}
+{ Q }_{ S }=\oint _{ l }{\varepsilon_{0}\varepsilon_{r}\overrightarrow { E } \cdot d\overrightarrow { r } }
+ \end{equation}
+ where, $\varepsilon_{0}$ is permittivity in free space and $\varepsilon_{r}$ is relative permittivity of medium, which in this case are air ($\epsilon_{r}\approx 1$) and semiconductor (active region of QCL, $\epsilon_{r}\approx 12.96$). Here a rectangular was chosen as integration path for the sake of simplification. 
 
-$E=-\nabla \phi$
-
-pictures and calculations...
-
-${ Q }_{ S }=\oint _{ l }{\varepsilon_{0}\varepsilon_{r}\overrightarrow { E } \cdot d\overrightarrow { r } } $
+ $C=\frac{Q_{S}}{\phi}=7.85\times 10^{-10} F/m$
 \subsubsection{Distributed inductance}
 In order to evaluate the self-inductance of surface metal layer in QCLs, Biot–Savart law \cite{grant2013electromagnetism} is used for computing resultant magnetic field $\textbf{B}$ (SI unit: Tesla) at surrounding which is generated by a steady current $\textbf{I}$. The distributed inductance L is inhere characteristic for a certain metal or wire, and is independent of applied current value.  
 \begin{equation}
@@ -468,8 +474,8 @@ where $\textbf{l}$ is the current unit length and $\textbf{r}$ is the displaceme
 
 In QCLs with metal-metal structure, the thickness of top metal is usually extremely thin which is around 80 nm ($8\times 10^{-8} m$). Therefore, it can be regarded as a current sheet with assumption of no thickness (See Fig. \ref{fig:TL_L(2)}). The magnetic field resulting from a current unit is $d\textbf{B}_{P}=\frac { \mu \textbf{I}\times { \textbf{r}}dS }{ 4\pi w{ r }^{ 3 }}$ while the magnetic field at a point $ \textbf{B}_{P}$ results from the magnetic field of each current unit. Hence, it can be evaluated by adding all these together with superposition principle:
 \begin{eqnarray}
- \textbf{B}_{P} &=& \sum _{ i=1 }^{ n }{ \sum _{ j=1 }^{ n }{ \frac { \mu \textbf{I}\times { \textbf{r} }_{ i,j } \Delta S }{ 4\pi w{ r }_{ i,j }^{ 3 } }  }  } \\
- &=& \int _{ -\frac { w }{ 2 }  }^{ \frac { w }{ 2 }  }{ \int _{ -\frac { l }{ 2 }  }^{ \frac { l }{ 2 }  }{ { \frac { \mu { \textbf{I} }\times { { \textbf{r} } }_{ i,j } }{ 4\pi w{ r }_{ i,j }^{ 3 } }  } }  } dxdy \label{eq. TL_L}
+ \textbf{B}_{P}&=&\sum _{ i=1 }^{ n }{ \sum _{ j=1 }^{ n }{ \frac { \mu \textbf{I}\times { \textbf{r} }_{ i,j } \Delta S }{ 4\pi w{ r }_{ i,j }^{ 3 } }  }  } \\
+ &=&\int _{ -\frac { w }{ 2 }  }^{ \frac { w }{ 2 }  }{ \int _{ -\frac { l }{ 2 }  }^{ \frac { l }{ 2 }  }{ { \frac { \mu { \textbf{I} }\times { { \textbf{r} } }_{ i,j } }{ 4\pi w{ r }_{ i,j }^{ 3 } }  } }  } dxdy \label{eq. TL_L}
  \end{eqnarray}
  where, w is width of lateral cross section and $\textbf{r}$ is vector pointing from the surface element to the observation point P, $\mu$ is permeability depending on given medium and frequency.
 
@@ -487,8 +493,6 @@ With formula (\ref{eq. TL_L}) the magnetic field at each point on y-z plane can 
  \end{equation} 
  where $\textbf{H}$ is the auxiliary magnetic field and has a relation $\textbf{B}=\mu \textbf{H}$.
 
- pictures and calculation....
- use the function quiver of Matlab to plot our vector plot.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.3]{images/TL_L.pdf}
@@ -497,7 +501,13 @@ With formula (\ref{eq. TL_L}) the magnetic field at each point on y-z plane can 
 \end{center}
 \end{figure}
 
-
+ pictures and calculation....
+ use the function quiver of Matlab to plot our vector plot.
+ In active region, $\mu\approx \mu_{0}$,
+  $L'=\frac{\psi}{I}=3.03\times 10^{-9} H/m$
+  
+    $L'=\frac{1}{c^{2}C'}=1.42\times 10^{-8} H/m$
+where c is the speed of light in vacuum.
 \chapter{Numerical Treatment}
 \section{Discretization}
 Following Yee’s staggered grid approximation\cite{yee1966numerical}, voltage and current are discretized with separation of $\Delta x/2$ and $\Delta t/2$ in space and time respectively (See Figure \ref{fig:Discretisation}), which leads to a second-order accurate approximation. Voltage V(x,t) and current I(x,t) samples are then expressed as $ V\big(j\Delta x, (n+\frac{1}{2})\Delta t\big)$ and $ I\big((j+\frac{1}{2})\Delta x, n\Delta t\big)$, where j and n are integers. For reasons of simplicity, in the following text they will be replaced by $ V _{ j }^{ n+\frac{1}{2}}$ and ${ I }_{ j+\frac{1}{2} }^{ n }$. After discretization, the first-order derivative of voltage $\partial V(x,t)$ as well as current $\partial I(x,t)$ in space and time can be simply calculated with central difference method\cite{yang2012central}. 
@@ -509,8 +519,6 @@ Following Yee’s staggered grid approximation\cite{yee1966numerical}, voltage a
 \label{fig:Discretisation}
 \end{center}
 \end{figure}
-
-magic time step....
 
 In order to solve these two partial differential equations, finite difference in time domain (FDTD) method is applied which owns second order accuracy.
 
@@ -541,35 +549,40 @@ Finally, after rearrangement a recursive solution for Transmission line updating
  \hspace{-8mm} { V }_{ j }^{ n+\frac{1}{2} } &=& { V }_{ j }^{ n-\frac{1}{2} } + \frac{ \Delta t }{ C'\Delta x } ({ I }_{ j-\frac{1}{2} }^{ n}-{ I }_{ j+\frac{1}{2} }^{ n } - w\Delta x\frac{{J}_{j}^{n+\frac{1}{2}}+{J}_{j}^{n-\frac{1}{2}}}{2}) \label{eq:TL_U}
 \end{eqnarray}
 
+In the recursive equations above, except for the distributed parameters (R', L', C') time step $\Delta t$ and space step $\Delta x$ are still needed to be determined. Theoretically the smaller these step values were set, the more accurate their solution will be. But in real computation it wouldn't be chosen unlimited small, therefore, "magic time step" \cite{li1992simulation} is taken with regarding to stability, which is expressed as
+\begin{equation}
+\Delta t=n\Delta x/c=n\sqrt{\epsilon \mu}\Delta x,
+\end{equation}
+where n is the refractive index of active region.
 \section{Modulation power}
-Not only modulation frequency but also modulation power plays a key role in mode-locking. Even if QCL was modulated at near round trip frequency $f_{rt}$ , it can't be mode locked without enough modulation power. So it is essential to evaluate RF power for each simulation in order to analyze the modulation process. The RF source power can be easily calculated as modulation amplitude, signal function (since wave) as well as frequency are all known. But this power is total power and is larger than the power that was injected into QCL. Only the injected RF power will have influence on modulation.
+Not only modulation frequency but also modulation power plays a key role in mode-locking. Even if QCL was modulated at near roundtrip frequency $f_{rt}$ , it can't be mode locked without enough modulation power. So it is essential to evaluate RF power for each simulation in order to analyze the modulation process. The RF source power can be easily calculated as modulation amplitude, signal function (since wave) as well as frequency are all known. But this power is total power and is larger than the power that was injected into QCL. Only the injected RF power will have influence on modulation.
 
 The reflection coefficient $\Gamma$ is defined as:
 \begin{equation}
 \Gamma = \frac{Z_{QCL}-Z_{S}}{Z_{QCL}+Z_{S}}
 \end{equation}
 
-Two methods to estimate modulation power:
+Two methods could be used to estimate modulation power:
 
 1. Through Fourier Transformation ac component can be easily separated at modulation frequency $f_{RF}$ from recorded whole current data over time. In the way, average RF voltage signal can also be obtained. Therefore, the injected RF-power to QCL is approximately:
 \begin{equation}
- P_{RF}=\delta I* \delta V
+ P_{RF}=\delta I* \delta V.
  \end{equation}
-where $\delta I$ and $ \delta V$ are current and voltage component at $f_{RF}$, respectively. 
+Where $\delta I$ and $ \delta V$ are current and voltage components with frequency of $f_{RF}$, respectively. They can be obtained by Fourier Transform of recorded data after simulation. The calculated value in this way should larger than real injected RF power, because even without RF source the laser itself has also current and voltage components with the same frequency $f_{RF}$ due to microstrip line.
 
-2. Using the formula \cite{ramo2008fields}, which is used for calculation of small signal current modulation:
+2. The impedance of transmission line (in this case QCL) at certain frequency is 
 \begin{equation}
-{ P }_{ diss }=\frac { \delta { I }_{ QCL }^{ 2 }*Re[{ Z }_{ QCL }] }{ 2 }
+Z_{QCL}=\sqrt{\frac{R'+j2\pi f_{RF}L'}{G'+j2\pi f_{RF}C'}}.
+\end{equation}
+For calculation of small signal current modulation, there is a formula \cite{ramo2008fields} can be used 
+\begin{equation}
+{ P }_{ diss }=\frac { \delta { I }_{ QCL }^{ 2 }*Re[{ Z }_{ QCL }] }{ 2 }.
 \end{equation}
 
-where, $\delta { I }_{ QCL }$ is induced current variation due to RF source and ${ Z }_{ QCL }$ is the impedance of QCL at modulation frequency $Z_{QCL}=\sqrt{\frac{R'+j2\pi f_{RF}L'}{G'+j2\pi f_{RF}C'}}$. The distributed conductance G can be obtained through I-V characteristic curve of QCL.
-
---> rewrite this section 
+Where $\delta { I }_{ QCL }$ is induced current variation due to RF source. The distributed conductance G' can be obtained through I-V characteristic curve of QCL.
 
 \chapter{Simulation Results}
 The laser simulated in this work is based on doped $GaAs/Al_{x}Ga_{1-x}As$, which is 3 mm-long, 60 $\mu m$ wide, with height of 10 $\mu m$ metal-metal QCL. It is driven at 77 K and has an emission frequency of 3.8 THz. The average doping level of the active region is $5\times 10^{16} cm^{3}$. Its well and barrier widths are 4.6/9.8/2.6/9.0/4.4/17.6 nm.
-
-...QCL structure...
 
 \begin{figure}[htbp]
 \begin{center}
@@ -579,19 +592,18 @@ The laser simulated in this work is based on doped $GaAs/Al_{x}Ga_{1-x}As$, whic
 \end{center}
 \end{figure}
 
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[scale=0.8]{images/withoutRF.eps}
-\caption{Frequency spectrum of simulated QCL.}
-\label{fig:withoutRF}
-\end{center}
-\end{figure}
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[scale=0.8]{images/withoutRF.eps}
+%\caption{Frequency spectrum of simulated QCL.}
+%\label{fig:withoutRF}
+%\end{center}
+%\end{figure}
 
 Fig. \ref{fig:IVcurve} shows the voltage-current–power characteristics of the QCL, which was obtained by simulating the QCL under a series of bias from 7.4 V to 10.8 V. The QCL has a threshold voltage $V_{th}$ of 8.4 V, which means, under that there will be no lasing. Starting from $V_{th}$, the output power will increase exponentially with higher voltage until tunneling phenomena occurs. At this area, QCL owns negative differential resistance (NDR) which is similar as tunneling diode. A large amount of injected electrons due to increased input voltage will directly pass active region through tunneling rather than transition from upper and lower laser levels accompanied with emission of phonons. Therefore, they will not contribute to laser output power.
+--> kink?
 
-Description of I-V-P curve, e.g. threshold and kink, negative differential resistance (NDR)...............
-
-In order to obtain a accuracy round trip frequency of this QCL, beatnote was used by Fourier transform of its output power. As Fig. \ref{fig:beatnote_noRF} shows,  beatnote of the simulated QCL without modulation, its round trip frequency $f_{rt}$ is around 13.34 GHz.
+In order to obtain a accuracy roundtrip frequency of this QCL, beatnote was used by Fourier transform of its output power. As Fig. \ref{fig:beatnote_noRF} shows the beatnote of simulated QCL without modulation, its roundtrip frequency $f_{rt}$ is about 13.34 GHz.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.8]{images/beatnote_noRF.pdf}
@@ -602,19 +614,18 @@ In order to obtain a accuracy round trip frequency of this QCL, beatnote was use
 
 
 \section{Simulation setup}
-The source of simulated QCL consists of a DC voltage source and a RF source, which are combined through bias-T. 
-% Power calculation of injected RF
-
-replace this ugly picture with that from petar
+The source of simulated QCL consists of a DC voltage source and a RF source, which are combined through bias-T. The QCL is biased by DC source and modulated by RF source. Both source are chose as voltage source for continence. The modulation signal of RF source has a function
+\begin{equation}
+V_{RF}=modA\sin (2\pi f_{RF}t), \label{eq. V_RF}
+ \end{equation}
+ where modA is voltage amplitude of RF source.
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.4]{images/schematicSETUP}
-\caption{schematic scheme.}
+\caption{Schematic scheme of simulation setup.}
 \label{fig:schematicSETUP}
 \end{center}
 \end{figure}
-
-
 
 \begin{table}[]
 \centering
@@ -634,23 +645,58 @@ replace this ugly picture with that from petar
 
 
 \section{Results}
-After 100 round trips simulation, a clear short pulse was observed, as Figure \ref{fig:FWHM} shows, from 4610 to 4690 ps in corresponding to 164 $T_{rt}$. Its Full Width at Half Maximum (FWHM) in this modeling is around 11.6 ps, which shows extremely good agreement with experiment result 11 ps\cite{gellie2010injection}.
-
-\subsection{Modulation with different power} 
-optimal power injection and comparison with lack of enough RF power as modulation
-\subsection{Modulation with different frequency} 
-"Pulling effect" and locking range
-
+A series of simulations were carried out for investigating the influence of modulation power as well frequency on mode-locking of QCLs. After 200 roundtrips simulation, a clear short pulse was observed, as Figure \ref{fig:FWHM} shows, from 4610 to 4690 ps in corresponding to 164 roundtrip time $T_{rt}$. Its Full Width at Half Maximum (FWHM) in this modeling is around 11.6 ps, which shows quite good agreement with experiment result 11 ps \cite{gellie2010injection}.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=0.9]{images/FWHM.eps}
+\includegraphics[scale=0.6]{images/FWHM.eps}
 \caption{Singel pulse from simulation.}
 \label{fig:FWHM}
 \end{center}
 \end{figure}
 
+\subsection{Modulation with different power} 
+Before simulation was carried out, their rough values (modA and $f_{RF}$) have to be firstly determined. Although the RF source function is known (Eq. (\ref{eq. V_RF})) and its power is proportional to square of modA, the injected power to QCL can still not be determined before simulation. Due to reflection as well as attenuation on wire between RF source and QCL, the injected power should be smaller than the power coming from RF source. But it is well known that theoretically optimal modulation frequency should exactly at roundtrip frequency. Therefore, simulations with different power and certain $f_{RF}$ were firstly carried out.
+
+Lack of sufficient modulation power, QCLs can still not be mode-locked even if modulation frequency is equal to $f_{rt}$. Therefore, modulations with different RF amplitude (modA) was investigated, which haven the same modulation frequency and all other parameters are the same as well. When without RF source, QCL emits continuous light and will show a clear single peak in frequency domain, which is its emission frequency. The left graph of Fig. \ref{fig:modA_fspectra} is pulse trains with five roundtrips and right graph shows their corresponding frequency spectra. With increasing modulation power the side modes near main mode were strengthened and contributed to form short pulses. At modA which equals to 4 V, clear short pulse train was observed. This valued would be further used for investigating locking range of the QCL.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.28]{images/modA_spectra.pdf}
+\caption{Normalized spectra in time as well as frequency domain with different modulation powers. modA denotes RF amplitude. $f_{RF}$ of RF source is at roundtrip frequency and QCL is bias by 8.6 kV/cm}
+\label{fig:modA_fspectra}
+\end{center}
+\end{figure}
+
+\subsection{Modulation with different frequency} 
+Modulation frequency is a key factor for mode-locking. As already discussed at chapter 2.3 Mode-locking, the modulation frequency has to be close to roundtrip frequency. To investigate its maximal possible locking range, the laser was modulated with a large frequency interval nearby $f_{rt}$.
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.37]{images/modF_spectra.pdf}
+\caption{Frequency spectra with different modulation powers.}
+\label{fig:modF_spectra}
+\end{center}
+\end{figure}
+
+Fig. \ref{fig:modF_spectra}(a) shows pulse trains at time domain at a series of modulation frequencis from 13 GHz to 14.9 GHz, its time axis was normalized in roundtrips. This was obtained by recording the optical field $E_{z}$ in the middle point (x=L/2) of QCL at each time step and the last 5 roundtrips were chose to check their pulse shapes. Besides, their power intensity (proportional to $|E_{z}^{2}|$ ) were then normalized to the one which has highest intensity in order to compare their relative emission power.  The shortest pulses were found at modulation frequency 13.6 GHz and 13.9 GHz, which have FWHM of 10.7 ps and 11.2 ps, respectively. This can also be verified by the right graph beatnote (Fig. \ref{fig:modF_spectra}(b)), which contains not only optical power but also voltage signal of QCL in frequency domain. From 13.6 GHz to 13.9 GHz their frequency spectra of optical power and electrical voltage matched completely. Over this range some modes appeared which are not coherent with the other modes and disturbed mode-locking.
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[scale=0.6]{images/modF_fspectra.pdf}
+%\caption{Frequency spectra with different modulation powers.}
+%\label{fig:modF_fspectra}
+%\end{center}
+%\end{figure}
+
+
 \section{Comparison with experiment}
-Describe and argue this simulation results with experiment results from paper "Generating ultrafast pulses of light from qcls"
+Compared with experiment results from Ref. \cite{wang2015generating}, which used the same QCL as in this work, the obtained pulse width (FWHM) 11.6 ps is almost the same as from experiment, which shows good agreement.  
+
+Locking range:
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[scale=0.4]{images/comparison.pdf}
+\caption{Experiment data from Ref. \cite{wang2015generating}: output electric field for the seeded (red) and mode-locked (black) QCLs with an applied microwave modulation of 12.46 GHz for the latter. Inset: expanded view of the THz pulse intensity between 1470 and 1530 ps. }
+\label{fig:comparison}
+\end{center}
+\end{figure}
 \chapter{Conclusion}
 
 
