@@ -88,7 +88,7 @@ dat = makeMaxwellVars(dat);
 rlgc.C = 2;              %unit: pF/mm
 rlgc.L = 1.6e2;          %unit: pH/mm
 
-TL_model_s1 = TL_solver3(sim_params,rlgc);
+TL_model_s1 = TL_solver2(sim_params,rlgc);
 
 
 %simulation info storage arrays -> preallocate
@@ -139,19 +139,20 @@ while( dat.t< tEnd)
     dat = stepWave(dat,P,P_t,M,M_t,losses);
     
     %   Transmission line equations
-   if iter_ctr >= 2000
+    if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
            J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
            for mm = 1: N-1
               TL_model_s1.i_TL(mm) = J_tot*(N-mm)/N;
            end
            J_TL0 = J_TL1;
-           TL_model_s1.i_TLold = TL_model_s1.i_TL(1);
+           TL_model_s1.i_TLold = TL_model_s1.i_TL;
+           TL_model_s1.i_TLold2 = TL_model_s1.i_TL;
         end
-        TL_model_s1.propagate3(J_TL1,J_TL0,dat.t-dt*1999)
-   end
+        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1998)
+    end
     
-	J_TL0 = J_TL1;    
+	J_TL0 = J_TL1;   
     dm_model_.update_state();
     
 %     dm_model_.interpolate(TL_bias,W_fit,E_fit,AC_fit,zUL_fit);

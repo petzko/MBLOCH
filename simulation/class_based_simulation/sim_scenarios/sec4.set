@@ -42,13 +42,13 @@ modA = 2
 
 
 #initial bias value! in kV/cm
-bias = 8.6
+bias = 9
 
 #boundary voltage value! in V
 Vs = 8.6
 
 # Input impedence (ohm)
-Zin = 50
+Zin = 20
 
 #initial current value (A/mm) 
 current = 7.2870
@@ -66,4 +66,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 13
+linear_loss = 10

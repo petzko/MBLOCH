@@ -27,8 +27,8 @@ classdef TL_solver3 < handle
         obj.rlgc = rlgc;
         obj.width = params.width;               %unit: mm
         obj.height = params.height;             %unit: mm
-        obj.wire.C = 27/0.3048*1e-3;                        %unit: pF    pF/ft /0.3048 m/ft
-        obj.wire.L = 6.7498e4/0.3048*1e-3;                  %unit: pH
+        obj.wire.C = 27/0.3048;                        %unit: pF    pF/ft /0.3048 m/ft
+        obj.wire.L = 6.7498e4/0.3048;                  %unit: pH
         
         obj.bias = params.bias/(obj.height*1e+3); %unit: kV/mm
         obj.modA = params.modA/(obj.height*1e+3); %modulation amplitude unit: kV/mm
