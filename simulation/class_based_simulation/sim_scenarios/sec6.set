@@ -19,13 +19,13 @@ D = 46
 disp = +0.125
 
 #period length [nm]
-Lp = 54.8
+Lp = 50
 
 #doping density in [cm^-3]
-dN = 1.5E16
+dN = 5E16
 
 #doping region thickness [nm] (set equal to Lp if average doping density is known)
-Ld = 16.2
+Ld = 5
 
 #mode overlap factor [dimensionless]
 Overlap = 0.8
@@ -35,20 +35,20 @@ nTHz = 3.6
 nRF = 3.8
 
 #modulation frequency THz
-modF = 0.013
+modF = 0.0140
 
 #modulation amplitude unit: V
-modA = 1
+modA = 2
 
 
 #initial bias value! in kV/cm
-bias = 9
+bias = 8.6
 
 #boundary voltage value! in V
 Vs = 8.6
 
 # Input impedence (ohm)
-Zin = 50
+Zin = 20
 
 #initial current value (A/mm) 
 current = 7.2870
@@ -66,4 +66,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 13
+linear_loss = 12

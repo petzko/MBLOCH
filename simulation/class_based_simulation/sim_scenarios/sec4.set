@@ -35,14 +35,14 @@ nTHz = 3.6
 nRF = 3.8
 
 #modulation frequency THz
-modF = 0.0139
+modF = 0.0136
 
 #modulation amplitude unit: V
-modA = 2
+modA = 4
 
 
 #initial bias value! in kV/cm
-bias = 9
+bias = 8.6
 
 #boundary voltage value! in V
 Vs = 8.6
@@ -66,4 +66,4 @@ Tdeph_12 =  1
 Tdeph_32 =  1
 
 #cavity loss in 1/cm; 
-linear_loss = 10
+linear_loss = 12

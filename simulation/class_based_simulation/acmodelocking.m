@@ -120,7 +120,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 500;
+f_display = 100;
 
 suffix ='_';
 
@@ -141,15 +141,18 @@ while( dat.t< tEnd)
     %   Transmission line equations
     if iter_ctr >= 2000
         if iter_ctr == 2000        %Set initial current distribution
-           J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
-           for mm = 1: N-1
-              TL_model_s1.i_TL(mm) = J_tot*(N-mm)/N;
+           J_tot = trapz(x(2:sim_params.N_pts-1),J_TL1(2:sim_params.N_pts-1))+(J_TL1(1)+J_TL1(end))*dx/2;
+           for mm = 2: N-2
+              TL_model_s1.i_TL(mm) = (J_tot-(J_TL1(1)+J_TL1(end))*dx/2)*(N-mm)/N;
            end
+           TL_model_s1.i_TL(1) = TL_model_s1.i_TL(2)+J_TL1(end)*dx/2;
+           TL_model_s1.i_TL(N-1) = J_TL1(end)*dx/2;
            J_TL0 = J_TL1;
+           TL_model_s1.Is = J_tot;
            TL_model_s1.i_TLold = TL_model_s1.i_TL;
            TL_model_s1.i_TLold2 = TL_model_s1.i_TL;
         end
-        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1998)
+        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
     end
     
 	J_TL0 = J_TL1;   
@@ -166,7 +169,7 @@ while( dat.t< tEnd)
             suffix = '_NAN'
             break
         end
-        J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
+        J_tot = trapz(x(1:sim_params.N_pts),J_TL1)-(J_TL1(1)+J_TL1(end))*dx/2;
         display(['trace section 1: ' num2str(trace10) ]);
         display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);
