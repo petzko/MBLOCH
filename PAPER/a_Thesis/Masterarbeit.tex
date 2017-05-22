@@ -313,7 +313,7 @@ The time evolution of the density matrix is given by the von Neumann equation, w
 	\frac{d\rho_{43}}{dt} &= - i\omega_{43}\rho_{43} + i\frac{ez_{43}}{\hbar}E_z(\rho_{44}-\rho_{33})-\Gamma_{\parallel 43}\rho_{43}.
  \end{align}
 \end{subequations}
-In Eqs. (\ref{eq:dmequations}) $\rho_{ij}$ denotes the $ij-$th density matrix element,  $z_{43}$ the optical transition's dipole moment, $e$ the elementary charge, $\hbar$ is the reduced Plank's constant. Also the parameter $1/\tau_{i\rightarrow j}$ is the net scattering rate from level $i$ to level $j$, calculated by our ensemble Monte Carlo code and incorporating, amongst others, longitudinal optical (LO) phonon, interface roughness and electron electron scattering mechanisms [cite]. Lastly $1/\tau_{i} = \sum_j 1/\tau_{i\rightarrow j}$ is the inverse lifetime of level $i$ and $\Gamma_{\parallel 43} = (\tau_4+\tau_3)/(2\tau_4\tau_3)+1/\tau^*$ is the dephasing rate of the optical transition, including lifetime broadening and a phenomenological pure dephasing $1/\tau^*$ rate due to intrasubband scattering processes [cite ANDO model]. The only scattering mechanism treated quantum mechanically is the optical transition between the upper and lower laser states. One can also fully coherently include resonant tunneling between the injector 1' and the upper laser state 4, which leads to a modified system of equations with larger number of independent variables and is thus more computationally demanding [cite]. Furthermore such an approach does not allow for the inclusion (without $k-$space discretization) of second order tunneling current into the simulations, which has been shown to be the origin of negative the differential conductivity and dispersive gain in quantum cascade lasers []. 
+In Eqn. (\ref{eq:dmequations}) $\rho_{ij}$ denotes the $ij-$th density matrix element,  $z_{43}$ the optical transition's dipole moment, $e$ the elementary charge, $\hbar$ is the reduced Plank's constant. Also the parameter $1/\tau_{i\rightarrow j}$ is the net scattering rate from level $i$ to level $j$, calculated by our ensemble Monte Carlo code and incorporating, amongst others, longitudinal optical (LO) phonon, interface roughness and electron electron scattering mechanisms [cite]. Lastly $1/\tau_{i} = \sum_j 1/\tau_{i\rightarrow j}$ is the inverse lifetime of level $i$ and $\Gamma_{\parallel 43} = (\tau_4+\tau_3)/(2\tau_4\tau_3)+1/\tau^*$ is the dephasing rate of the optical transition, including lifetime broadening and a phenomenological pure dephasing $1/\tau^*$ rate due to intrasubband scattering processes [cite ANDO model]. The only scattering mechanism treated quantum mechanically is the optical transition between the upper and lower laser states. One can also fully coherently include resonant tunneling between the injector 1' and the upper laser state 4, which leads to a modified system of equations with larger number of independent variables and is thus more computationally demanding [cite]. Furthermore such an approach does not allow for the inclusion (without $k-$space discretization) of second order tunneling current into the simulations, which has been shown to be the origin of negative the differential conductivity and dispersive gain in quantum cascade lasers []. 
 
 In the tight-binding basis [cite], we can assume that the only electron transport channel across the QCL periods is via the resonant tunneling current between the injector and the upper laser state. When second order scattering effects are considered, under a few relaxing approximations, this tunneling current is given by [cite Terrazzi]
 \begin{align}
@@ -321,7 +321,7 @@ In the tight-binding basis [cite], we can assume that the only electron transpor
 J &= en^s\frac{\Omega_{AC}^22\Gamma_{\parallel 1'4}}{\epsilon^2+4\Gamma_{\parallel 1'4}^2}\Big\{\Theta(\epsilon)(\rho_{11}-\rho_{44}e^{-|\hbar\epsilon|/k_BT}) \nonumber \\
 &+\Theta(-\epsilon)(\rho_{11}e^{-|\hbar\epsilon|/k_BT}-\rho_{44})\Big\}.
 \end{align}
-In Eq. (\ref{eq:current}) $n^s$ denotes the sheet carrier density, $\Theta(\cdot)$ is the Heaviside function and the term $e^{-|\hbar\epsilon|/k_BT}$ denotes an effective "weight" factor modelling the assumption of thermalized $k$-space distribution of the injector and upper laser level electrons with the same thermal energy $k_BT$ in each subband.   
+In Eqn. (\ref{eq:current}) $n^s$ denotes the sheet carrier density, $\Theta(\cdot)$ is the Heaviside function and the term $e^{-|\hbar\epsilon|/k_BT}$ denotes an effective "weight" factor modeling the assumption of thermalized $k$-space distribution of the injector and upper laser level electrons with the same thermal energy $k_BT$ in each subband.   
 
 \subsection{Light propagation}
 The wave equation inside cavity can be described by the following equation with assumption of weak nonlinearity and inhomogeneity
@@ -349,7 +349,7 @@ In the electrical modeling, a modified Transmission Line Method (TLM) was introd
 \end{figure}
 
 \subsection{Transmission line approach}
-In this model, the vertical current component resulting from conductance of active region (n-doped semiconductor) under bias is calculated by current density J'(x,t) rather than by distributed conductance G'. Current density J(x,t) is nonuniform and bias dependent, it will be obtained by carrier transmission in optical part. Furthermore, although $v(x,t)$ and $i(x,t)$ in Eq. (\ref{eq:TLequation1}) and (\ref{eq:TLequation2}) are special for high frequency signal, they will be still valid if the transmission line was supplied additionally with a dc source. Therefore, the Telegrapher equations will be modified as following:
+In this model, the vertical current component resulting from conductance of active region (n-doped semiconductor) under bias is calculated by current density J'(x,t) rather than by distributed conductance G'. Current density J(x,t) is nonuniform and bias dependent, it will be obtained by carrier transmission in optical part. Furthermore, although $v(x,t)$ and $i(x,t)$ in Eqn. (\ref{eq:TLequation1}) and (\ref{eq:TLequation2}) are special for high frequency signal, they will be still valid if the transmission line was supplied additionally with a dc source. Therefore, the Telegrapher equations will be modified as following:
 
 \begin{eqnarray}
 \frac { \partial V(x,t) }{ \partial x }  &=& -L'\frac { \partial I(x,t) }{ \partial t }-R'\tilde i(x,t) \label{eq:TLequation5}\\
@@ -359,7 +359,7 @@ where V(x,t) and I(x,t) are voltage and current signal at a node x.
 \subsubsection{Boundary conditions}
 Boundary conditions account for the completeness of differential equations at the boundary. In order to refine the boudaries and avoid hard variation of electrical components, a cascading of $\pi$ networks\cite{orlandi1996fdtd} is introduced for the distributed transmission line by splitting the shunt capacitance and conductance in half with two parallel capacitors and conductors at boundary, which is illustrate in Fig. \ref{fig:BoundaryCondition}. 
 
-In active mode-locking, QCL is supplied with source $ {V}_{S} $ which consists of a DC voltage source $ {V}_{DC} $ and an external RF source $ {V}_{RF} $. These two sources are combined through bias-T and the source voltaged can be expressed with $ {V}_{S}=V_{DC}+{V}_{RF} $. Due to existence of wire impedance there will be voltage drop on it, so the voltage at node 0 is not equal to source voltage $ {V}_{S} $.
+In active mode-locking, QCL is supplied with source $ {V}_{S} $ which consists of a DC voltage source $ {V}_{DC} $ and an external RF source $ {V}_{RF} $. These two sources are combined through bias-T and the source voltage can be expressed with $ {V}_{S}=V_{DC}+{V}_{RF} $. Due to existence of wire impedance there will be voltage drop on it, so the voltage at node 0 is not equal to source voltage $ {V}_{S} $.
 % Boundary condition figure
 \begin{figure}[htbp]
 \begin{center}
@@ -415,7 +415,7 @@ I_{N-\frac{1}{2}}^{0}&=&w\frac{\Delta x}{2}J_{N}^{0},
 where, $I_{S}^{0}$ is the initial current injection, which can be obtained by integrating J(x,0) over x from optical model. N is the number of the last node while j integer ranging from 0 to N-2. The initial condition for current is under assumption that at very beginning the current was linearly distributed along active region in x direction.
 
 \subsection{Distributed components}
-The involvement of transmission line requires distributed component parameters. Except for distributed conductance G', which will be calculated in optical part, distributed resistance R', distributed inductance L' as well as distributed capacitance C' still need to be determined. They can be either calcuted as convertial passive components (plane resistor, parallel plane capacitor and inductor), or extracted from S-Parameter, which can be directly measured with network analyser. The former methode is simple and also don't require any extra tests, but could lead to large error due to neglection of fringe effect\cite{pillai1970fringing} as well as high frequency influence. The latter is based on experiments, so shows higher accuracy compared with former, but requires extra experiments as well as equipments, which is not always feasible for simulation research. In this work, these parameters of distributed components were eliminated by simple physical calculation assuming that device is with infinite length.
+The involvement of transmission line requires distributed component parameters. Except for distributed conductance G', which will be calculated in optical part, distributed resistance R', distributed inductance L' as well as distributed capacitance C' still need to be determined. They can be either calcuted as convertial passive components (plane resistor, parallel plane capacitor and inductor), or extracted from S-Parameter, which can be directly measured with network analyser. The former methode is simple and also don't require any extra tests, but could lead to large error due to neglection of fringe effect\cite{pillai1970fringing} as well as high frequency influence. The latter is based on experiments, so shows higher accuracy compared with former, but requires extra experiments as well as equipment, which is not always feasible for simulation research. In this work, these parameters of distributed components were eliminated by simple physical calculation assuming that device is with infinite length.
 
 \subsubsection{Distributed capacitance}
 Numerically, one only have to consider a small, bounded 2D region with assumption of uniform cross-section going into the page (See Fig. \ref{fig:Gauss2D}). The strip potential was set to 1 V while the boundary to 0 V.  Between strip line and boundary (box) there is no charges, therefore, the electric potential inside the box can be solved. According to Gauss's law in 2D, the surface charge quantity (colon per unit length) can be calculated by integrating the surrounding electric field of strip over arbitrary closed path $l$ with equation
@@ -495,11 +495,11 @@ Now that pure ac component cannot be simply obtained while resistance of transmi
 \begin{equation}
 \frac { { V }_{ j+1 }^{ n+\frac{3}{2} }-{ V }_{ j }^{ n+\frac{3}{2}}-({ V }_{ j+1 }^{ n+\frac{1}{2} }-{ V }_{ j }^{ n+\frac{1}{2} }) }{ \Delta x } \approx -L'\frac { { I }_{ j+\frac{1}{2} }^{ n+2 }-2{ I }_{ j+\frac{1}{2} }^{ n+1 }+{ I }_{ j+\frac{1}{2} }^{ n } }{ \Delta t } -R' (\widetilde{ i } _{ j+\frac{1}{2} }^{ n+\frac{3}{2} }-\widetilde{ i } _{ j+\frac{1}{2} }^{ n+\frac{1}{2} })\label{Eq:TL_substraction}
 \end{equation}
-The idea is, dc component as well as ac component with low frequency remains nearly unchanged after extremly short time step $\Delta t$ which is shorter than picosecond ($10^{-12}$ second) in this modeling. The variation of whole current at node $j+\frac{1}{2}$ is mainly resulting from variation of ac component of high frequency, which plays a key roll for increase of metal resistance. Hence, the variation of ac component can be approximately replaced with its corresponding variation of whole current. Besides, the current components have to be averaged in time with central difference method for sake of consistence, the same with $J_{j}^{n}$, leading to:
+The idea is, dc component as well as ac component with low frequency remains nearly unchanged after extremely short time step $\Delta t$ which is shorter than picosecond ($10^{-12}$ second) in this modeling. The variation of whole current at node $j+\frac{1}{2}$ is mainly resulting from variation of ac component of high frequency, which plays a key roll for increase of metal resistance. Hence, the variation of ac component can be approximately replaced with its corresponding variation of whole current. Besides, the current components have to be averaged in time with central difference method for sake of consistence, the same with $J_{j}^{n}$, leading to:
 \begin{equation}
 \tilde{ i }_{ j+\frac { 1 }{ 2 }  }^{ n+\frac{3}{2} }-\tilde{ i }_{ j+\frac { 1 }{ 2 }  }^{ n+\frac{1}{2} }\approx{ I }_{ j+\frac { 1 }{ 2 }  }^{ n+\frac{3}{2} }-{ I }_{ j+\frac { 1 }{ 2 }  }^{ n+\frac{1}{2} } \approx \frac{{ I }_{ j+\frac { 1 }{ 2 }  }^{ n+2 }+{ I }_{ j+\frac { 1 }{ 2 }  }^{ n+1 }-({ I }_{ j+\frac { 1 }{ 2 }  }^{ n+1 }+{ I }_{ j+\frac { 1 }{ 2 }  }^{ n })}{2}\label{Eq:ac_Current}
 \end{equation}
-Then substituting the approximate treatment above to Eqn. (\ref{Eq:TL_substraction}),  a equation with only voltage and whole current can be obtained:
+Then substituting the approximate treatment above to Eqn. (\ref{Eqn:TL_substraction}),  a equation with only voltage and whole current can be obtained:
 \begin{equation}
 \frac { { V }_{ j+1 }^{ n+\frac{3}{2} }-{ V }_{ j }^{ n+\frac{3}{2}}-({ V }_{ j+1 }^{ n+\frac{1}{2} }-{ V }_{ j }^{ n+\frac{1}{2} }) }{ \Delta x } \approx -L'\frac { { I }_{ j+\frac{1}{2} }^{ n+2 }-2{ I }_{ j+\frac{1}{2} }^{ n+1 }+{ I }_{ j+\frac{1}{2} }^{ n } }{ \Delta t } -R' \frac{{ I }_{ j+\frac { 1 }{ 2 }  }^{ n+2 }-{ I }_{ j+\frac { 1 }{ 2 }  }^{ n }}{2}
 \end{equation}
@@ -638,12 +638,12 @@ The simulation setup is illustrated in Fig. \ref{fig:schematicSETUP}. The QCL is
 \section{Results}
 The amount of simulated iterations are 400 roundtrips, and during each simulation those important variables (e.g. optical field $E_{z}$, voltage, current, current density) at the middle point (x=L/2) of QCL were recorded after every time step.
 \subsection{Characteristics of QCL}
-Fig. \ref{fig:IVcurve} shows the voltage-current–luminance characteristics of the simulated QCL, which was obtained by supplying the QCL with a series of voltages ranging from 7.4 V to 10.8 V. The threshold voltage $V_{th}$ of the QCL is about 8.3 V, which means, under that there will be no lasing. Starting from $V_{th}$, the output emission will increase exponentially with higher voltage until tunneling phenomena occurs. At this area, QCL owns negative differential resistance (NDR) which is similar with tunneling diode. A large amount of injected electrons will directly pass active region through tunneling rather than transition from upper and lower laser levels accompanied with emission of phonons. Therefore, the increasing input voltage will not contribute to laser output power. 
+Fig. \ref{fig:IVcurve} shows the voltage-current–luminance characteristics of the simulated QCL, which was obtained by supplying the QCL with a series of voltages ranging from 7.4 V to 10.8 V. The threshold voltage $V_{th}$ of the QCL is about 8.3 V, which means, under that there will be no lasing. Starting from $V_{th}$, the output emission will increase exponentially with higher voltage until tunneling phenomena occurs. At this area, QCL owns negative differential resistance (NDR) which is similar with tunneling diode. A large amount of injected electrons will directly pass active region through tunneling rather than transition from upper and lower laser levels accompanied with emission of photons. Therefore, the increasing input voltage will not contribute to laser output power. 
 
 \begin{figure}[htbp]
 \begin{center}
 \includegraphics[scale=0.6]{images/IVCURVE.pdf}
-\caption{voltage-current–power characteristics of simulated QCL.}
+\caption{voltage-current-luminance characteristics of simulated QCL.}
 \label{fig:IVcurve}
 \end{center}
 \end{figure}
@@ -651,8 +651,8 @@ Fig. \ref{fig:IVcurve} shows the voltage-current–luminance characteristics of 
 Besides, the roundtrip frequency of this QCL was obtained by Fourier transformation of both its optical field and electrical voltage. As Fig. \ref{fig:beatnote_noRF} shows the beatnote of simulated QCL without RF source, its roundtrip frequency $f_{rt}$ is about 13.34 GHz.
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=0.8]{images/beatnote_noRF.pdf}
-\caption{Beatnote of the simulated QCL without RF source.}
+\includegraphics[scale=0.8]{images/Beatnote_noRF.pdf}
+\caption{Beatnote of the simulated QCL without RF source. Its roundtrip frequency $f_{rt}$ is about 13.34 GHz.}
 \label{fig:beatnote_noRF}
 \end{center}
 \end{figure}
@@ -668,7 +668,7 @@ A series of simulations were carried out for investigating the influence of modu
 %\end{center}
 %\end{figure}
 
-Before simulation was carried out, firstly two parameters ($M_{A}$ and $f_{RF}$) have to be roughly defined. Although the function of RF source is known (Eq. (\ref{eq. V_RF})) and its power is proportional to square of its amplitude $M_{A}$, the injected power to QCL can still not be determined before simulation. Due to reflection as well as attenuation on wire between RF source and QCL, the injected power should be smaller than the power coming from RF source. But it is well known that theoretically optimal modulation frequency should exactly at roundtrip frequency. Therefore, simulations with different power and certain $f_{RF}$ were firstly carried out.
+Before simulation was carried out, firstly two parameters ($M_{A}$ and $f_{RF}$) have to be roughly defined. Although the function of RF source is known with $V_{RF}^{n}=M_{A}\cos(2\pi f_{RF}n\Delta t)$ and its power is proportional to square of its amplitude $M_{A}$, the injected power to QCL can still not be determined before simulation. Due to reflection as well as attenuation on wire between RF source and QCL, the injected power should be smaller than the power coming from RF source. But it is well known that theoretically optimal modulation frequency should exactly at roundtrip frequency. Therefore, simulations with different power and certain $f_{RF}$ were firstly carried out.
 \subsubsection{Modulation with different power} 
 Lack of sufficient modulation power, QCLs can still not be mode-locked even if modulation frequency is equal to $f_{rt}$. Therefore, modulations with different RF amplitude ($M_{A}$) was investigated, in which they all have the same modulation frequency and all the other parameters are the same as well. With increasing modulation power the side modes around main mode were strengthened (See Fig. \ref{fig:modA_Beatnote}) and will contribute to generate ultra short pulse. The bandwidth of frequency spectra was increasing consequently from 40 GHz to larger than 100 GHz. The optical field was mode-locked at modulation frequency $f_{RF}$, which is set at 13.9 GHz and a little higher than roundtrip frequency of this laser. 
 %\begin{figure}[htbp]
@@ -682,7 +682,7 @@ Lack of sufficient modulation power, QCLs can still not be mode-locked even if m
   \centering
   \subfigure[]{\includegraphics[scale=0.9]{images/fa.pdf}}
   \subfigure[]{\includegraphics[scale=0.9]{images/Ba.pdf}}
-\caption{(a)Frequency spectra of QCL emission with increasing modulation power from -8.5 dBm to -0.8 dBm. The simulated QCL has optical emission frequency of 3.8 THZ. (b) Beatnote of optical field $E_{z}$ (dashed blue line) and electrical voltage $V\_{TL}$ (red solid line).}
+\caption{(a)Frequency spectra of QCL emission with increasing modulation power from -8.5 dBm to -0.8 dBm. The simulated QCL has optical emission frequency of 3.8 THz. (b) Beatnote of optical field $E_{z}$ (dashed blue line) and electrical voltage $V\_{TL}$ (red solid line).}
 \label{fig:modA_Beatnote}
 \end{figure*}
 
@@ -703,7 +703,7 @@ Similar with in modulation with different powers, frequency spectra and beatnote
   \centering
   \subfigure[]{\includegraphics[scale=0.9]{images/f.pdf}}
   \subfigure[]{\includegraphics[scale=0.9]{images/B.pdf}}
-\caption{(a)Frequency spectra of QCL emission with increasing modulation frequency from -8.5 dBm to -0.8 dBm. The simulated QCL has optical emission frequency of 3.8 THZ. (b) Beatnote of optical field $E_{z}$ (dashed blue line) and electrical voltage $V\_{TL}$ (red solid line).}
+\caption{(a)Frequency spectra of QCL emission with increasing modulation frequency from -8.5 dBm to -0.8 dBm. The simulated QCL has optical emission frequency of 3.8 THz. (b) Beatnote of optical field $E_{z}$ (dashed blue line) and electrical voltage $V\_{TL}$ (red solid line).}
 \label{fig:modA_Beatnote}
 \end{figure*}
 
