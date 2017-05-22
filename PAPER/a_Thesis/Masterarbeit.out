@@ -10,7 +10,7 @@
 \BOOKMARK [1][-]{section.2.3}{Mode-locking}{chapter.2}% 10
 \BOOKMARK [0][-]{chapter.3}{Model}{}% 11
 \BOOKMARK [1][-]{section.3.1}{Optical modeling}{chapter.3}% 12
-\BOOKMARK [2][-]{subsection.3.1.1}{Carrier transport}{section.3.1}% 13
+\BOOKMARK [2][-]{subsection.3.1.1}{Carrier transition}{section.3.1}% 13
 \BOOKMARK [2][-]{subsection.3.1.2}{Light propagation}{section.3.1}% 14
 \BOOKMARK [1][-]{section.3.2}{Electrical modeling}{chapter.3}% 15
 \BOOKMARK [2][-]{subsection.3.2.1}{Transmission line approach}{section.3.2}% 16
@@ -21,8 +21,8 @@
 \BOOKMARK [0][-]{chapter.5}{Simulation Results}{}% 21
 \BOOKMARK [1][-]{section.5.1}{Simulation setup}{chapter.5}% 22
 \BOOKMARK [1][-]{section.5.2}{Results}{chapter.5}% 23
-\BOOKMARK [2][-]{subsection.5.2.1}{Modulation with different power}{section.5.2}% 24
-\BOOKMARK [2][-]{subsection.5.2.2}{Modulation with different frequency}{section.5.2}% 25
+\BOOKMARK [2][-]{subsection.5.2.1}{Characteristics of QCL}{section.5.2}% 24
+\BOOKMARK [2][-]{subsection.5.2.2}{Modulation with RF source}{section.5.2}% 25
 \BOOKMARK [1][-]{section.5.3}{Comparison with experiment}{chapter.5}% 26
 \BOOKMARK [0][-]{chapter.6}{Conclusion}{}% 27
-\BOOKMARK [0][-]{chapter*.27}{Bibliography}{}% 28
+\BOOKMARK [0][-]{chapter*.33}{Bibliography}{}% 28
