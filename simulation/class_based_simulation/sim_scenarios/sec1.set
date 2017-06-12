@@ -38,7 +38,7 @@ nRF = 3.8
 modF = 0
 
 #modulation amplitude unit: V
-modA = 0
+modA = 0.3
 
 
 #initial bias value! in kV/cm
@@ -48,7 +48,7 @@ bias = 8.6
 Vs = 8.6
 
 # Input impedence (ohm)
-Zin = 0
+Zin = 50
 
 #initial current value (A/mm) 
 current = 7.2870

@@ -19,7 +19,7 @@ classdef TL_solver2 < handle
             
         %Definition of constants
         obj.dx = params.dx;              %unit: mm
-        obj.dt = params.dt;              %unit: picosecond
+        obj.dt = params.dt/2;              %unit: picosecond
         obj.c = params.c;                %unit: mm/picosecond
         obj.IDX = params.IDX;
         obj.N_pts = params.N_pts;
@@ -57,9 +57,10 @@ classdef TL_solver2 < handle
         obj.v_TL(end) = obj.v_TL(end)+2*obj.Bcoeff*(obj.i_TL(end-1)-obj.i_TL(end)-(J_TL1(end)+J_TL0(end))*obj.dx/4);
         obj.v_TLold2 = obj.v_TLold(1);
         
-        obj.Is = obj.Is + 1/obj.Zin*(obj.height*1e+3/obj.width)...
-                 *(4*pi*obj.modF*obj.dt*obj.modA/(obj.height*1e+3)*cos(2*pi*obj.modF*(t-obj.dt))...
-                 -2*(obj.v_TL(1)-obj.v_TLold(1)));  
+        obj.Is = obj.Isold + 1/obj.Zin*(obj.height*1e+3/obj.width)...
+                 *(2*pi*obj.modF*obj.dt*obj.modA*cos(2*pi*obj.modF*(t-obj.dt))...
+                 -(obj.v_TL(1)-obj.v_TLold(1)));
+        
         obj.i_TLold = obj.i_TL; % store the boundary voltage of previous step      
         obj.i_TL(1:end-1) = 4*obj.rlgc.L/obj.Ecoeff*obj.i_TL(1:end-1)...
                             -(2*obj.rlgc.L-obj.rlgc.R*obj.dt)/obj.Ecoeff*obj.i_TLold2(1:end-1)...

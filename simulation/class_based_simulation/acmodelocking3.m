@@ -87,10 +87,10 @@ dat = makeMaxwellVars(dat);
 
 % rlgc.C = 2;              %unit: pF/mm
 % rlgc.L = 1.6e2;          %unit: pH/mm
-rlgc.C = 1;             %unit: pF/mm
-rlgc.L = 1.6e2;            %unit: pH/mm
+rlgc.C = 0.56;             %unit: pF/mm
+rlgc.L = 3.0e2;            %unit: pH/mm
 
-TL_model_s1 = TL_solver2(sim_params,rlgc);
+TL_model_s1 = TL_solver3(sim_params,rlgc);
 
 
 %simulation info storage arrays -> preallocate
@@ -122,7 +122,7 @@ record_r220 = zeros(padsize,1);
 
 dat.t = 0;
 P = zeros(dat.N,1); P_t = zeros(dat.N,1); M = P; M_t = P_t; losses = P_t;
-f_display = 100;
+f_display = 10;
 
 suffix ='_';
 
@@ -149,13 +149,20 @@ while( dat.t< tEnd)
            for mm = 2: N-2
               TL_model_s1.i_TL(N-mm) = TL_model_s1.i_TL(N-mm+1)+J_TL1(N-mm+1)*dx;
            end
+
            J_TL0 = J_TL1;
            TL_model_s1.Is = J_tot;
+           TL_model_s1.Isold = J_tot;
+           TL_model_s1.Isold2 = J_tot;
            TL_model_s1.i_TLold = TL_model_s1.i_TL;
            TL_model_s1.i_TLold2 = TL_model_s1.i_TL;
+           TL_model_s1.v_TLold = TL_model_s1.v_TL(1);
         end
-        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1999)
-        TL_model_s1.propagate2(J_TL1,J_TL0,dat.t-dt*1998.5)
+%         dt_loop = 4;
+%         while dt_loop>0
+            TL_model_s1.propagate3(J_TL1,J_TL0,dat.t-dt*1999)
+%             dt_loop = dt_loop-1;
+%         end
     end
     
 	J_TL0 = J_TL1;   
@@ -172,7 +179,7 @@ while( dat.t< tEnd)
             suffix = '_NAN'
             break
         end
-        J_tot = trapz(x(1:sim_params.N_pts),J_TL1)-(J_TL1(1)+J_TL1(end))*dx/2;
+        J_tot = trapz(x(1:sim_params.N_pts),J_TL1);
         display(['trace section 1: ' num2str(trace10) ]);
         display(['Iteration: ' num2str(iter_ctr) '/' num2str(round(tEnd/dat.dt))]);
         display(['average bias (kV/cm) sec 1: ' num2str(mean(TL_model_s1.v_TL)*10)]);

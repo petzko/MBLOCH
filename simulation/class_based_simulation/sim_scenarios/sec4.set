@@ -10,7 +10,7 @@ tch = 1E-12
 lch = 1E-3 
 
 #grid size in x direction
-N_pts = 3000 
+N_pts = 5000 
 
 #diffusion constant in [cm^2/sec]
 D = 46
@@ -38,7 +38,7 @@ nRF = 3.8
 modF = 0.0136
 
 #modulation amplitude unit: V
-modA = 4
+modA = 0.3
 
 
 #initial bias value! in kV/cm
@@ -48,7 +48,7 @@ bias = 8.6
 Vs = 8.6
 
 # Input impedence (ohm)
-Zin = 20
+Zin = 50
 
 #initial current value (A/mm) 
 current = 7.2870
