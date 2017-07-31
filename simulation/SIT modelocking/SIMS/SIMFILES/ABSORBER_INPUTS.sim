@@ -1,0 +1,64 @@
+# % or ! are comments 
+
+#simulattion name 
+name = ABS-PML
+
+####dipole mtx elements (in C-nm)
+zUL = 4
+
+# EIGENENERGY OF UPPER AND LOWER LEVEL in eV
+E_UL = 0.1099
+E_LL = 0.0960
+
+% barbieri 2.1 kv/cm at 70 k
+%E_UL = 0.0755
+%E_LL = 0.0658
+
+
+% barbieri 2.1 kv/cm at 10 k
+% E_UL = 0.0771
+% E_LL = 0.0657
+
+
+% barbieri 2.3 kv cm
+%E_UL = 0.0824
+%E_LL = 0.0701
+
+
+
+#steady state values for the upper and lower laser levels 
+rho_u_0 =  0
+rho_l_0 = 1 
+
+# Dephasing times in ps
+T_1 = 3
+T_2 = .5
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3 
+
+#grid size in x direction
+N = 2000
+
+# cavity length (mm) 
+L = .5
+# gain period length [nm]
+Lp_g = 48.0
+#absorber period length [nm]
+Lp_a = 48.0
+
+# doping density in [cm^-3]
+Ncarriers_cm = 3.7e14
+
+#mode overlap factor [dimensionless] -> ignore these (for Olfa)
+Gamma = 1
+
+#refractive index
+nTHz = 3.6
+
+#cavity loss in 1/cm;  (from optica paper) 
+linear_loss = 0
+
+#reflection coeff 
+R = 1

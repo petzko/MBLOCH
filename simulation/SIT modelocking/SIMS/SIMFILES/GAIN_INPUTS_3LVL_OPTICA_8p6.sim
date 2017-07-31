@@ -1,0 +1,55 @@
+# % or ! are comments 
+#simulattion name 
+name = PML-GAIN-OPTICADATA-AT-8p6kVpcm
+
+####dipole mtx elements (in C-nm)
+zUL = 4.
+
+#### Hamiltonian matrix in the TB Basis in (eV): ordering is as follows [INJ,ULL,LLL,RES,DEPOP]
+HTB = [0.1440 8.4980e-04 0 0 0 8.4980e-04 0.1478 0 0 0 0 0 0.1386 0 0 0 0 0  0.1349  0 0 0 0  0   0.1027]
+
+E_UL = 0.1184
+E_LL = 0.1075
+# scattering rates matrix in linear form
+# for NLVL levels Wmtx((i-1)*NLVL+j) gives the outscattering rate from level i to level j, where i,j = 1,2... NLVL
+Wmtx = [0 0.0032 0.0031 0.0019 0.0001 0.0099 0 0.1460 0.1133 0.0740 0.0212  0.1242  0 0.8036 2.4572 0.0122 0.0798 0.4978  0 0.9184 0.0000 0.0008 0.0753 0.0303  0] 
+
+NLVLS = 5
+INJ = 1 
+ULL = 2
+LLL = 3
+DEPOP = 5
+IGNORE= -1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3
+
+# pure dephasing times
+Tdeph_iu = 0.4586
+Tdeph_ul = 0.6920
+Tdeph_il = 0.1626
+
+#grid size in x direction
+N = 3000
+
+#gain cavity length (mm) 
+L = 2.0
+
+# period length (nm)
+Lp = 48
+
+# doping density in [cm^-3]
+Ncarriers_cm =  1e16
+
+#mode overlap factor [dimensionless] -> ignore these (for Olfa)
+Gamma = 1
+
+#refractive index
+nTHz = 3.6
+
+#cavity loss in 1/cm;  (from optica paper) 
+linear_loss = 7
+
+#reflection coeff 
+R = 1

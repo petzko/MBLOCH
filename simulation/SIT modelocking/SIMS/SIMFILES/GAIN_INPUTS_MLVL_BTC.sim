@@ -1,0 +1,57 @@
+# % or ! are comments 
+#simulattion name 
+name = PML-GAIN-BTC-AT-2p5kVpcm
+
+####dipole mtx elements (in C-nm)
+zUL = 2
+
+#### Hamiltonian matrix in the TB Basis in (eV): ordering is as follows [INJ,ULL,LLL,RES,DEPOP]
+HTB = [ 0.1215         0         0         0         0         0         0         0         0         0    0.1068         0         0         0         0         0         0         0         0         0    0.0960         0         0         0         0         0         0         0         0         0    0.0926         0         0         0         0         0         0         0         0         0    0.1081         0         0         0         0         0         0         0         0         0    0.1099         0         0         0         0         0         0         0         0         0    0.1120         0         0         0         0         0         0         0         0         0    0.1148         0         0         0         0         0         0         0         0         0    0.1179]
+
+E_UL = 0.1068
+E_LL = 0.0960
+# scattering rates matrix in linear form
+# for NLVL levels Wmtx((i-1)*NLVL+j) gives the outscattering rate from level i to level j, where i,j = 1,2... NLVL
+Wmtx = [   0    0.1042    0.0011    0.0015    0.1891    0.0551    0.1249    0.0997    0.6079        0.0238         0    0.0189    0.0261    0.6260    0.1559    0.1061    0.0607    0.0394          0.0002    0.0343         0    0.6884    0.0239    0.0461    0.0078    0.0032    0.0026        0.0009    0.0368    0.4896         0    0.0323    0.0434    0.0106    0.0049    0.0017        0.0510    0.8219    0.0200    0.0261         0    0.3829    0.2099    0.0836    0.0710        0.0203    0.2246    0.0523    0.0778    0.4905         0    0.2316    0.0882    0.0352       0.0448    0.2038    0.0093    0.0141    0.3926    0.2842         0    0.3079    0.0901       0.0508    0.1425    0.0045    0.0048    0.1775    0.1648    0.4057         0    0.3867       0.4084    0.1198    0.0025    0.0046    0.2182    0.0703    0.1719    0.5410         0]
+
+
+
+NLVLS = 9
+INJ = 1 
+ULL = 2
+LLL = 3
+DEPOP = 4
+IGNORE= -1
+
+#characteristic time.. seconds per picosecond and length meters per millimeter 
+tch = 1E-12 
+lch = 1E-3
+
+# pure dephasing times
+Tdeph_iu = .01
+Tdeph_ul = 2.0
+Tdeph_il = .01
+
+#grid size in x direction
+N = 3000
+
+#gain cavity length (mm) 
+L = 1.0
+
+# period length (nm)
+Lp = 48
+
+# doping density in [cm^-3]
+Ncarriers_cm =  3.2e16
+
+#mode overlap factor [dimensionless] -> ignore these (for Olfa)
+Gamma = 1
+
+#refractive index
+nTHz = 3.6
+
+#cavity loss in 1/cm;  (from optica paper) 
+linear_loss = 7
+
+#reflection coeff 
+R = 1
